@@ -1,4 +1,4 @@
-name: Deploy to S3
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,9 +9,13 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  # ─────────────────────────────────────────────
+  # Jobs parallèles (pas de dépendances)
+  # ─────────────────────────────────────────────
 
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,17 +35,113 @@ jobs:
       - name: Format check
         run: npm run format:check
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build
         run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  # ─────────────────────────────────────────────
+  # Jobs après build (dépendent de build)
+  # ─────────────────────────────────────────────
+
+  test:
+    name: E2E Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
       - name: Run E2E tests
         run: npm run test
 
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse Audit
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
       - name: Run Lighthouse CI
         run: npm run lighthouse
+
+  # ─────────────────────────────────────────────
+  # Déploiement (après tous les checks)
+  # ─────────────────────────────────────────────
+
+  deploy:
+    name: Deploy to AWS
+    needs: [lint, test, lighthouse]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -50,7 +150,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-3
 
-      - name: Deploy to S3
+      - name: Deploy assets to S3
         run: |
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
             --delete \
@@ -59,6 +159,8 @@ jobs:
             --exclude "sitemap*.xml" \
             --exclude "robots.txt"
 
+      - name: Deploy HTML to S3
+        run: |
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
             --cache-control "public, max-age=0, must-revalidate" \
             --include "*.html" \
