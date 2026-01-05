@@ -1,0 +1,20 @@
+# Black Hole Consulting
+
+> Cabinet de conseil en architecture de solutions, intelligence artificielle et cloud computing basé en Île-de-France, France.
+
+## Services
+- [Accueil](https://blackholeconsulting.io/): Solution Architecture, GenAI/LLM, Cloud & DevOps, Développement Web
+- [Mentions Légales](https://blackholeconsulting.io/mentions-legales): Informations légales de l'entreprise
+- [CGV](https://blackholeconsulting.io/cgv): Conditions générales de vente
+- [Politique de Confidentialité](https://blackholeconsulting.io/politique-confidentialite): Protection des données RGPD
+
+## À propos
+- Fondateur: Cédric Jacqueline, Solution Architect avec 17+ ans d'expérience
+- Expertise: Architecture de solutions, IA générative, Cloud AWS/GCP/Azure, DevOps
+- Contact: cedric@blkhole.fr | +33 6 02 18 04 13
+- LinkedIn: https://www.linkedin.com/in/cedric-blackhole
+
+## Informations Entreprise
+- Raison sociale: Black Hole Consulting (SASU)
+- SIRET: 833 909 864 00021
+- Siège: 18 Résidence des Noues, 77140 Montcourt-Fromonville, France

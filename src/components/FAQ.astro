@@ -1,0 +1,127 @@
+---
+const faqs = [
+  {
+    question: 'Quels types de projets accompagnez-vous ?',
+    answer:
+      "J'accompagne des projets varies : conception d'architectures cloud, integration de solutions IA/GenAI, developpement d'applications web, migration vers le cloud, mise en place de pipelines CI/CD, et transformation digitale. Que ce soit pour une startup ou un grand groupe, j'adapte mon approche a vos besoins specifiques.",
+  },
+  {
+    question: 'Comment se deroule une mission type ?',
+    answer:
+      'Chaque mission suit une methodologie eprouvee en 4 phases : Decouverte (analyse des besoins et audit), Conception (architecture et planning), Realisation (developpement iteratif avec points reguliers), et Livraison (deploiement, documentation et support). La duree varie selon la complexite, de quelques jours pour un audit a plusieurs mois pour un projet complet.',
+  },
+  {
+    question: 'Travaillez-vous en remote ou sur site ?',
+    answer:
+      'Je travaille principalement en remote, ce qui permet une grande flexibilite et efficacite. Cependant, je me deplace volontiers pour les phases cles du projet : ateliers de cadrage, presentations strategiques, formations ou workshops. Une approche hybride peut etre mise en place selon vos besoins.',
+  },
+  {
+    question: 'Quelles sont vos technologies de predilection ?',
+    answer:
+      "Cote cloud : AWS, Azure, GCP avec une expertise Terraform pour l'IaC. Pour l'IA : OpenAI, Claude, Mistral, LangChain et les architectures RAG. En developpement web : React, Next.js, Vue.js, Node.js, PHP/Symfony. Je reste technologiquement agnostique et choisis les outils les plus adaptes a chaque contexte.",
+  },
+  {
+    question: 'Comment reserver un premier echange ?',
+    answer:
+      'Rien de plus simple ! Vous pouvez reserver directement un creneau de 30 minutes via Calendly pour un appel decouverte gratuit et sans engagement. Vous pouvez egalement me contacter via le formulaire ci-dessous ou par email. Je reponds generalement sous 24h.',
+  },
+  {
+    question: 'Quels sont vos tarifs ?',
+    answer:
+      "Mes tarifs varient selon le type de mission : forfait projet, regie au TJM, ou accompagnement recurrent. Chaque devis est personnalise apres analyse de vos besoins. Le premier echange decouverte est gratuit et permet d'etablir une proposition adaptee a votre budget et vos objectifs.",
+  },
+];
+---
+
+<section id="faq" class="section">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+        Questions Frequentes
+      </h2>
+      <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+        Les reponses aux questions que vous vous posez peut-etre
+      </p>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="max-w-3xl mx-auto space-y-4">
+      {
+        faqs.map((faq, index) => (
+          <div class={`fade-in stagger-${Math.min(index + 1, 4)} faq-item`}>
+            <details class="group bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-2xl overflow-hidden hover:border-[var(--color-accent-primary)]/50 transition-all">
+              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                <span class="text-[var(--color-text-primary)] font-medium pr-4">
+                  {faq.question}
+                </span>
+                <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-accent-primary)] group-open:rotate-45 transition-transform duration-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-6 pb-6">
+                <p class="text-[var(--color-text-secondary)] leading-relaxed">{faq.answer}</p>
+              </div>
+            </details>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- CTA -->
+    <div class="fade-in text-center mt-12">
+      <p class="text-[var(--color-text-muted)] mb-6">Vous avez d'autres questions ?</p>
+      <a href="#contact" class="btn btn-secondary">
+        Contactez-moi
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Schema JSON-LD -->
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  })}
+/>
+
+<style>
+  /* Remove default marker */
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details summary::marker {
+    display: none;
+  }
+
+  /* Smooth content reveal */
+  details[open] summary {
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0;
+  }
+</style>
