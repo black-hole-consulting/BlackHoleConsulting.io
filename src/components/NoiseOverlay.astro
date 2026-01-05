@@ -1,0 +1,49 @@
+---
+/**
+ * NoiseOverlay.astro
+ *
+ * A subtle noise texture overlay that adds organic texture to the page.
+ * Uses a base64-encoded tiny noise pattern for optimal performance.
+ *
+ * Usage: Add <NoiseOverlay /> to your layout, typically near the end of <body>
+ */
+---
+
+<div class="noise-overlay" aria-hidden="true"></div>
+
+<style>
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 900;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+
+    /*
+     * Base64 encoded 100x100 noise pattern PNG
+     * This is a small repeating noise texture that tiles seamlessly
+     * Generated as a tiny grayscale noise pattern for minimal file size
+     */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  /* Reduce motion preference - disable animation if any were added */
+  @media (prefers-reduced-motion: reduce) {
+    .noise-overlay {
+      animation: none;
+    }
+  }
+
+  /* Slightly adjust opacity for light mode if needed */
+  @media (prefers-color-scheme: light) {
+    .noise-overlay {
+      opacity: 0.03;
+    }
+  }
+</style>

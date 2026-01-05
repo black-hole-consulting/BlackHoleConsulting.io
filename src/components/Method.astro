@@ -1,0 +1,113 @@
+---
+const steps = [
+  {
+    number: "01",
+    title: "Découverte",
+    description: "Analyse de vos besoins, objectifs business et contraintes techniques.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>`,
+    details: ["Audit existant", "Objectifs & KPIs", "Contraintes"]
+  },
+  {
+    number: "02",
+    title: "Conception",
+    description: "Architecture technique, choix des solutions et planning détaillé.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>`,
+    details: ["Architecture", "Prototypage", "Validation"]
+  },
+  {
+    number: "03",
+    title: "Réalisation",
+    description: "Développement itératif avec points réguliers et ajustements.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`,
+    details: ["Sprints agiles", "Tests auto", "Revues code"]
+  },
+  {
+    number: "04",
+    title: "Livraison",
+    description: "Déploiement, documentation et support post-lancement.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>`,
+    details: ["Mise en prod", "Formation", "Monitoring"]
+  }
+];
+---
+
+<section id="methode" class="section overflow-hidden">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="text-center mb-20">
+      <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+        Méthode
+      </h2>
+      <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+        Une approche structurée pour garantir le succès de votre projet
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="relative max-w-6xl mx-auto">
+      <!-- Progress bar background -->
+      <div class="hidden lg:block absolute top-24 left-0 right-0 h-1 bg-[var(--color-border)]"></div>
+      <!-- Progress bar gradient -->
+      <div class="hidden lg:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] opacity-50"></div>
+
+      <!-- Steps -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+        {steps.map((step, index) => (
+          <div class={`fade-in stagger-${index + 1} relative`}>
+            <!-- Card -->
+            <div class="relative bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-2xl p-6 hover:border-[var(--color-accent-primary)]/50 transition-all group h-full">
+              <!-- Number badge -->
+              <div class="absolute -top-4 left-6 px-3 py-1 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] rounded-full text-white text-sm font-bold">
+                {step.number}
+              </div>
+
+              <!-- Icon -->
+              <div class="mt-4 mb-6 w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--color-accent-primary)]/10 to-[var(--color-accent-secondary)]/10 flex items-center justify-center text-[var(--color-accent-primary)] group-hover:from-[var(--color-accent-primary)]/20 group-hover:to-[var(--color-accent-secondary)]/20 transition-all">
+                <Fragment set:html={step.icon} />
+              </div>
+
+              <!-- Content -->
+              <h3 class="text-xl font-semibold text-[var(--color-text-primary)] mb-3">
+                {step.title}
+              </h3>
+              <p class="text-[var(--color-text-secondary)] text-sm mb-5 leading-relaxed">
+                {step.description}
+              </p>
+
+              <!-- Details tags -->
+              <div class="flex flex-wrap gap-2">
+                {step.details.map(detail => (
+                  <span class="px-2 py-1 text-xs rounded-md bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+                    {detail}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Connector arrow (desktop only, except last) -->
+              {index < steps.length - 1 && (
+                <div class="hidden lg:flex absolute -right-4 top-24 w-8 h-8 items-center justify-center z-10">
+                  <div class="w-8 h-8 rounded-full bg-[var(--color-bg-primary)] border-2 border-[var(--color-accent-primary)] flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[var(--color-accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="fade-in text-center mt-16">
+      <p class="text-[var(--color-text-muted)] mb-6">Prêt à démarrer ?</p>
+      <a href="#contact" class="btn btn-primary">
+        Discuter de votre projet
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

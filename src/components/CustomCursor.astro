@@ -1,0 +1,256 @@
+---
+/**
+ * CustomCursor.astro
+ * A custom cursor component with a main dot and follower ring
+ * - Smooth following animation
+ * - Scale + glow on interactive elements
+ * - Disabled on touch devices and reduced motion
+ */
+---
+
+<!-- Cursor elements -->
+<div id="cursor-dot" class="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" class="cursor-ring" aria-hidden="true"></div>
+
+<style>
+  /* Hide native cursor when custom cursor is active */
+  :global(.custom-cursor-active) {
+    cursor: none !important;
+  }
+
+  :global(.custom-cursor-active *) {
+    cursor: none !important;
+  }
+
+  /* Main cursor dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--color-text-primary, #fafafa);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 300ms ease, transform 150ms ease, background-color 200ms ease;
+    will-change: transform;
+  }
+
+  /* Follower ring */
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-accent-primary, #6366f1);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 300ms ease, width 200ms ease, height 200ms ease, border-color 200ms ease, background-color 200ms ease;
+    will-change: transform;
+  }
+
+  /* Visible state */
+  .cursor-dot.visible,
+  .cursor-ring.visible {
+    opacity: 1;
+  }
+
+  /* Hover state on interactive elements */
+  .cursor-dot.hover {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: var(--color-accent-primary, #6366f1);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+  }
+
+  .cursor-ring.hover {
+    width: 60px;
+    height: 60px;
+    border-color: var(--color-accent-secondary, #8b5cf6);
+    background-color: rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  }
+
+  /* Click state */
+  .cursor-dot.click {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  .cursor-ring.click {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Hidden on touch devices and reduced motion via JS */
+  .cursor-hidden {
+    display: none !important;
+  }
+</style>
+
+<script>
+  (function initCustomCursor() {
+    // Check for touch device
+    const isTouchDevice = () => {
+      return (
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        (navigator as any).msMaxTouchPoints > 0
+      );
+    };
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = () => {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    };
+
+    // Exit early if touch device or reduced motion
+    if (isTouchDevice() || prefersReducedMotion()) {
+      return;
+    }
+
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+
+    if (!cursorDot || !cursorRing) return;
+
+    // Add class to body to hide native cursor
+    document.body.classList.add('custom-cursor-active');
+
+    // Mouse position
+    let mouseX = 0;
+    let mouseY = 0;
+
+    // Ring position (for smooth following)
+    let ringX = 0;
+    let ringY = 0;
+
+    // Animation frame reference
+    let animationFrame: number;
+
+    // Smooth following factor (lower = smoother, higher = more responsive)
+    const followSpeed = 0.15;
+
+    // Track mouse position
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      // Dot follows immediately
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+
+      // Show cursors on first move
+      if (!cursorDot.classList.contains('visible')) {
+        cursorDot.classList.add('visible');
+        cursorRing.classList.add('visible');
+      }
+    };
+
+    // Animate ring following
+    const animateRing = () => {
+      // Smooth interpolation
+      ringX += (mouseX - ringX) * followSpeed;
+      ringY += (mouseY - ringY) * followSpeed;
+
+      cursorRing.style.left = `${ringX}px`;
+      cursorRing.style.top = `${ringY}px`;
+
+      animationFrame = requestAnimationFrame(animateRing);
+    };
+
+    // Handle hover on interactive elements
+    const interactiveElements = 'a, button, input, textarea, select, [role="button"], .btn, .card, .tech-badge, [data-cursor-hover]';
+
+    const onMouseEnter = () => {
+      cursorDot.classList.add('hover');
+      cursorRing.classList.add('hover');
+    };
+
+    const onMouseLeave = () => {
+      cursorDot.classList.remove('hover');
+      cursorRing.classList.remove('hover');
+    };
+
+    // Handle click animation
+    const onMouseDown = () => {
+      cursorDot.classList.add('click');
+      cursorRing.classList.add('click');
+    };
+
+    const onMouseUp = () => {
+      cursorDot.classList.remove('click');
+      cursorRing.classList.remove('click');
+    };
+
+    // Hide cursor when leaving window
+    const onMouseLeaveWindow = () => {
+      cursorDot.classList.remove('visible');
+      cursorRing.classList.remove('visible');
+    };
+
+    const onMouseEnterWindow = () => {
+      cursorDot.classList.add('visible');
+      cursorRing.classList.add('visible');
+    };
+
+    // Add event listeners for interactive elements
+    const addInteractiveListeners = () => {
+      document.querySelectorAll(interactiveElements).forEach((el) => {
+        el.addEventListener('mouseenter', onMouseEnter);
+        el.addEventListener('mouseleave', onMouseLeave);
+      });
+    };
+
+    // Initialize
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
+    document.documentElement.addEventListener('mouseleave', onMouseLeaveWindow);
+    document.documentElement.addEventListener('mouseenter', onMouseEnterWindow);
+
+    // Start animation loop
+    animateRing();
+
+    // Add listeners to interactive elements
+    addInteractiveListeners();
+
+    // Re-add listeners when DOM changes (for SPA navigation or dynamic content)
+    const observer = new MutationObserver(() => {
+      addInteractiveListeners();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    // Listen for reduced motion changes
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+      if (e.matches) {
+        // Disable custom cursor
+        document.body.classList.remove('custom-cursor-active');
+        cursorDot.classList.add('cursor-hidden');
+        cursorRing.classList.add('cursor-hidden');
+        cancelAnimationFrame(animationFrame);
+      } else {
+        // Re-enable custom cursor
+        document.body.classList.add('custom-cursor-active');
+        cursorDot.classList.remove('cursor-hidden');
+        cursorRing.classList.remove('cursor-hidden');
+        animateRing();
+      }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(animationFrame);
+      observer.disconnect();
+    });
+  })();
+</script>

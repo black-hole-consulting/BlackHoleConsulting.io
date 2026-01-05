@@ -1,0 +1,184 @@
+---
+/**
+ * BlobBackground.astro
+ * Animated organic blob shapes for subtle background decoration
+ * Respects prefers-reduced-motion for accessibility
+ */
+---
+
+<div class="blob-container" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<style>
+  .blob-container {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(100px);
+    will-change: transform, border-radius;
+  }
+
+  /* Blob 1: Top-right area - Indigo */
+  .blob-1 {
+    top: -10%;
+    right: -5%;
+    width: 600px;
+    height: 600px;
+    background: rgba(99, 102, 241, 0.07); /* indigo #6366f1 */
+    animation:
+      blob-move-1 45s ease-in-out infinite,
+      blob-morph-1 30s ease-in-out infinite;
+  }
+
+  /* Blob 2: Left-center area - Violet */
+  .blob-2 {
+    top: 30%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: rgba(139, 92, 246, 0.06); /* violet #8b5cf6 */
+    filter: blur(120px);
+    animation:
+      blob-move-2 50s ease-in-out infinite,
+      blob-morph-2 35s ease-in-out infinite;
+  }
+
+  /* Blob 3: Bottom-right area - Mixed indigo/violet */
+  .blob-3 {
+    bottom: -5%;
+    right: 10%;
+    width: 550px;
+    height: 550px;
+    background: rgba(109, 97, 243, 0.05); /* blend of indigo/violet */
+    filter: blur(80px);
+    animation:
+      blob-move-3 60s ease-in-out infinite,
+      blob-morph-3 40s ease-in-out infinite;
+  }
+
+  /* Movement animations */
+  @keyframes blob-move-1 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(-30px, 40px) scale(1.05);
+    }
+    50% {
+      transform: translate(-20px, 80px) scale(0.95);
+    }
+    75% {
+      transform: translate(20px, 40px) scale(1.02);
+    }
+  }
+
+  @keyframes blob-move-2 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(40px, -30px) scale(0.98);
+    }
+    50% {
+      transform: translate(60px, 20px) scale(1.04);
+    }
+    75% {
+      transform: translate(30px, 50px) scale(0.96);
+    }
+  }
+
+  @keyframes blob-move-3 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(-40px, -20px) scale(1.03);
+    }
+    50% {
+      transform: translate(20px, -40px) scale(0.97);
+    }
+    75% {
+      transform: translate(-20px, 30px) scale(1.01);
+    }
+  }
+
+  /* Morphing animations for organic shape changes */
+  @keyframes blob-morph-1 {
+    0%, 100% {
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    }
+    25% {
+      border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+    }
+    50% {
+      border-radius: 50% 60% 30% 60% / 50% 40% 70% 50%;
+    }
+    75% {
+      border-radius: 60% 40% 60% 40% / 60% 50% 40% 60%;
+    }
+  }
+
+  @keyframes blob-morph-2 {
+    0%, 100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    25% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    50% {
+      border-radius: 70% 50% 50% 50% / 40% 70% 50% 50%;
+    }
+    75% {
+      border-radius: 50% 70% 40% 60% / 70% 40% 60% 30%;
+    }
+  }
+
+  @keyframes blob-morph-3 {
+    0%, 100% {
+      border-radius: 50% 50% 60% 40% / 50% 60% 40% 60%;
+    }
+    25% {
+      border-radius: 40% 70% 50% 50% / 60% 40% 70% 40%;
+    }
+    50% {
+      border-radius: 60% 40% 40% 70% / 40% 50% 60% 50%;
+    }
+    75% {
+      border-radius: 70% 50% 60% 30% / 50% 70% 30% 60%;
+    }
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .blob {
+      animation: none;
+      /* Keep blobs visible but static for users who prefer reduced motion */
+    }
+  }
+
+  /* Reduce blob size on smaller screens for performance */
+  @media (max-width: 768px) {
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+    }
+    .blob-2 {
+      width: 350px;
+      height: 350px;
+    }
+    .blob-3 {
+      width: 380px;
+      height: 380px;
+    }
+  }
+</style>

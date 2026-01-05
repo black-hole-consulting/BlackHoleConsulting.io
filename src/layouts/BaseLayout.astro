@@ -1,0 +1,225 @@
+---
+import '../styles/global.css';
+import CustomCursor from '../components/CustomCursor.astro';
+import NoiseOverlay from '../components/NoiseOverlay.astro';
+import BlobBackground from '../components/BlobBackground.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+
+const {
+  title = "Black Hole Consulting | Solution Architect & Expert IA - Tours, France",
+  description = "Solution Architect & Expert GenAI avec 17+ ans d'expérience. Architecture cloud, intégration IA/LLM et développement web sur mesure. Basé à Tours, interventions France entière.",
+  canonical = "https://blackholeconsulting.io/"
+} = Astro.props;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Black Hole Consulting",
+  "description": "Solution Architect & Expert GenAI avec 17+ ans d'expérience. Architecture cloud, intégration IA/LLM et développement web sur mesure.",
+  "url": "https://blackholeconsulting.io",
+  "logo": "https://blackholeconsulting.io/logo.png",
+  "image": "https://blackholeconsulting.io/og-image.png",
+  "telephone": "+33602180413",
+  "email": "cedric@blkhole.fr",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Tours",
+    "addressRegion": "Centre-Val de Loire",
+    "addressCountry": "FR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 47.394144,
+    "longitude": 0.68484
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "France"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Cédric",
+    "jobTitle": "Solution Architect & AI Expert"
+  },
+  "knowsAbout": [
+    "Solution Architecture",
+    "Artificial Intelligence",
+    "Generative AI",
+    "Large Language Models",
+    "Cloud Computing",
+    "AWS",
+    "Web Development",
+    "DevOps"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Architecture de Solutions",
+          "description": "Conception d'architectures techniques évolutives"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Intelligence Artificielle & GenAI",
+          "description": "Intégration de solutions IA génératives"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cloud & DevOps",
+          "description": "Architecture cloud-native et CI/CD"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Développement Web",
+          "description": "Applications web modernes sur mesure"
+        }
+      }
+    ]
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/cedric-blackhole"
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  <meta name="keywords" content="solution architect, architecte solutions, consultant IA, GenAI, LLM, cloud architect, AWS, développement web, Tours, France" />
+  <meta name="author" content="Cédric - Black Hole Consulting" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonical} />
+
+  <!-- Geo Tags -->
+  <meta name="geo.region" content="FR-CVL" />
+  <meta name="geo.placename" content="Tours" />
+  <meta name="geo.position" content="47.394144;0.68484" />
+  <meta name="ICBM" content="47.394144, 0.68484" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="https://blackholeconsulting.io/og-image.png" />
+  <meta property="og:locale" content="fr_FR" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonical} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content="https://blackholeconsulting.io/og-image.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Preload Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+</head>
+<body>
+  <!-- Background visual effect (behind everything) -->
+  <BlobBackground />
+
+  <slot />
+
+  <!-- Floating CTA -->
+  <div id="floating-cta" class="fixed bottom-6 right-6 z-40 opacity-0 translate-y-4 pointer-events-none transition-all duration-300">
+    <a
+      href="#contact"
+      class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] text-white font-medium rounded-full shadow-lg shadow-[var(--color-accent-primary)]/30 hover:shadow-xl hover:shadow-[var(--color-accent-primary)]/40 hover:scale-105 transition-all"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+      </svg>
+      <span class="hidden sm:inline">Discutons</span>
+    </a>
+  </div>
+
+  <!-- Intersection Observer for Animations -->
+  <script>
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Floating CTA visibility
+    const floatingCta = document.getElementById('floating-cta');
+    const contactSection = document.getElementById('contact');
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const contactTop = contactSection?.offsetTop || Infinity;
+      const showAfter = 600;
+
+      if (scrollY > showAfter && scrollY < contactTop - 500) {
+        floatingCta?.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        floatingCta?.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      } else {
+        floatingCta?.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        floatingCta?.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      }
+    });
+  </script>
+
+  <!-- Custom cursor effect -->
+  <CustomCursor />
+
+  <!-- Noise overlay (on top of everything except modals) -->
+  <NoiseOverlay />
+
+  <!-- Tilt effect script -->
+  <script>
+    import { initTilt } from '../scripts/tilt.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTilt();
+    });
+  </script>
+</body>
+</html>

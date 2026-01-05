@@ -1,0 +1,81 @@
+---
+const testimonials = [
+  {
+    quote: "L'expertise technique de Cédric nous a permis de moderniser notre application legacy en un temps record. La nouvelle architecture cloud nous a fait économiser 40% sur nos coûts d'hébergement.",
+    author: "Mathieu Dupont",
+    role: "CTO @ FinTech Solutions",
+    initials: "MD"
+  },
+  {
+    quote: "Black Hole Consulting a complètement transformé notre processus de déploiement. Notre équipe peut maintenant livrer de nouvelles fonctionnalités chaque semaine au lieu de chaque trimestre.",
+    author: "Sophie Laurent",
+    role: "Directrice Produit @ E-commerce Plus",
+    initials: "SL"
+  },
+  {
+    quote: "Cédric a su comprendre nos enjeux métier et nous proposer une solution technique parfaitement adaptée. Son expertise en gestion de projet a été déterminante dans le succès de notre plateforme.",
+    author: "Alexandre Martin",
+    role: "CEO @ InnovStart",
+    initials: "AM"
+  }
+];
+---
+
+<section id="temoignages" class="section section-alt">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+        Ce que disent mes clients
+      </h2>
+      <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+        Des collaborations réussies qui parlent d'elles-mêmes
+      </p>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="grid md:grid-cols-3 gap-6">
+      {testimonials.map((testimonial, index) => (
+        <article class={`fade-in stagger-${index + 1} card card-tilt flex flex-col`}>
+          <!-- Quote icon -->
+          <svg class="w-8 h-8 text-[var(--color-accent-primary)]/30 mb-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+          </svg>
+
+          <!-- Quote text -->
+          <blockquote class="flex-1 text-[var(--color-text-secondary)] leading-relaxed mb-6">
+            "{testimonial.quote}"
+          </blockquote>
+
+          <!-- Author -->
+          <div class="flex items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] flex items-center justify-center text-white text-sm font-medium">
+              {testimonial.initials}
+            </div>
+            <div>
+              <div class="text-[var(--color-text-primary)] font-medium text-sm">
+                {testimonial.author}
+              </div>
+              <div class="text-[var(--color-text-muted)] text-xs">
+                {testimonial.role}
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- CTA -->
+    <div class="fade-in text-center mt-16">
+      <p class="text-[var(--color-text-secondary)] mb-6">
+        Rejoignez ces entreprises qui ont accéléré leur transformation digitale
+      </p>
+      <a href="#contact" class="btn btn-primary">
+        Démarrer votre projet
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
