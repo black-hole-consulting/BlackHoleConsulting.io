@@ -3,6 +3,7 @@ import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
 import NoiseOverlay from '../components/NoiseOverlay.astro';
 import BlobBackground from '../components/BlobBackground.astro';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   title?: string;
@@ -202,8 +203,57 @@ const structuredData = {
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <script type="application/ld+json" set:html={JSON.stringify(localBusinessData)} />
+
+    <!-- Google Tag Manager with Consent Mode v2 -->
+    <script is:inline>
+      // Initialize dataLayer
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+
+      // Default consent state (denied until user accepts)
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        wait_for_update: 500,
+      });
+
+      // Check for existing consent
+      var savedConsent = localStorage.getItem('bhc_cookie_consent');
+      if (savedConsent === 'granted') {
+        gtag('consent', 'update', {
+          analytics_storage: 'granted',
+          ad_storage: 'granted',
+        });
+      }
+
+      // Make gtag available globally
+      window.gtag = gtag;
+
+      // GTM script
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-NXXQ4LKT');
+    </script>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NXXQ4LKT"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
     <!-- Background visual effect (behind everything) -->
     <BlobBackground />
 
@@ -283,5 +333,8 @@ const structuredData = {
         initTilt();
       });
     </script>
+
+    <!-- Cookie consent banner -->
+    <CookieBanner />
   </body>
 </html>
