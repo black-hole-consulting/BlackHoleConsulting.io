@@ -4,15 +4,34 @@
  * A custom cursor component with a main dot and follower ring
  * - Smooth following animation
  * - Scale + glow on interactive elements
- * - Disabled on touch devices and reduced motion
+ * - Completely disabled on touch/mobile devices
+ * - Respects prefers-reduced-motion accessibility preference
  */
 ---
 
-<!-- Cursor elements -->
+<!-- Cursor elements - hidden by default, shown only on supported devices -->
 <div id="cursor-dot" class="cursor-dot" aria-hidden="true"></div>
 <div id="cursor-ring" class="cursor-ring" aria-hidden="true"></div>
 
 <style>
+  /*
+   * Hide cursor elements by default on touch devices and reduced motion
+   * Using CSS media queries as first line of defense (before JS loads)
+   */
+  @media (pointer: coarse), (hover: none) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none !important;
+    }
+  }
+
   /* Hide native cursor when custom cursor is active */
   :global(.custom-cursor-active) {
     cursor: none !important;
@@ -32,14 +51,15 @@
     background: var(--color-text-primary, #fafafa);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 99999;
+    /* z-index lower than modals (typically 1000+) but above content */
+    z-index: 9990;
     opacity: 0;
     transform: translate(-50%, -50%);
     transition:
       opacity 300ms ease,
       transform 150ms ease,
       background-color 200ms ease;
-    will-change: transform;
+    will-change: transform, opacity;
   }
 
   /* Follower ring */
@@ -52,7 +72,7 @@
     border: 1px solid var(--color-accent-primary, #6366f1);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 99998;
+    z-index: 9989;
     opacity: 0;
     transform: translate(-50%, -50%);
     transition:
@@ -61,7 +81,7 @@
       height 200ms ease,
       border-color 200ms ease,
       background-color 200ms ease;
-    will-change: transform;
+    will-change: transform, opacity;
   }
 
   /* Visible state */
@@ -95,7 +115,7 @@
     height: 30px;
   }
 
-  /* Hidden on touch devices and reduced motion via JS */
+  /* Hidden state (JS fallback) */
   .cursor-hidden {
     display: none !important;
   }
@@ -103,22 +123,43 @@
 
 <script>
   (function initCustomCursor() {
-    // Check for touch device
-    const isTouchDevice = () => {
-      return (
-        'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0 ||
-        (navigator as any).msMaxTouchPoints > 0
-      );
+    /**
+     * Comprehensive check for devices that should NOT have custom cursor:
+     * - Touch-primary devices (phones, tablets)
+     * - Devices with coarse pointer (no precise mouse)
+     * - Devices without hover capability
+     * - Users who prefer reduced motion
+     */
+    const shouldDisableCursor = (): boolean => {
+      // Check CSS media queries (most reliable for device capability)
+      const hasCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+      const hasNoHover = window.matchMedia('(hover: none)').matches;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // If primary input is coarse (touch) or device can't hover, disable
+      if (hasCoarsePointer || hasNoHover || prefersReducedMotion) {
+        return true;
+      }
+
+      // Additional check: if device has touch AND no fine pointer, disable
+      // This catches tablets that might report hover: hover but are primarily touch
+      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+      const hasTouchCapability = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+      // Only disable if touch is the PRIMARY input (no fine pointer available)
+      if (hasTouchCapability && !hasFinePointer) {
+        return true;
+      }
+
+      return false;
     };
 
-    // Check for reduced motion preference
-    const prefersReducedMotion = () => {
-      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    };
-
-    // Exit early if touch device or reduced motion
-    if (isTouchDevice() || prefersReducedMotion()) {
+    // Exit early and ensure elements are hidden
+    if (shouldDisableCursor()) {
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorRing = document.getElementById('cursor-ring');
+      if (cursorDot) cursorDot.classList.add('cursor-hidden');
+      if (cursorRing) cursorRing.classList.add('cursor-hidden');
       return;
     }
 
@@ -138,11 +179,16 @@
     let ringX = 0;
     let ringY = 0;
 
-    // Animation frame reference
-    let animationFrame: number;
+    // Animation state
+    let animationFrame: number | null = null;
+    let isVisible = false;
+    let isAnimating = false;
 
     // Smooth following factor (lower = smoother, higher = more responsive)
     const followSpeed = 0.15;
+
+    // Threshold for stopping animation (when ring is close enough to mouse)
+    const stopThreshold = 0.5;
 
     // Track mouse position
     const onMouseMove = (e: MouseEvent) => {
@@ -154,34 +200,66 @@
       cursorDot.style.top = `${mouseY}px`;
 
       // Show cursors on first move
-      if (!cursorDot.classList.contains('visible')) {
+      if (!isVisible) {
+        isVisible = true;
         cursorDot.classList.add('visible');
         cursorRing.classList.add('visible');
       }
+
+      // Start animation if not already running
+      if (!isAnimating) {
+        startAnimation();
+      }
     };
 
-    // Animate ring following
+    // Animate ring following with auto-stop when stationary
     const animateRing = () => {
+      // Calculate distance to target
+      const dx = mouseX - ringX;
+      const dy = mouseY - ringY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
       // Smooth interpolation
-      ringX += (mouseX - ringX) * followSpeed;
-      ringY += (mouseY - ringY) * followSpeed;
+      ringX += dx * followSpeed;
+      ringY += dy * followSpeed;
 
       cursorRing.style.left = `${ringX}px`;
       cursorRing.style.top = `${ringY}px`;
 
-      animationFrame = requestAnimationFrame(animateRing);
+      // Continue animation only if ring hasn't caught up
+      if (distance > stopThreshold) {
+        animationFrame = requestAnimationFrame(animateRing);
+      } else {
+        isAnimating = false;
+        animationFrame = null;
+      }
+    };
+
+    const startAnimation = () => {
+      if (!isAnimating) {
+        isAnimating = true;
+        animationFrame = requestAnimationFrame(animateRing);
+      }
+    };
+
+    const stopAnimation = () => {
+      if (animationFrame !== null) {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+      }
+      isAnimating = false;
     };
 
     // Handle hover on interactive elements
-    const interactiveElements =
+    const interactiveSelector =
       'a, button, input, textarea, select, [role="button"], .btn, .card, .tech-badge, [data-cursor-hover]';
 
-    const onMouseEnter = () => {
+    const onElementMouseEnter = () => {
       cursorDot.classList.add('hover');
       cursorRing.classList.add('hover');
     };
 
-    const onMouseLeave = () => {
+    const onElementMouseLeave = () => {
       cursorDot.classList.remove('hover');
       cursorRing.classList.remove('hover');
     };
@@ -199,67 +277,92 @@
 
     // Hide cursor when leaving window
     const onMouseLeaveWindow = () => {
+      isVisible = false;
       cursorDot.classList.remove('visible');
       cursorRing.classList.remove('visible');
+      stopAnimation();
     };
 
     const onMouseEnterWindow = () => {
-      cursorDot.classList.add('visible');
-      cursorRing.classList.add('visible');
+      if (mouseX > 0 || mouseY > 0) {
+        isVisible = true;
+        cursorDot.classList.add('visible');
+        cursorRing.classList.add('visible');
+      }
     };
 
-    // Add event listeners for interactive elements
-    const addInteractiveListeners = () => {
-      document.querySelectorAll(interactiveElements).forEach((el) => {
-        el.addEventListener('mouseenter', onMouseEnter);
-        el.addEventListener('mouseleave', onMouseLeave);
-      });
+    // Use event delegation for interactive elements (better performance)
+    const onDocumentMouseOver = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (target.closest(interactiveSelector)) {
+        onElementMouseEnter();
+      }
     };
 
-    // Initialize
-    document.addEventListener('mousemove', onMouseMove);
+    const onDocumentMouseOut = (e: MouseEvent) => {
+      const target = e.target as Element;
+      const relatedTarget = e.relatedTarget as Element | null;
+
+      // Only remove hover if we're leaving an interactive element
+      // and not entering another interactive element
+      if (
+        target.closest(interactiveSelector) &&
+        (!relatedTarget || !relatedTarget.closest(interactiveSelector))
+      ) {
+        onElementMouseLeave();
+      }
+    };
+
+    // Initialize event listeners
+    document.addEventListener('mousemove', onMouseMove, { passive: true });
     document.addEventListener('mousedown', onMouseDown);
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseover', onDocumentMouseOver, { passive: true });
+    document.addEventListener('mouseout', onDocumentMouseOut, { passive: true });
     document.documentElement.addEventListener('mouseleave', onMouseLeaveWindow);
     document.documentElement.addEventListener('mouseenter', onMouseEnterWindow);
 
-    // Start animation loop
-    animateRing();
+    // Disable cursor completely
+    const disableCursor = () => {
+      document.body.classList.remove('custom-cursor-active');
+      cursorDot.classList.add('cursor-hidden');
+      cursorRing.classList.add('cursor-hidden');
+      stopAnimation();
+    };
 
-    // Add listeners to interactive elements
-    addInteractiveListeners();
+    // Enable cursor
+    const enableCursor = () => {
+      document.body.classList.add('custom-cursor-active');
+      cursorDot.classList.remove('cursor-hidden');
+      cursorRing.classList.remove('cursor-hidden');
+      if (isVisible) {
+        startAnimation();
+      }
+    };
 
-    // Re-add listeners when DOM changes (for SPA navigation or dynamic content)
-    const observer = new MutationObserver(() => {
-      addInteractiveListeners();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    // Listen for reduced motion changes
-    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    // Listen for reduced motion preference changes
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotionQuery.addEventListener('change', (e) => {
       if (e.matches) {
-        // Disable custom cursor
-        document.body.classList.remove('custom-cursor-active');
-        cursorDot.classList.add('cursor-hidden');
-        cursorRing.classList.add('cursor-hidden');
-        cancelAnimationFrame(animationFrame);
-      } else {
-        // Re-enable custom cursor
-        document.body.classList.add('custom-cursor-active');
-        cursorDot.classList.remove('cursor-hidden');
-        cursorRing.classList.remove('cursor-hidden');
-        animateRing();
+        disableCursor();
+      } else if (!shouldDisableCursor()) {
+        enableCursor();
+      }
+    });
+
+    // Listen for pointer type changes (e.g., connecting/disconnecting mouse on tablet)
+    const pointerQuery = window.matchMedia('(pointer: fine)');
+    pointerQuery.addEventListener('change', (e) => {
+      if (!e.matches) {
+        disableCursor();
+      } else if (!shouldDisableCursor()) {
+        enableCursor();
       }
     });
 
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
-      cancelAnimationFrame(animationFrame);
-      observer.disconnect();
+      stopAnimation();
     });
   })();
 </script>

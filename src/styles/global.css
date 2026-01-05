@@ -594,12 +594,164 @@ body {
   z-index: -1;
 }
 
+/* ===== BLACK HOLE SINGULARITY EFFECT ===== */
+
+.black-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 50vw, 600px);
+  height: clamp(300px, 50vw, 600px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* The dark core - the singularity */
+.black-hole-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15%;
+  height: 15%;
+  background: radial-gradient(circle, #000000 0%, #0a0a0b 70%, transparent 100%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 60px 30px rgba(0, 0, 0, 0.8),
+    0 0 100px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Glowing event horizon rings */
+.black-hole-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-bg-primary), var(--color-bg-primary)) padding-box,
+    linear-gradient(
+        135deg,
+        var(--color-accent-primary),
+        var(--color-accent-secondary),
+        var(--color-accent-primary)
+      )
+      border-box;
+  opacity: 0.6;
+  animation: ringPulse 4s ease-in-out infinite;
+}
+
+.black-hole-ring-2 {
+  width: 40%;
+  height: 40%;
+  opacity: 0.4;
+  animation-delay: -1.3s;
+  animation-duration: 5s;
+}
+
+.black-hole-ring-3 {
+  width: 60%;
+  height: 60%;
+  opacity: 0.2;
+  animation-delay: -2.6s;
+  animation-duration: 6s;
+}
+
+/* Accretion disk - the swirling matter around the black hole */
+.accretion-disk {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(99, 102, 241, 0.03) 30deg,
+    transparent 60deg,
+    rgba(139, 92, 246, 0.05) 120deg,
+    transparent 150deg,
+    rgba(99, 102, 241, 0.04) 210deg,
+    transparent 240deg,
+    rgba(139, 92, 246, 0.03) 300deg,
+    transparent 330deg,
+    transparent 360deg
+  );
+  animation: accretionSpin 30s linear infinite;
+  opacity: 0.8;
+}
+
+/* Gravitational lensing effect - subtle light bending */
+.accretion-disk::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(99, 102, 241, 0.02) 50%,
+    rgba(139, 92, 246, 0.03) 60%,
+    transparent 70%
+  );
+  animation: lensingPulse 8s ease-in-out infinite;
+}
+
+/* Ring pulse animation */
+@keyframes ringPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Accretion disk slow rotation */
+@keyframes accretionSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Gravitational lensing pulse */
+@keyframes lensingPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
 /* ===== REDUCED MOTION OVERRIDES ===== */
 
 @media (prefers-reduced-motion: reduce) {
   .gradient-shift,
   .blob,
-  .gradient-mesh::before {
+  .gradient-mesh::before,
+  .black-hole-ring,
+  .accretion-disk,
+  .accretion-disk::before {
     animation: none;
   }
 
