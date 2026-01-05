@@ -1,0 +1,156 @@
+/**
+ * AWS Lambda function for contact form
+ * Sends emails via Brevo (Sendinblue) API
+ */
+
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+
+// CORS headers for browser requests
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'https://blackholeconsulting.io',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+export const handler = async (event) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: '',
+    };
+  }
+
+  // Only allow POST
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers: corsHeaders,
+      body: JSON.stringify({ error: 'Method not allowed' }),
+    };
+  }
+
+  try {
+    // Parse form data
+    const body = JSON.parse(event.body);
+    const { name, email, company, 'project-type': projectType, message } = body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Missing required fields' }),
+      };
+    }
+
+    // Project type labels
+    const projectLabels = {
+      architecture: 'Architecture & Conseil',
+      ia: 'IA & GenAI',
+      cloud: 'Cloud & DevOps',
+      web: 'Développement Web',
+      autre: 'Autre',
+    };
+
+    const projectLabel = projectLabels[projectType] || 'Non spécifié';
+
+    // Build email content
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #6366f1;">Nouveau message de contact</h2>
+        <hr style="border: 1px solid #e5e7eb;" />
+
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Nom</td>
+            <td style="padding: 10px 0; color: #4b5563;">${escapeHtml(name)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Email</td>
+            <td style="padding: 10px 0; color: #4b5563;">
+              <a href="mailto:${escapeHtml(email)}" style="color: #6366f1;">${escapeHtml(email)}</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Société</td>
+            <td style="padding: 10px 0; color: #4b5563;">${escapeHtml(company) || '-'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Type de projet</td>
+            <td style="padding: 10px 0; color: #4b5563;">${projectLabel}</td>
+          </tr>
+        </table>
+
+        <h3 style="color: #374151; margin-top: 20px;">Message</h3>
+        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; color: #4b5563; white-space: pre-wrap;">${escapeHtml(message)}</div>
+
+        <hr style="border: 1px solid #e5e7eb; margin-top: 30px;" />
+        <p style="color: #9ca3af; font-size: 12px;">
+          Message envoyé depuis le formulaire de contact de blackholeconsulting.io
+        </p>
+      </div>
+    `;
+
+    // Send via Brevo API
+    const response = await fetch(BREVO_API_URL, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'Black Hole Consulting',
+          email: 'noreply@blackholeconsulting.io',
+        },
+        to: [
+          {
+            email: 'cedric@blkhole.fr',
+            name: 'Cédric',
+          },
+        ],
+        replyTo: {
+          email: email,
+          name: name,
+        },
+        subject: `[Contact] ${name} - ${projectLabel}`,
+        htmlContent: htmlContent,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Brevo API error:', errorData);
+      throw new Error('Failed to send email');
+    }
+
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: JSON.stringify({ success: true }),
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      headers: corsHeaders,
+      body: JSON.stringify({ error: 'Internal server error' }),
+    };
+  }
+};
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}

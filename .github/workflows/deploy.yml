@@ -137,6 +137,9 @@ jobs:
     needs: [lint, test, lighthouse]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -150,6 +153,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-3
 
+      # ─── Deploy Lambda (Contact Form API) ───
+      - name: Deploy CloudFormation stack
+        run: |
+          aws cloudformation deploy \
+            --template-file lambda/template.yaml \
+            --stack-name bhc-contact-form \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameter-overrides BrevoApiKey=${{ secrets.BREVO_API_KEY }} \
+            --no-fail-on-empty-changeset
+
+      - name: Update Lambda code
+        run: |
+          cd lambda/contact-form
+          zip -j function.zip index.mjs
+          aws lambda update-function-code \
+            --function-name bhc-contact-form \
+            --zip-file fileb://function.zip
+
+      # ─── Deploy Static Site ───
       - name: Deploy assets to S3
         run: |
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
@@ -172,3 +194,11 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
+
+      - name: Output API URL
+        run: |
+          API_URL=$(aws cloudformation describe-stacks \
+            --stack-name bhc-contact-form \
+            --query 'Stacks[0].Outputs[?OutputKey==`ApiEndpoint`].OutputValue' \
+            --output text)
+          echo "Contact API URL: $API_URL"
