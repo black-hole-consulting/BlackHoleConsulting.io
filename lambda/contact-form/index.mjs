@@ -14,8 +14,11 @@ const corsHeaders = {
 };
 
 export const handler = async (event) => {
+  // HTTP API v2 uses requestContext.http.method
+  const httpMethod = event.requestContext?.http?.method || event.httpMethod;
+
   // Handle CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
+  if (httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
       headers: corsHeaders,
@@ -24,7 +27,7 @@ export const handler = async (event) => {
   }
 
   // Only allow POST
-  if (event.httpMethod !== 'POST') {
+  if (httpMethod !== 'POST') {
     return {
       statusCode: 405,
       headers: corsHeaders,
