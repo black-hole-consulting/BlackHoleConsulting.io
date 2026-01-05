@@ -1,0 +1,41 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0f"/>
+
+  <!-- Gradient overlay -->
+  <defs>
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0a0a0f" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Glow effect -->
+  <ellipse cx="600" cy="200" rx="400" ry="200" fill="url(#glow)"/>
+
+  <!-- Logo circle -->
+  <circle cx="600" cy="240" r="80" stroke="url(#accent-gradient)" stroke-width="4" fill="none"/>
+  <circle cx="600" cy="240" r="32" fill="url(#accent-gradient)"/>
+
+  <!-- Company name -->
+  <text x="600" y="380" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="600" fill="#ffffff">
+    Black Hole Consulting
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="440" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#a1a1aa">
+    Solution Architecture • GenAI • Cloud • Web
+  </text>
+
+  <!-- Bottom accent line -->
+  <rect x="450" y="500" width="300" height="3" rx="1.5" fill="url(#accent-gradient)"/>
+
+  <!-- URL -->
+  <text x="600" y="560" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#71717a">
+    blackholeconsulting.io
+  </text>
+</svg>
