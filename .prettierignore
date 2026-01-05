@@ -1,0 +1,10 @@
+dist/
+node_modules/
+.astro/
+package-lock.json
+*.md
+
+# Files with complex Astro templates that cause Prettier parsing issues
+src/components/Expertise.astro
+src/components/Method.astro
+src/components/Testimonials.astro

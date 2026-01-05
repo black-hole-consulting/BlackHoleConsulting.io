@@ -12,17 +12,17 @@
  * - Disabled if prefers-reduced-motion is set
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Configuration
   const CONFIG = {
-    maxRotation: 10,        // Maximum rotation in degrees
-    perspective: 1000,      // Perspective value in pixels
-    scale: 1.02,            // Scale factor on hover
+    maxRotation: 10, // Maximum rotation in degrees
+    perspective: 1000, // Perspective value in pixels
+    scale: 1.02, // Scale factor on hover
     transitionDuration: 150, // Transition duration in ms
-    easing: 'ease-out',     // Transition easing function
-    shineOpacity: 0.15      // Opacity of the shine effect
+    easing: 'ease-out', // Transition easing function
+    shineOpacity: 0.15, // Opacity of the shine effect
   };
 
   // Check if user prefers reduced motion
@@ -149,7 +149,11 @@
       }
 
       animationFrameId = requestAnimationFrame(() => {
-        const { rotateX, rotateY, shineX, shineY } = calculateRotation(card, event.clientX, event.clientY);
+        const { rotateX, rotateY, shineX, shineY } = calculateRotation(
+          card,
+          event.clientX,
+          event.clientY
+        );
         applyTilt(card, rotateX, rotateY, shineX, shineY);
         animationFrameId = null;
       });
@@ -175,7 +179,7 @@
     card.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     // Store cleanup function on element for potential removal
-    card._tiltCleanup = function() {
+    card._tiltCleanup = function () {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
@@ -205,7 +209,7 @@
    */
   function cleanupTilt() {
     const cards = document.querySelectorAll('.card-tilt');
-    cards.forEach(card => {
+    cards.forEach((card) => {
       if (card._tiltCleanup) {
         card._tiltCleanup();
         delete card._tiltCleanup;
@@ -233,7 +237,7 @@
   window.CardTilt = {
     init: initializeTilt,
     cleanup: cleanupTilt,
-    initCard: initializeCard
+    initCard: initializeCard,
   };
 })();
 

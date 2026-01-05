@@ -13,14 +13,17 @@ const navLinks = [
   <div class="container mx-auto px-6">
     <nav class="flex items-center justify-between h-20">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-lg">
+      <a
+        href="/"
+        class="flex items-center gap-2 text-[var(--color-text-primary)] font-semibold text-lg"
+      >
         <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" stroke="url(#logo-gradient)" stroke-width="2"/>
-          <circle cx="16" cy="16" r="6" fill="url(#logo-gradient)"/>
+          <circle cx="16" cy="16" r="14" stroke="url(#logo-gradient)" stroke-width="2"></circle>
+          <circle cx="16" cy="16" r="6" fill="url(#logo-gradient)"></circle>
           <defs>
             <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-              <stop offset="0%" stop-color="var(--color-accent-primary)"/>
-              <stop offset="100%" stop-color="var(--color-accent-secondary)"/>
+              <stop offset="0%" stop-color="var(--color-accent-primary)"></stop>
+              <stop offset="100%" stop-color="var(--color-accent-secondary)"></stop>
             </linearGradient>
           </defs>
         </svg>
@@ -29,24 +32,24 @@ const navLinks = [
 
       <!-- Desktop Navigation -->
       <ul class="hidden md:flex items-center gap-8">
-        {navLinks.map(link => (
-          <li>
-            <a
-              href={link.href}
-              class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors text-sm font-medium"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors text-sm font-medium"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
 
       <!-- Desktop Actions: Theme Toggle + CTA Button -->
       <div class="hidden sm:flex items-center gap-4">
         <ThemeToggle />
-        <a href="#contact" class="btn btn-primary text-sm py-2.5 px-5">
-          Discutons
-        </a>
+        <a href="#contact" class="btn btn-primary text-sm py-2.5 px-5"> Discutons </a>
       </div>
 
       <!-- Mobile Actions: Theme Toggle + Menu Button -->
@@ -59,7 +62,12 @@ const navLinks = [
           aria-expanded="false"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path
+              id="menu-icon"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
       </div>
@@ -67,22 +75,25 @@ const navLinks = [
   </div>
 
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)]">
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)]"
+  >
     <ul class="container mx-auto px-6 py-4 space-y-4">
-      {navLinks.map(link => (
-        <li>
-          <a
-            href={link.href}
-            class="block text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-2"
-          >
-            {link.label}
-          </a>
-        </li>
-      ))}
+      {
+        navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="block text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-2"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
       <li class="pt-2">
-        <a href="#contact" class="btn btn-primary w-full">
-          Discutons
-        </a>
+        <a href="#contact" class="btn btn-primary w-full"> Discutons </a>
       </li>
     </ul>
   </div>
@@ -119,7 +130,7 @@ const navLinks = [
   });
 
   // Close menu on link click
-  mobileMenu?.querySelectorAll('a').forEach(link => {
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       mobileMenu.classList.add('hidden');
       menuToggle?.setAttribute('aria-expanded', 'false');

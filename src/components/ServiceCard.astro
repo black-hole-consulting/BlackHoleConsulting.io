@@ -17,22 +17,22 @@ const sizeClasses = {
     iconSvg: 'w-7 h-7',
     title: 'text-xl lg:text-2xl',
     description: 'text-base',
-    features: 'text-sm'
+    features: 'text-sm',
   },
   medium: {
     icon: 'w-12 h-12',
     iconSvg: 'w-6 h-6',
     title: 'text-lg lg:text-xl',
     description: 'text-sm',
-    features: 'text-sm'
+    features: 'text-sm',
   },
   small: {
     icon: 'w-10 h-10',
     iconSvg: 'w-5 h-5',
     title: 'text-base lg:text-lg',
     description: 'text-sm',
-    features: 'text-xs'
-  }
+    features: 'text-xs',
+  },
 };
 
 const styles = sizeClasses[size];
@@ -40,7 +40,9 @@ const styles = sizeClasses[size];
 
 <article class={`card card-tilt fade-in stagger-${index + 1} group h-full flex flex-col`}>
   <div class={`flex ${size === 'large' ? 'flex-col gap-4' : 'items-start gap-4'}`}>
-    <div class={`flex-shrink-0 ${styles.icon} rounded-lg bg-gradient-to-br from-[var(--color-accent-primary)]/20 to-[var(--color-accent-secondary)]/20 flex items-center justify-center text-[var(--color-accent-primary)] group-hover:from-[var(--color-accent-primary)]/30 group-hover:to-[var(--color-accent-secondary)]/30 transition-all`}>
+    <div
+      class={`flex-shrink-0 ${styles.icon} rounded-lg bg-gradient-to-br from-[var(--color-accent-primary)]/20 to-[var(--color-accent-secondary)]/20 flex items-center justify-center text-[var(--color-accent-primary)] group-hover:from-[var(--color-accent-primary)]/30 group-hover:to-[var(--color-accent-secondary)]/30 transition-all`}
+    >
       <div class={styles.iconSvg}>
         <Fragment set:html={icon} />
       </div>
@@ -52,15 +54,29 @@ const styles = sizeClasses[size];
       <p class={`text-[var(--color-text-secondary)] ${styles.description} mb-4 leading-relaxed`}>
         {description}
       </p>
-      <ul class={`space-y-2 mt-auto ${size === 'large' ? 'grid grid-cols-1 lg:grid-cols-2 gap-x-4' : ''}`}>
-        {features.map(feature => (
-          <li class={`flex items-center gap-2 ${styles.features} text-[var(--color-text-muted)]`}>
-            <svg class="w-4 h-4 text-[var(--color-accent-primary)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            {feature}
-          </li>
-        ))}
+      <ul
+        class={`space-y-2 mt-auto ${size === 'large' ? 'grid grid-cols-1 lg:grid-cols-2 gap-x-4' : ''}`}
+      >
+        {
+          features.map((feature) => (
+            <li class={`flex items-center gap-2 ${styles.features} text-[var(--color-text-muted)]`}>
+              <svg
+                class="w-4 h-4 text-[var(--color-accent-primary)] flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              {feature}
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
