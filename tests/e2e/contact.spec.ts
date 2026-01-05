@@ -11,19 +11,19 @@ test.describe('Contact Form', () => {
   test('contact form has required fields', async ({ page }) => {
     await page.goto('/');
 
-    // Check for name field
-    const nameInput = page.locator('input[name="name"]');
+    // Check for name field (in contact section)
+    const nameInput = page.locator('#contact input[name="name"]');
     await expect(nameInput).toBeVisible();
     await expect(nameInput).toHaveAttribute('required', '');
 
-    // Check for email field
-    const emailInput = page.locator('input[name="email"]');
+    // Check for email field (in contact section)
+    const emailInput = page.locator('#contact input[name="email"]');
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toHaveAttribute('required', '');
     await expect(emailInput).toHaveAttribute('type', 'email');
 
     // Check for message field
-    const messageInput = page.locator('textarea[name="message"]');
+    const messageInput = page.locator('#contact textarea[name="message"]');
     await expect(messageInput).toBeVisible();
     await expect(messageInput).toHaveAttribute('required', '');
   });
@@ -31,7 +31,7 @@ test.describe('Contact Form', () => {
   test('contact form validates email format', async ({ page }) => {
     await page.goto('/');
 
-    const emailInput = page.locator('input[name="email"]');
+    const emailInput = page.locator('#contact input[name="email"]');
     await emailInput.fill('invalid-email');
 
     const submitButton = page.locator('#contact form button[type="submit"]');
