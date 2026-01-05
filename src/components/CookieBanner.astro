@@ -4,7 +4,8 @@
 
 <div
   id="cookie-banner"
-  class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] transform translate-y-full transition-transform duration-300"
+  class="fixed bottom-0 left-0 right-0 z-[9999] p-4 bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)]"
+  style="display: none;"
   role="dialog"
   aria-labelledby="cookie-title"
   aria-describedby="cookie-description"
@@ -13,7 +14,7 @@
     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
       <div class="flex-1">
         <h2 id="cookie-title" class="text-sm font-semibold text-[var(--color-text-primary)] mb-1">
-          🍪 Cookies & Confidentialité
+          Cookies & Confidentialité
         </h2>
         <p id="cookie-description" class="text-sm text-[var(--color-text-secondary)]">
           Nous utilisons des cookies pour analyser le trafic et améliorer votre expérience.
@@ -53,7 +54,6 @@
 
     function setConsent(value) {
       localStorage.setItem(CONSENT_KEY, value);
-      // Update GTM consent
       if (typeof window.gtag === 'function') {
         window.gtag('consent', 'update', {
           analytics_storage: value,
@@ -65,28 +65,30 @@
     function showBanner() {
       var banner = document.getElementById('cookie-banner');
       if (banner) {
-        banner.classList.remove('translate-y-full');
-        banner.classList.add('translate-y-0');
+        banner.style.display = 'block';
+        console.log('[CookieBanner] Banner shown');
+      } else {
+        console.log('[CookieBanner] Banner element not found');
       }
     }
 
     function hideBanner() {
       var banner = document.getElementById('cookie-banner');
       if (banner) {
-        banner.classList.add('translate-y-full');
-        banner.classList.remove('translate-y-0');
+        banner.style.display = 'none';
       }
     }
 
     function init() {
+      console.log('[CookieBanner] Init called');
       var consent = getConsent();
+      console.log('[CookieBanner] Current consent:', consent);
 
       if (!consent) {
-        // No consent yet, show banner after a short delay
+        console.log('[CookieBanner] No consent, showing banner in 1s');
         setTimeout(showBanner, 1000);
       }
 
-      // Accept button
       var acceptBtn = document.getElementById('cookie-accept');
       if (acceptBtn) {
         acceptBtn.addEventListener('click', function () {
@@ -95,7 +97,6 @@
         });
       }
 
-      // Reject button
       var rejectBtn = document.getElementById('cookie-reject');
       if (rejectBtn) {
         rejectBtn.addEventListener('click', function () {
@@ -105,7 +106,6 @@
       }
     }
 
-    // Run on DOM ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
