@@ -1,0 +1,157 @@
+---
+interface Skill {
+  name: string;
+  level: number; // 1-5
+}
+
+interface SkillCategory {
+  title: string;
+  icon: string;
+  color: string;
+  skills: Skill[];
+}
+
+const categories: SkillCategory[] = [
+  {
+    title: 'Architecture',
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>`,
+    color: 'var(--color-accent-primary)',
+    skills: [
+      { name: 'Microservices', level: 5 },
+      { name: 'API Design', level: 5 },
+      { name: 'Event-Driven', level: 4 },
+      { name: 'Domain-Driven Design', level: 4 },
+      { name: 'System Design', level: 5 },
+    ],
+  },
+  {
+    title: 'Cloud & DevOps',
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>`,
+    color: 'var(--color-accent-secondary)',
+    skills: [
+      { name: 'AWS', level: 5 },
+      { name: 'Terraform', level: 4 },
+      { name: 'Docker', level: 5 },
+      { name: 'Kubernetes', level: 4 },
+      { name: 'CI/CD (GitHub Actions)', level: 5 },
+    ],
+  },
+  {
+    title: 'GenAI & LLM',
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
+    color: '#ec4899',
+    skills: [
+      { name: 'OpenAI API', level: 5 },
+      { name: 'Claude API', level: 5 },
+      { name: 'LangChain', level: 4 },
+      { name: 'RAG Systems', level: 4 },
+      { name: 'Prompt Engineering', level: 5 },
+    ],
+  },
+  {
+    title: 'Developpement Web',
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`,
+    color: '#22c55e',
+    skills: [
+      { name: 'TypeScript', level: 5 },
+      { name: 'React / Next.js', level: 5 },
+      { name: 'Node.js', level: 5 },
+      { name: 'PHP / Symfony', level: 4 },
+      { name: 'PostgreSQL / MongoDB', level: 4 },
+    ],
+  },
+];
+---
+
+<div class="grid md:grid-cols-2 gap-6">
+  {
+    categories.map((category, categoryIndex) => (
+      <div class={`fade-in stagger-${(categoryIndex % 4) + 1} card card-tilt group`}>
+        {/* Category Header */}
+        <div class="flex items-center gap-3 mb-6">
+          <div
+            class="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+            style={`background: linear-gradient(135deg, ${category.color}20, ${category.color}10); border: 1px solid ${category.color}30;`}
+          >
+            <span style={`color: ${category.color};`} set:html={category.icon} />
+          </div>
+          <h3 class="text-xl font-bold text-[var(--color-text-primary)]">{category.title}</h3>
+        </div>
+
+        {/* Skills List */}
+        <div class="space-y-4">
+          {category.skills.map((skill, skillIndex) => (
+            <div
+              class="skill-item"
+              style={`--skill-delay: ${skillIndex * 100}ms; --skill-color: ${category.color};`}
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[var(--color-text-secondary)] font-medium">{skill.name}</span>
+                <div class="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((dot) => (
+                    <div
+                      class={`w-2 h-2 rounded-full transition-all duration-300 ${dot <= skill.level ? 'scale-100' : 'scale-75 opacity-30'}`}
+                      style={
+                        dot <= skill.level
+                          ? `background: ${category.color};`
+                          : 'background: var(--color-border);'
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              {/* Progress bar */}
+              <div class="h-1.5 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden">
+                <div
+                  class="skill-bar h-full rounded-full transition-all duration-700 ease-out"
+                  style={`width: ${skill.level * 20}%; background: linear-gradient(90deg, ${category.color}, ${category.color}80);`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .skill-item {
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: skillSlideIn 500ms var(--ease-out-expo) forwards;
+    animation-delay: var(--skill-delay, 0ms);
+  }
+
+  .card.visible .skill-item,
+  .card:hover .skill-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @keyframes skillSlideIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .skill-bar {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .card.visible .skill-bar {
+    transform: scaleX(1);
+  }
+
+  /* Ensure animations work on page load */
+  .fade-in.visible .skill-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .fade-in.visible .skill-bar {
+    transform: scaleX(1);
+  }
+</style>

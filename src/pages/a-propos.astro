@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Timeline from '../components/Timeline.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+
+const values = [
+  {
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
+    title: 'Expertise',
+    description:
+      "17+ ans d'experience dans le developpement et l'architecture. Une veille technologique permanente pour vous proposer les meilleures solutions.",
+    color: 'var(--color-accent-primary)',
+  },
+  {
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
+    title: 'Innovation',
+    description:
+      "Passion pour les nouvelles technologies, notamment l'IA generative. Integration des derniers outils et pratiques pour maximiser votre competitivite.",
+    color: 'var(--color-accent-secondary)',
+  },
+  {
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+    title: 'Collaboration',
+    description:
+      "Communication transparente et travail en equipe. Je m'integre a vos processus et partage mes connaissances avec vos equipes.",
+    color: '#22c55e',
+  },
+  {
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>`,
+    title: 'Resultats',
+    description:
+      'Focus sur la valeur delivree. Des solutions pragmatiques, evolutives et maintenables qui repondent a vos objectifs business.',
+    color: '#ec4899',
+  },
+];
+---
+
+<BaseLayout
+  title="A propos | Black Hole Consulting - Cedric, Solution Architect"
+  description="Decouvrez mon parcours de 17+ ans en developpement et architecture. Expert Solution Architecture, GenAI/LLM et Cloud. Consultant independant base en France."
+  canonical="https://blackholeconsulting.io/a-propos"
+>
+  <Header />
+
+  <main>
+    <!-- Hero Section -->
+    <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-24">
+      <!-- Gradient mesh animated background -->
+      <div class="gradient-mesh"></div>
+      <div class="hero-glow"></div>
+
+      <div class="container mx-auto px-6 py-20 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+          <!-- Badge -->
+          <div
+            class="fade-in inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] mb-8"
+          >
+            <svg
+              class="w-4 h-4 text-[var(--color-accent-primary)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="text-sm text-[var(--color-text-secondary)]">A propos de moi</span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="fade-in stagger-1 text-4xl font-bold text-[var(--color-text-primary)] mb-6">
+            <span class="gradient-text-animated">17+ ans</span> a construire le web
+          </h1>
+
+          <!-- Subtitle -->
+          <p
+            class="fade-in stagger-2 text-lg md:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            De developpeur junior a Solution Architect, j'ai traverse toutes les etapes d'une
+            carriere technique. Aujourd'hui, je mets cette experience au service de vos projets les
+            plus ambitieux.
+          </p>
+
+          <!-- Stats -->
+          <div
+            class="fade-in stagger-3 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto pt-8 border-t border-[var(--color-border)]"
+          >
+            <div class="text-center">
+              <div class="text-3xl font-bold gradient-text mb-1">17+</div>
+              <div class="text-sm text-[var(--color-text-muted)]">Annees d'experience</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold gradient-text mb-1">50+</div>
+              <div class="text-sm text-[var(--color-text-muted)]">Projets realises</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold gradient-text mb-1">20+</div>
+              <div class="text-sm text-[var(--color-text-muted)]">Technologies maitrisees</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold gradient-text mb-1">100%</div>
+              <div class="text-sm text-[var(--color-text-muted)]">Clients satisfaits</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="parcours" class="section section-alt">
+      <div class="container">
+        <div class="text-center mb-16">
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Mon parcours
+          </h2>
+          <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Une evolution progressive des fondamentaux du developpement vers l'architecture de
+            solutions complexes
+          </p>
+        </div>
+
+        <Timeline />
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="competences" class="section">
+      <div class="container">
+        <div class="text-center mb-16">
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Competences
+          </h2>
+          <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Un eventail de competences techniques acquises au fil des projets et constamment
+            enrichies
+          </p>
+        </div>
+
+        <SkillsGrid />
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section id="valeurs" class="section section-alt">
+      <div class="container">
+        <div class="text-center mb-16">
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Mes valeurs
+          </h2>
+          <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Les principes qui guident mon travail au quotidien
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {
+            values.map((value, index) => (
+              <div class={`fade-in stagger-${(index % 4) + 1} card card-tilt text-center group`}>
+                <div
+                  class="w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                  style={`background: linear-gradient(135deg, ${value.color}20, ${value.color}10); border: 1px solid ${value.color}30;`}
+                >
+                  <span style={`color: ${value.color};`} set:html={value.icon} />
+                </div>
+                <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-3">
+                  {value.title}
+                </h3>
+                <p class="text-[var(--color-text-secondary)] leading-relaxed">
+                  {value.description}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section">
+      <div class="container">
+        <div
+          class="fade-in text-center p-8 md:p-12 rounded-2xl bg-gradient-to-r from-[var(--color-accent-primary)]/10 to-[var(--color-accent-secondary)]/10 border border-[var(--color-border)]"
+        >
+          <h2 class="text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Pret a collaborer ?
+          </h2>
+          <p class="text-[var(--color-text-secondary)] mb-8 max-w-xl mx-auto">
+            Discutons de votre projet et voyons comment mon experience peut vous aider a atteindre
+            vos objectifs.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/#contact" class="btn btn-gradient-animated">
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                ></path>
+              </svg>
+              Me contacter
+            </a>
+            <a
+              href="https://calendly.com/cedric-blackhole"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-secondary"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+              Reserver un appel
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

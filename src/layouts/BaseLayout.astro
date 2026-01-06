@@ -7,6 +7,7 @@ import NoiseOverlay from '../components/NoiseOverlay.astro';
 import BlobBackground from '../components/BlobBackground.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import CrispChat from '../components/CrispChat.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
 
 interface Props {
   title?: string;
@@ -243,6 +244,7 @@ const structuredData = {
     </script>
   </head>
   <body>
+    <ScrollProgress />
     <a href="#services" class="skip-link">Aller au contenu principal</a>
 
     <!-- Google Tag Manager (noscript) -->

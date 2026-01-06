@@ -2,10 +2,13 @@
 import ThemeToggle from './ThemeToggle.astro';
 
 const navLinks = [
-  { href: '#services', label: 'Services' },
-  { href: '#expertise', label: 'Expertise' },
-  { href: '#methode', label: 'Méthode' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/#services', label: 'Services' },
+  { href: '/projets', label: 'Projets' },
+  { href: '/#expertise', label: 'Expertise' },
+  { href: '/a-propos', label: 'A propos' },
+  { href: '/#methode', label: 'Methode' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/#contact', label: 'Contact' },
 ];
 ---
 
@@ -55,7 +58,7 @@ const navLinks = [
       <!-- Desktop Actions: Theme Toggle + CTA Button -->
       <div class="hidden sm:flex items-center gap-4">
         <ThemeToggle />
-        <a href="#contact" class="btn btn-primary text-sm py-2.5 px-5"> Discutons </a>
+        <a href="/#contact" class="btn btn-primary text-sm py-2.5 px-5"> Discutons </a>
       </div>
 
       <!-- Mobile Actions: Theme Toggle + Menu Button -->
@@ -105,7 +108,7 @@ const navLinks = [
         ))
       }
       <li class="pt-2">
-        <a href="#contact" class="btn btn-primary w-full"> Discutons </a>
+        <a href="/#contact" class="btn btn-primary w-full"> Discutons </a>
       </li>
     </ul>
   </div>
@@ -166,11 +169,42 @@ const navLinks = [
     });
   }
 
+  function initActiveNav() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navLinks.forEach((link) => {
+              link.classList.remove('nav-active');
+              if (link.getAttribute('href') === `#${id}`) {
+                link.classList.add('nav-active');
+              }
+            });
+          }
+        });
+      },
+      {
+        rootMargin: '-20% 0px -80% 0px',
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  }
+
   // Initialize on first load
   initHeader();
+  initActiveNav();
 
   // Re-initialize after View Transitions
-  document.addEventListener('astro:page-load', initHeader);
+  document.addEventListener('astro:page-load', () => {
+    initHeader();
+    initActiveNav();
+  });
 </script>
 
 <style>
@@ -191,5 +225,22 @@ const navLinks = [
   :global(html.light) #header.header-scrolled {
     background: rgba(255, 255, 255, 0.8);
     border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Active navigation link */
+  :global(.nav-active) {
+    color: var(--color-accent-primary) !important;
+    position: relative;
+  }
+
+  :global(.nav-active)::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent-primary);
+    border-radius: 1px;
   }
 </style>

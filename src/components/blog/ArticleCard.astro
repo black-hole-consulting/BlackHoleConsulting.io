@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ReadingTime from './ReadingTime.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  class?: string;
+}
+
+const { post, class: className = '' } = Astro.props;
+const { title, description, pubDate, tags, heroImage } = post.data;
+
+const formattedDate = pubDate.toLocaleDateString('fr-FR', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class:list={['article-card group', className]}>
+  <a href={`/blog/${post.id}`} class="block h-full">
+    <div
+      class="card h-full flex flex-col overflow-hidden hover:border-[var(--color-accent-primary)] transition-all duration-300"
+    >
+      <!-- Hero Image -->
+      {
+        heroImage && (
+          <div class="relative h-48 -mx-6 -mt-6 mb-4 overflow-hidden">
+            <img
+              src={heroImage}
+              alt={title}
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-secondary)] to-transparent opacity-60" />
+          </div>
+        )
+      }
+
+      <!-- Content -->
+      <div class="flex flex-col flex-grow">
+        <!-- Tags -->
+        {
+          tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-3">
+              {tags.slice(0, 3).map((tag) => (
+                <span class="tech-badge text-xs py-1 px-2">{tag}</span>
+              ))}
+              {tags.length > 3 && (
+                <span class="text-xs text-[var(--color-text-muted)]">+{tags.length - 3}</span>
+              )}
+            </div>
+          )
+        }
+
+        <!-- Title -->
+        <h3
+          class="text-lg font-semibold text-[var(--color-text-primary)] mb-2 group-hover:text-[var(--color-accent-primary)] transition-colors line-clamp-2"
+        >
+          {title}
+        </h3>
+
+        <!-- Description -->
+        <p class="text-sm text-[var(--color-text-secondary)] mb-4 line-clamp-3 flex-grow">
+          {description}
+        </p>
+
+        <!-- Meta -->
+        <div
+          class="flex items-center justify-between text-xs text-[var(--color-text-muted)] mt-auto pt-4 border-t border-[var(--color-border)]"
+        >
+          <time datetime={pubDate.toISOString()}>
+            {formattedDate}
+          </time>
+          <ReadingTime content={post.body || ''} />
+        </div>
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .article-card .card {
+    transform: translateY(0);
+  }
+
+  .article-card:hover .card {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.15);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+interface TimelineEntry {
+  period: string;
+  title: string;
+  company: string;
+  description: string;
+  highlights?: string[];
+}
+
+interface Props {
+  entries?: TimelineEntry[];
+}
+
+const defaultEntries: TimelineEntry[] = [
+  {
+    period: '2024 - Present',
+    title: 'Solution Architect & AI Expert',
+    company: 'Black Hole Consulting',
+    description:
+      "Fondateur et consultant independant. Accompagnement de startups et scale-ups dans leur transformation digitale, conception d'architectures cloud-native et integration de solutions IA generatives.",
+    highlights: ['Architecture Solutions', 'GenAI & LLM', 'Cloud AWS', 'Conseil strategique'],
+  },
+  {
+    period: '2020 - 2024',
+    title: 'Lead Developer / Tech Lead',
+    company: 'Grands comptes & Scale-ups',
+    description:
+      "Direction technique d'equipes de developpement, mise en place de pratiques DevOps, migration cloud et modernisation d'applications legacy vers des architectures microservices.",
+    highlights: ['Leadership technique', 'DevOps & CI/CD', 'Microservices', 'Mentoring'],
+  },
+  {
+    period: '2015 - 2020',
+    title: 'Senior Developer',
+    company: 'ESN & Editeurs logiciels',
+    description:
+      "Developpement d'applications web complexes, e-commerce et systemes distribues. Specialisation progressive vers l'architecture et le conseil technique.",
+    highlights: ['Full-stack development', 'E-commerce', 'API REST', 'Performance'],
+  },
+  {
+    period: '2007 - 2015',
+    title: 'Developer',
+    company: 'Agences & Startups',
+    description:
+      'Debut de carriere en developpement web. Acquisition des fondamentaux du metier et decouverte de multiples technologies et environnements de travail.',
+    highlights: ['PHP/Symfony', 'JavaScript', 'MySQL', 'Agilite'],
+  },
+];
+
+const { entries = defaultEntries } = Astro.props;
+---
+
+<div class="timeline-container relative">
+  <!-- Vertical line -->
+  <div
+    class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-border)] md:-translate-x-1/2"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="space-y-12 md:space-y-16">
+    {
+      entries.map((entry, index) => (
+        <div
+          class={`fade-in stagger-${(index % 4) + 1} timeline-entry relative pl-12 md:pl-0 ${index % 2 === 0 ? 'md:pr-[calc(50%+2rem)]' : 'md:pl-[calc(50%+2rem)]'}`}
+        >
+          {/* Timeline dot */}
+          <div
+            class={`absolute left-4 md:left-1/2 top-2 w-3 h-3 rounded-full bg-[var(--color-accent-primary)] border-4 border-[var(--color-bg-primary)] md:-translate-x-1/2 z-10 shadow-[0_0_10px_var(--color-accent-primary)]`}
+            aria-hidden="true"
+          />
+
+          {/* Content card */}
+          <div class="card card-tilt hover:border-[var(--color-accent-primary)]/50 transition-all duration-300">
+            {/* Period badge */}
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20 mb-4">
+              <svg
+                class="w-4 h-4 text-[var(--color-accent-primary)]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span class="text-sm font-medium text-[var(--color-accent-primary)]">
+                {entry.period}
+              </span>
+            </div>
+
+            {/* Title & Company */}
+            <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-1">{entry.title}</h3>
+            <p class="text-[var(--color-accent-secondary)] font-medium mb-3">{entry.company}</p>
+
+            {/* Description */}
+            <p class="text-[var(--color-text-secondary)] mb-4 leading-relaxed">
+              {entry.description}
+            </p>
+
+            {/* Highlights */}
+            {entry.highlights && entry.highlights.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {entry.highlights.map((highlight) => (
+                  <span class="tech-badge">{highlight}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* Mobile: All entries on the left side of the line */
+  @media (max-width: 767px) {
+    .timeline-entry {
+      padding-left: 3rem;
+      padding-right: 0;
+    }
+  }
+
+  /* Desktop: Alternating left/right layout */
+  @media (min-width: 768px) {
+    .timeline-entry:nth-child(odd) .card {
+      text-align: left;
+    }
+
+    .timeline-entry:nth-child(even) .card {
+      text-align: left;
+    }
+  }
+</style>

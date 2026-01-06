@@ -1,0 +1,304 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const pageTitle = `${project.data.title} | Black Hole Consulting`;
+const pageDescription = project.data.description;
+
+// Get related projects (same tags)
+const allProjects = await getCollection('projects');
+const relatedProjects = allProjects
+  .filter(
+    (p) => p.slug !== project.slug && p.data.tags.some((tag) => project.data.tags.includes(tag))
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={`https://blackholeconsulting.io/projets/${project.slug}/`}
+>
+  <Header />
+
+  <main class="pt-24 pb-16">
+    <!-- Back link -->
+    <section class="section pb-0">
+      <div class="container">
+        <a
+          href="/projets"
+          class="inline-flex items-center gap-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors mb-8 fade-in"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Retour aux projets
+        </a>
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="section py-8">
+      <div class="container">
+        <div class="max-w-4xl mx-auto">
+          <!-- Featured badge -->
+          {
+            project.data.featured && (
+              <div class="mb-4 fade-in">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] text-white text-sm font-medium rounded-full">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  Projet phare
+                </span>
+              </div>
+            )
+          }
+
+          <h1
+            class="text-3xl lg:text-4xl font-bold text-[var(--color-text-primary)] mb-4 fade-in stagger-1"
+          >
+            {project.data.title}
+          </h1>
+
+          <p class="text-lg text-[var(--color-text-secondary)] mb-6 fade-in stagger-2">
+            {project.data.description}
+          </p>
+
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2 mb-8 fade-in stagger-3">
+            {project.data.tags.map((tag) => <span class="tech-badge">{tag}</span>)}
+          </div>
+
+          <!-- Links -->
+          <div class="flex flex-wrap gap-4 mb-12 fade-in stagger-4">
+            {
+              project.data.url && (
+                <a
+                  href={project.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-primary"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                  Voir la demo
+                </a>
+              )
+            }
+
+            {
+              project.data.github && (
+                <a
+                  href={project.data.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-secondary"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                  </svg>
+                  Code source
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project image -->
+    {
+      project.data.image && (
+        <section class="section py-0">
+          <div class="container">
+            <div class="max-w-4xl mx-auto fade-in stagger-5">
+              <div class="rounded-xl overflow-hidden border border-[var(--color-border)]">
+                <img
+                  src={project.data.image}
+                  alt={`Capture du projet ${project.data.title}`}
+                  class="w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Content -->
+    <section class="section py-12">
+      <div class="container">
+        <div class="max-w-4xl mx-auto fade-in stagger-6">
+          <article class="prose prose-invert prose-lg max-w-none">
+            <Content />
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related projects -->
+    {
+      relatedProjects.length > 0 && (
+        <section class="section py-12 border-t border-[var(--color-border)]">
+          <div class="container">
+            <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8 fade-in">
+              Projets similaires
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedProjects.map((related, index) => (
+                <a
+                  href={`/projets/${related.slug}`}
+                  class={`card group fade-in stagger-${index + 1}`}
+                >
+                  <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-2 group-hover:text-[var(--color-accent-primary)] transition-colors">
+                    {related.data.title}
+                  </h3>
+                  <p class="text-sm text-[var(--color-text-secondary)] line-clamp-2">
+                    {related.data.description}
+                  </p>
+                  <div class="flex flex-wrap gap-1.5 mt-4">
+                    {related.data.tags.slice(0, 3).map((tag) => (
+                      <span class="tech-badge text-xs">{tag}</span>
+                    ))}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- CTA Section -->
+    <section class="section py-16">
+      <div class="container">
+        <div
+          class="card p-8 lg:p-12 text-center max-w-3xl mx-auto fade-in bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-tertiary)]"
+        >
+          <h2 class="text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Un projet similaire en tete ?
+          </h2>
+          <p class="text-[var(--color-text-secondary)] mb-8 max-w-xl mx-auto">
+            Je serais ravi de discuter de votre projet et de voir comment mon expertise peut vous
+            aider a atteindre vos objectifs.
+          </p>
+          <a href="/#contact" class="btn btn-primary"> Discutons de votre projet </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* Prose styles for markdown content */
+  .prose {
+    color: var(--color-text-secondary);
+  }
+
+  .prose h2 {
+    color: var(--color-text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .prose h3 {
+    color: var(--color-text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose p {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
+  }
+
+  .prose ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose ul li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    border-radius: 50%;
+  }
+
+  .prose strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .prose code {
+    background: var(--color-bg-tertiary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-family: var(--font-mono);
+  }
+
+  .prose pre {
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .prose pre code {
+    background: transparent;
+    padding: 0;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,116 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to only include H2 and H3
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav class="toc sticky top-24" aria-label="Table des matieres">
+      <h2 class="text-sm font-semibold text-[var(--color-text-primary)] uppercase tracking-wider mb-4">
+        Sommaire
+      </h2>
+      <ul class="space-y-2 text-sm">
+        {tocHeadings.map((heading) => (
+          <li class={heading.depth === 3 ? 'ml-4' : ''}>
+            <a
+              href={`#${heading.slug}`}
+              class="toc-link block py-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent-primary)] transition-colors border-l-2 border-transparent hover:border-[var(--color-accent-primary)] pl-3 -ml-[2px]"
+              data-heading={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
+
+  .toc-link.active {
+    color: var(--color-accent-primary);
+    border-left-color: var(--color-accent-primary);
+  }
+</style>
+
+<script>
+  function initTOC() {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length === 0) return;
+
+    const headingIds = Array.from(tocLinks).map((link) => (link as HTMLElement).dataset.heading);
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-80px 0px -80% 0px',
+      threshold: 0,
+    };
+
+    let currentActiveId: string | null = null;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          currentActiveId = entry.target.id;
+          updateActiveLink();
+        }
+      });
+    }, observerOptions);
+
+    function updateActiveLink() {
+      tocLinks.forEach((link) => {
+        const linkEl = link as HTMLElement;
+        if (linkEl.dataset.heading === currentActiveId) {
+          linkEl.classList.add('active');
+        } else {
+          linkEl.classList.remove('active');
+        }
+      });
+    }
+
+    // Observe all headings
+    headingIds.forEach((id) => {
+      if (id) {
+        const heading = document.getElementById(id);
+        if (heading) {
+          observer.observe(heading);
+        }
+      }
+    });
+
+    // Smooth scroll on click
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = (link as HTMLElement).dataset.heading;
+        if (targetId) {
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            // Update URL hash without jumping
+            history.pushState(null, '', `#${targetId}`);
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTOC);
+</script>
