@@ -104,6 +104,17 @@
           hideBanner();
         });
       }
+
+      // Close banner on Escape key (equivalent to reject)
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          var banner = document.getElementById('cookie-banner');
+          if (banner && banner.style.display !== 'none') {
+            setConsent('denied');
+            hideBanner();
+          }
+        }
+      });
     }
 
     if (document.readyState === 'loading') {
@@ -111,5 +122,8 @@
     } else {
       init();
     }
+
+    // Re-initialize after View Transitions
+    document.addEventListener('astro:page-load', init);
   })();
 </script>

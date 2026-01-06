@@ -1,10 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/inter';
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
 import NoiseOverlay from '../components/NoiseOverlay.astro';
 import BlobBackground from '../components/BlobBackground.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import CrispChat from '../components/CrispChat.astro';
 
 interface Props {
   title?: string;
@@ -24,7 +26,7 @@ const localBusinessData = {
   '@type': 'LocalBusiness',
   '@id': 'https://blackholeconsulting.io/#localbusiness',
   name: 'Black Hole Consulting',
-  image: 'https://blackholeconsulting.io/og-image.svg',
+  image: 'https://blackholeconsulting.io/og-image.png',
   telephone: '+33602180413',
   email: 'cedric@blkhole.fr',
   address: {
@@ -53,7 +55,7 @@ const structuredData = {
     "Du site vitrine à l'infrastructure cloud, je conçois et développe des applications performantes et évolutives. Expert indépendant, 17+ ans d'expérience.",
   url: 'https://blackholeconsulting.io',
   logo: 'https://blackholeconsulting.io/logo.svg',
-  image: 'https://blackholeconsulting.io/og-image.svg',
+  image: 'https://blackholeconsulting.io/og-image.png',
   telephone: '+33602180413',
   email: 'cedric@blkhole.fr',
   address: {
@@ -176,7 +178,7 @@ const structuredData = {
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://blackholeconsulting.io/og-image.svg" />
+    <meta property="og:image" content="https://blackholeconsulting.io/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="fr_FR" />
@@ -186,20 +188,12 @@ const structuredData = {
     <meta property="twitter:url" content={canonical} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="https://blackholeconsulting.io/og-image.svg" />
+    <meta property="twitter:image" content="https://blackholeconsulting.io/og-image.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    <!-- Preload Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
 
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
@@ -249,6 +243,8 @@ const structuredData = {
     </script>
   </head>
   <body>
+    <a href="#services" class="skip-link">Aller au contenu principal</a>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe
@@ -347,5 +343,8 @@ const structuredData = {
 
     <!-- Cookie consent banner -->
     <CookieBanner />
+
+    <!-- Crisp Chat Widget -->
+    <CrispChat />
   </body>
 </html>

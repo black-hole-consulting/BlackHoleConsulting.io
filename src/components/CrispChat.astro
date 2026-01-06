@@ -1,0 +1,24 @@
+---
+// Crisp Chat Widget
+// Configure your website ID at https://app.crisp.chat/
+---
+
+<script is:inline>
+  window.$crisp = [];
+  window.CRISP_WEBSITE_ID = 'YOUR_WEBSITE_ID'; // TODO: Replace with actual ID
+
+  (function () {
+    var d = document;
+    var s = d.createElement('script');
+    s.src = 'https://client.crisp.chat/l.js';
+    s.async = 1;
+    d.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
+
+<style is:global>
+  /* Crisp chat customization for dark theme */
+  .crisp-client .cc-1brb6 .cc-1yy0g .cc-1m2mf {
+    background: var(--color-bg-secondary) !important;
+  }
+</style>
