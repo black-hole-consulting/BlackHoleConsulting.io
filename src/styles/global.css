@@ -116,6 +116,28 @@ body {
   background-clip: text;
 }
 
+/* Animated gradient text with smooth color shift */
+@keyframes gradientTextShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-text-animated {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899, #8b5cf6, #6366f1);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientTextShift 3s ease-in-out infinite;
+}
+
 /* ===== BUTTONS ===== */
 
 .btn {
@@ -133,22 +155,100 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary),
+    var(--color-accent-secondary),
+    var(--color-accent-primary)
+  );
+  background-size: 200% 200%;
   color: white;
-  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  border-radius: 0.625rem;
+  box-shadow: 0 0 20px 0 rgba(99, 102, 241, 0.2);
+  animation: btnGradientShift 3s ease infinite;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 0 30px 0 rgba(99, 102, 241, 0.4),
-    0 0 60px 0 rgba(99, 102, 241, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 0 40px 0 rgba(99, 102, 241, 0.5),
+    0 0 80px 0 rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  animation:
+    btnGradientShift 3s ease infinite,
+    btnGlowPulse 1.5s ease-in-out infinite;
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 0 20px 0 rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 30px 0 rgba(99, 102, 241, 0.4);
+}
+
+/* Animated gradient button for special CTAs */
+.btn-gradient-animated {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary),
+    var(--color-accent-secondary),
+    #ec4899,
+    var(--color-accent-primary)
+  );
+  background-size: 300% 300%;
+  color: white;
+  border-radius: 0.625rem;
+  box-shadow:
+    0 0 30px 0 rgba(99, 102, 241, 0.3),
+    0 0 60px 0 rgba(139, 92, 246, 0.15);
+  animation: btnGradientShift 3s ease infinite;
+}
+
+.btn-gradient-animated:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 0 50px 0 rgba(99, 102, 241, 0.5),
+    0 0 100px 0 rgba(139, 92, 246, 0.3),
+    0 0 150px 0 rgba(236, 72, 153, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation:
+    btnGradientShift 3s ease infinite,
+    btnGlowPulse 1.5s ease-in-out infinite;
+}
+
+.btn-gradient-animated:active {
+  transform: translateY(0) scale(1.02);
+  box-shadow:
+    0 0 40px 0 rgba(99, 102, 241, 0.4),
+    0 0 80px 0 rgba(139, 92, 246, 0.2);
+}
+
+/* Button gradient animation keyframes */
+@keyframes btnGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Button glow pulse animation */
+@keyframes btnGlowPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 40px 0 rgba(99, 102, 241, 0.5),
+      0 0 80px 0 rgba(139, 92, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 60px 5px rgba(99, 102, 241, 0.6),
+      0 0 100px 10px rgba(139, 92, 246, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
 }
 
 .btn-secondary {
@@ -747,11 +847,19 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .gradient-shift,
+  .gradient-text-animated,
   .blob,
   .gradient-mesh::before,
   .black-hole-ring,
   .accretion-disk,
-  .accretion-disk::before {
+  .accretion-disk::before,
+  .btn-primary,
+  .btn-gradient-animated {
+    animation: none;
+  }
+
+  .btn-primary:hover,
+  .btn-gradient-animated:hover {
     animation: none;
   }
 
@@ -809,6 +917,15 @@ html.light .gradient-text {
   background: linear-gradient(135deg, var(--color-accent-primary-light), #7c3aed);
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+html.light .gradient-text-animated {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777, #7c3aed, #4f46e5);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientTextShift 3s ease-in-out infinite;
 }
 
 /* Light mode blob adjustments - slightly higher opacity */

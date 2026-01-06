@@ -1,0 +1,154 @@
+---
+interface StatItem {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+const stats: StatItem[] = [
+  {
+    value: 17,
+    suffix: '+',
+    label: "Annees d'experience",
+  },
+  {
+    value: 50,
+    suffix: '+',
+    label: 'Projets livres',
+  },
+  {
+    value: 100,
+    suffix: '%',
+    label: 'Satisfaction client',
+  },
+  {
+    value: 24,
+    suffix: 'h',
+    label: 'Delai de reponse',
+  },
+];
+---
+
+<section id="stats" class="py-16 md:py-20">
+  <div class="container">
+    <div class="stats-container fade-in grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 lg:gap-12">
+      {
+        stats.map((stat, index) => (
+          <div class={`stat-item text-center stagger-${index + 1}`}>
+            <div class="stat-value-wrapper mb-2">
+              <span
+                class="stat-value gradient-text text-4xl md:text-5xl lg:text-6xl font-bold"
+                data-target={stat.value}
+                data-suffix={stat.suffix}
+              >
+                0{stat.suffix}
+              </span>
+            </div>
+            <p class="stat-label text-sm md:text-base text-[var(--color-text-secondary)]">
+              {stat.label}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .stat-item {
+    position: relative;
+  }
+
+  .stat-value {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    transition: transform 300ms var(--ease-out-expo);
+  }
+
+  .stat-item:hover .stat-value {
+    transform: scale(1.05);
+  }
+
+  .stat-label {
+    opacity: 0.8;
+    transition: opacity 300ms ease;
+  }
+
+  .stat-item:hover .stat-label {
+    opacity: 1;
+  }
+
+  /* Separator lines between stats on desktop */
+  @media (min-width: 768px) {
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 60%;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--color-border-hover), transparent);
+    }
+  }
+</style>
+
+<script>
+  function initStatsCounter() {
+    const statsSection = document.getElementById('stats');
+    if (!statsSection) return;
+
+    const statValues = statsSection.querySelectorAll('.stat-value');
+    let hasAnimated = false;
+
+    const animateCounter = (element: Element) => {
+      const target = parseInt(element.getAttribute('data-target') || '0', 10);
+      const suffix = element.getAttribute('data-suffix') || '';
+      const duration = 2000; // 2 seconds
+      const frameDuration = 1000 / 60; // 60fps
+      const totalFrames = Math.round(duration / frameDuration);
+      const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+
+      let frame = 0;
+
+      const counter = setInterval(() => {
+        frame++;
+        const progress = easeOutQuart(frame / totalFrames);
+        const currentValue = Math.round(target * progress);
+
+        element.textContent = `${currentValue}${suffix}`;
+
+        if (frame === totalFrames) {
+          clearInterval(counter);
+          element.textContent = `${target}${suffix}`;
+        }
+      }, frameDuration);
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.3,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          hasAnimated = true;
+          statValues.forEach((el, index) => {
+            // Stagger the animation start
+            setTimeout(() => {
+              animateCounter(el);
+            }, index * 150);
+          });
+          observer.disconnect();
+        }
+      });
+    }, observerOptions);
+
+    observer.observe(statsSection);
+  }
+
+  // Initialize on page load and after view transitions
+  document.addEventListener('astro:page-load', initStatsCounter);
+</script>
