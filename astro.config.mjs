@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://blackholeconsulting.io',
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport'
+    defaultStrategy: 'viewport',
   },
   vite: {
     plugins: [tailwindcss()],
