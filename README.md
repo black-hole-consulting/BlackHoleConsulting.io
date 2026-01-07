@@ -1,8 +1,14 @@
 # Black Hole Consulting - Website
 
+[![CI/CD Pipeline](https://github.com/black-hole-consulting/website/actions/workflows/deploy.yml/badge.svg)](https://github.com/black-hole-consulting/website/actions/workflows/deploy.yml)
+[![Node](https://img.shields.io/badge/node-20-green?style=flat-square)](https://nodejs.org)
+[![Astro](https://img.shields.io/badge/astro-5.x-FF5D01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/tailwind-4.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fblkhole.fr&style=flat-square)](https://blkhole.fr)
+
 Site vitrine corporate pour Black Hole Consulting, expert en Solution Architecture, GenAI/LLM, Cloud et Développement Web.
 
-**URL** : [https://blackholeconsulting.io](https://blackholeconsulting.io)
+**URL** : [https://blkhole.fr](https://blkhole.fr)
 
 ## Stack Technique
 
