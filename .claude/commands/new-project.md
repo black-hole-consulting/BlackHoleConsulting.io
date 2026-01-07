@@ -1,3 +1,8 @@
+---
+description: Create a new project page for the portfolio
+argument-hint: <project-name>
+---
+
 # Add New Project
 
 Create a new project page for the portfolio.

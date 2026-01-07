@@ -1,3 +1,8 @@
+---
+description: Full deployment workflow to AWS S3 + CloudFront
+allowed-tools: Bash(npm run lint:*), Bash(npm run format:check:*), Bash(npm run build:*), Bash(npm run test:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*)
+---
+
 # Deploy to Production
 
 Full deployment workflow to AWS S3 + CloudFront.

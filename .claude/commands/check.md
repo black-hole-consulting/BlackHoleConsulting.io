@@ -1,3 +1,8 @@
+---
+description: Run all pre-deployment quality checks (lint, format, build, tests)
+allowed-tools: Bash(npm run lint:*), Bash(npm run format:check:*), Bash(npm run build:*), Bash(npm run test:*)
+---
+
 # Pre-deploy Checks
 
 Run all quality checks before deploying:

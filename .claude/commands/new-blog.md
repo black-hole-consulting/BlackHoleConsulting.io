@@ -1,3 +1,8 @@
+---
+description: Create a new blog article
+argument-hint: <topic>
+---
+
 # Add New Blog Article
 
 Create a new blog post.

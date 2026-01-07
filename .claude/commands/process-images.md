@@ -1,3 +1,8 @@
+---
+description: Process project images with color-matched backgrounds
+allowed-tools: Bash(npm run images:process:*), Bash(npm run images:watch:*)
+---
+
 # Process Project Images
 
 Process images for the portfolio with color-matched backgrounds.
