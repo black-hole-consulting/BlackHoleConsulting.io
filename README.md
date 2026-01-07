@@ -4,11 +4,11 @@
 [![Node](https://img.shields.io/badge/node-20-green?style=flat-square)](https://nodejs.org)
 [![Astro](https://img.shields.io/badge/astro-5.x-FF5D01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/tailwind-4.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fblkhole.fr&style=flat-square)](https://blkhole.fr)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fblackholeconsulting.io&style=flat-square)](https://blackholeconsulting.io)
 
 Site vitrine corporate pour Black Hole Consulting, expert en Solution Architecture, GenAI/LLM, Cloud et Développement Web.
 
-**URL** : [https://blkhole.fr](https://blkhole.fr)
+**URL** : [https://blackholeconsulting.io](https://blackholeconsulting.io)
 
 ## Stack Technique
 
