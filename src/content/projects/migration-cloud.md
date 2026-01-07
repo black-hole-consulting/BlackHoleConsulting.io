@@ -1,49 +1,51 @@
 ---
-title: "Migration Cloud AWS"
-description: "Migration complete d'une infrastructure on-premise vers AWS. Containerisation des applications legacy, mise en place CI/CD, Infrastructure as Code avec Terraform et optimisation des couts cloud."
-image: "/images/projects/cloud-migration.svg"
-tags: ["AWS", "Terraform", "Docker", "DevOps", "CI/CD"]
-featured: false
-order: 3
+title: "Migration Cloud QUARTUS"
+description: "Pilotage de la migration vers une plateforme tech unifiee avec implementation AWS et Terraform. Creation d'une software factory integree avec GitLab CI/CD et developpement de plateformes metier avec API Platform."
+image: "/images/projects/processed/quartus-card.webp"
+tags: ["AWS", "Terraform", "GitLab CI/CD", "API Platform", "Symfony"]
+featured: true
+order: 2
 ---
 
 ## Contexte
 
-Une entreprise industrielle operait son SI sur une infrastructure vieillissante on-premise. Les couts de maintenance augmentaient, et l'equipe IT passait plus de temps a "garder les lumieres allumees" qu'a innover.
+QUARTUS Residentiel, acteur de l'immobilier, operait avec un SI fragmente et des pratiques de developpement heterogenes. L'objectif : unifier l'infrastructure technique et moderniser les pratiques de developpement sur une periode de pres de 3 ans.
+
+## Mon role
+
+En tant qu'**Engineering Manager / Tech Lead**, j'ai dirige :
+
+- La strategie de migration vers une plateforme tech unifiee
+- La direction des equipes de developpement
+- L'implementation des solutions cloud
+- Le mentorat technique des equipes
 
 ## Solution technique
 
-### Phase 1 : Audit et planification
+### Infrastructure Cloud AWS
 
-- Cartographie complete de l'infrastructure existante
-- Analyse des dependances inter-applications
-- Evaluation des couts TCO cloud vs on-premise
-- Definition de la strategie de migration (6R)
+- Implementation AWS avec Infrastructure as Code (Terraform)
+- Architecture scalable et agile
+- Gestion des environnements (dev, staging, production)
+- Securite et conformite aux standards
 
-### Phase 2 : Containerisation
+### Software Factory
 
-- Dockerisation des applications Java et .NET
-- Refactoring leger pour cloud-readiness
-- Mise en place de registres d'images (ECR)
-- Tests de non-regression automatises
+- Pipeline CI/CD complet avec GitLab
+- Automatisation des tests et deploiements
+- Gestion des branches avec Git Flow
+- Code review systematique
 
-### Phase 3 : Infrastructure AWS
+### Plateformes Metier
 
-- VPC multi-AZ avec subnets publics/prives
-- EKS pour l'orchestration des containers
-- RDS Aurora pour les bases de donnees
-- S3 + Glacier pour le stockage et l'archivage
-
-### Phase 4 : DevOps et CI/CD
-
-- Pipelines GitLab CI/CD complets
-- Infrastructure as Code avec Terraform
-- Monitoring avec CloudWatch et Datadog
-- Alerting et on-call avec PagerDuty
+- Backend PHP 8 avec Symfony 5/6
+- APIs RESTful avec API Platform
+- Integration RabbitMQ pour le messaging asynchrone
+- Systeme PIM (Product Information Management)
 
 ## Resultats
 
-- **40%** reduction des couts infrastructure
-- **99.95%** disponibilite vs 95% precedemment
-- **Deploiements** : de 1/mois a 10+/semaine
-- **MTTR** : reduction de 4h a 20 minutes
+- **Infrastructure coherente** a travers tous les projets
+- **Reduction significative** du time-to-market
+- **Scalabilite amelioree** des services
+- **Excellence technique** dans les equipes

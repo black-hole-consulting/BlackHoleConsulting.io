@@ -13,36 +13,60 @@ interface Props {
 
 const defaultEntries: TimelineEntry[] = [
   {
-    period: '2024 - Present',
-    title: 'Solution Architect & AI Expert',
-    company: 'Black Hole Consulting',
+    period: '2025 - Present',
+    title: 'Solution Architect',
+    company: 'Sanofi Accelerator',
     description:
-      "Fondateur et consultant independant. Accompagnement de startups et scale-ups dans leur transformation digitale, conception d'architectures cloud-native et integration de solutions IA generatives.",
-    highlights: ['Architecture Solutions', 'GenAI & LLM', 'Cloud AWS', 'Conseil strategique'],
+      "Architecture de solutions Cloud et IA au sein de l'Accelerator Sanofi. Conception d'architectures scalables pour accelerer l'innovation dans le secteur pharmaceutique.",
+    highlights: ['Solution Architecture', 'Cloud AWS', 'IA & Innovation', 'Pharma'],
   },
   {
-    period: '2020 - 2024',
-    title: 'Lead Developer / Tech Lead',
-    company: 'Grands comptes & Scale-ups',
+    period: '2024 - 2025',
+    title: 'Head of Engineering ~ Solution Architect',
+    company: 'Career Booster',
     description:
-      "Direction technique d'equipes de developpement, mise en place de pratiques DevOps, migration cloud et modernisation d'applications legacy vers des architectures microservices.",
-    highlights: ['Leadership technique', 'DevOps & CI/CD', 'Microservices', 'Mentoring'],
+      "Definition de la strategie digitale, management d'equipes techniques et resolution de la complexite produit par les technologies. Transformation et modernisation des systemes.",
+    highlights: ['Strategie digitale', 'Management', 'Architecture', 'Product'],
   },
   {
-    period: '2015 - 2020',
-    title: 'Senior Developer',
-    company: 'ESN & Editeurs logiciels',
+    period: '2023 - 2024',
+    title: 'Head of Engineering',
+    company: 'Wamiz',
     description:
-      "Developpement d'applications web complexes, e-commerce et systemes distribues. Specialisation progressive vers l'architecture et le conseil technique.",
-    highlights: ['Full-stack development', 'E-commerce', 'API REST', 'Performance'],
+      "Direction des equipes d'ingenieurs, gestion de projets techniques complexes ameliorant l'efficacite operationnelle. Mise en place de processus d'amelioration continue et collaboration cross-fonctionnelle.",
+    highlights: ['Leadership', 'Web Core Vitals', 'Symfony', 'Google Analytics'],
   },
   {
-    period: '2007 - 2015',
-    title: 'Developer',
-    company: 'Agences & Startups',
+    period: '2021 - 2023',
+    title: 'Engineering Manager ~ Tech Lead',
+    company: 'QUARTUS Residentiel',
     description:
-      'Debut de carriere en developpement web. Acquisition des fondamentaux du metier et decouverte de multiples technologies et environnements de travail.',
-    highlights: ['PHP/Symfony', 'JavaScript', 'MySQL', 'Agilite'],
+      "Migration vers une plateforme tech unifiee, implementation AWS/Terraform pour la scalabilite. Creation d'une software factory integree avec GitLab CI/CD, developpement de plateformes metier avec Symfony et API Platform.",
+    highlights: ['AWS/Terraform', 'GitLab CI/CD', 'API Platform', 'RabbitMQ'],
+  },
+  {
+    period: '2018 - 2020',
+    title: 'Senior Backend Developer',
+    company: 'Meetic, Rue Du Commerce, upply',
+    description:
+      'Developpement backend senior, mise en place de tests automatises (BEHAT, E2E), environnements DevOps avec Docker et GitLab CI/CD. Mentorat de developpeurs juniors et mid-level.',
+    highlights: ['PHP 8', 'Docker', 'Tests automatises', 'Mentoring'],
+  },
+  {
+    period: '2015 - 2017',
+    title: 'Lead Developer',
+    company: 'Aramisauto',
+    description:
+      "Recrutement et formation d'une equipe tech complete (PO, devs, ops). Conception et deploiement d'une plateforme e-commerce automobile en 7 mois. Mise en place des outils de monitoring (New Relic, AppDynamics).",
+    highlights: ['E-commerce', 'Team Building', 'Symfony', 'Monitoring'],
+  },
+  {
+    period: '2008 - 2015',
+    title: 'PHP Developer',
+    company: 'Anakrys, AgriAffaires (LeBonCoin), FashionGroup',
+    description:
+      'Conception et developpement backend sous Symfony (1 a 5). Tests unitaires et fonctionnels, maintenance applicative, revues de code et methodologies Agile (SCRUM).',
+    highlights: ['PHP/Symfony', 'TDD', 'SCRUM', 'Code Review'],
   },
 ];
 
@@ -72,7 +96,7 @@ const { entries = defaultEntries } = Astro.props;
           {/* Content card */}
           <div class="card card-tilt hover:border-[var(--color-accent-primary)]/50 transition-all duration-300">
             {/* Period badge */}
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20 mb-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent-primary)]/20 border border-[var(--color-accent-primary)]/30 mb-4">
               <svg
                 class="w-4 h-4 text-[var(--color-accent-primary)]"
                 fill="none"

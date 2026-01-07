@@ -1,44 +1,51 @@
 ---
-title: "Plateforme SaaS Multi-tenant"
-description: "Architecture et developpement d'une plateforme SaaS B2B multi-tenant avec gestion avancee des abonnements, API REST et microservices. Infrastructure cloud-native deployee sur AWS avec auto-scaling et haute disponibilite."
-image: "/images/projects/saas-platform.svg"
-tags: ["Architecture", "AWS", "TypeScript", "Microservices", "PostgreSQL"]
-url: "https://example.com/saas-demo"
+title: "Plateforme E-commerce Aramisauto"
+description: "Conception et deploiement d'une plateforme e-commerce automobile complete en 7 mois. Recrutement et formation d'une equipe tech de 10+ personnes, mise en place d'une architecture moderne avec Symfony, Docker et GitLab CI/CD."
+image: "/images/projects/processed/aramisauto-card.webp"
+tags: ["E-commerce", "Symfony", "Docker", "GitLab CI/CD", "Team Building"]
 featured: true
 order: 1
 ---
 
 ## Contexte
 
-Une startup en pleine croissance avait besoin d'une plateforme SaaS robuste pour servir des centaines de clients B2B simultanement. Le defi principal etait de concevoir une architecture capable de scaler horizontalement tout en maintenant l'isolation des donnees entre les tenants.
+Aramisauto, acteur majeur de la vente de vehicules d'occasion en ligne, avait besoin d'une refonte complete de sa plateforme technique pour accompagner sa croissance. Le defi : construire une equipe et livrer une plateforme production-ready en 7 mois.
+
+## Mon role
+
+En tant que **Lead Developer**, j'ai ete responsable de :
+
+- Recrutement et structuration d'une equipe complete : Product Owners, developpeurs front-end et back-end, administrateurs systeme et Ops
+- Definition des jalons de developpement et des dates de livraison
+- Coaching technique et business de l'equipe
+- Protection de l'equipe face a la pression de la direction
 
 ## Solution technique
 
-### Architecture multi-tenant
+### Architecture applicative
 
-- Isolation des donnees au niveau schema PostgreSQL
-- Middleware de resolution de tenant automatique
-- Systeme de cache Redis partage avec prefixage par tenant
+- Backend Symfony avec API REST moderne
+- Integration RabbitMQ pour les traitements asynchrones
+- Frontend SCSS avec bundling optimise
+- Base de donnees relationnelle optimisee pour le e-commerce
 
-### Infrastructure AWS
+### Infrastructure & DevOps
 
-- ECS Fargate pour les microservices containerises
-- Aurora PostgreSQL avec read replicas
-- ElastiCache Redis pour le caching distribue
-- CloudFront + S3 pour les assets statiques
-- API Gateway avec throttling par tenant
+- Containerisation complete avec Docker
+- Pipeline CI/CD avec GitLab
+- Monitoring avec New Relic et AppDynamics
+- Deploiements automatises et rollback instantane
 
-### Fonctionnalites cles
+### Methodologie
 
-- Gestion des abonnements avec Stripe
-- Dashboard analytics temps reel
-- API REST documentee avec OpenAPI
-- Systeme de webhooks configurable
-- SSO via SAML 2.0 et OIDC
+- Adaptation des nouvelles pratiques au SI existant
+- Transition fluide et sans interruption de service
+- Documentation technique complete
+- Formation continue des equipes
 
 ## Resultats
 
-- **99.9%** de disponibilite sur 12 mois
-- **3x** reduction des couts infrastructure vs solution precedente
-- **< 100ms** temps de reponse API P95
-- Support de **200+ tenants** actifs simultanement
+- **7 mois** de la conception au deploiement production
+- **10+ personnes** recrutees et formees
+- **0 downtime** lors de la mise en production
+- Plateforme supportant des milliers de transactions mensuelles

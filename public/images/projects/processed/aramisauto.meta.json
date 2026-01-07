@@ -1,0 +1,18 @@
+{
+  "originalFile": "aramisauto.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T09:51:14.596Z",
+  "dominantColors": {
+    "primary": "#7d8998",
+    "lighter": "#8a97a7",
+    "darker": "#58606a"
+  },
+  "aiDescription": null,
+  "formats": [
+    "aramisauto-thumb.webp",
+    "aramisauto-card.webp",
+    "aramisauto-hero.webp",
+    "aramisauto-card.jpg",
+    "aramisauto-original.webp"
+  ]
+}

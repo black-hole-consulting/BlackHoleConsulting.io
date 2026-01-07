@@ -1,0 +1,18 @@
+{
+  "originalFile": "infreelancing.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:14:35.008Z",
+  "dominantColors": {
+    "primary": "#7316a1",
+    "lighter": "#7f18b1",
+    "darker": "#510f71"
+  },
+  "aiDescription": null,
+  "formats": [
+    "infreelancing-thumb.webp",
+    "infreelancing-card.webp",
+    "infreelancing-hero.webp",
+    "infreelancing-card.jpg",
+    "infreelancing-original.webp"
+  ]
+}

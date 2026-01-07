@@ -1,0 +1,18 @@
+{
+  "originalFile": "meetic.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:02:44.421Z",
+  "dominantColors": {
+    "primary": "#97959b",
+    "lighter": "#a6a4ab",
+    "darker": "#6a686d"
+  },
+  "aiDescription": null,
+  "formats": [
+    "meetic-thumb.webp",
+    "meetic-card.webp",
+    "meetic-hero.webp",
+    "meetic-card.jpg",
+    "meetic-original.webp"
+  ]
+}

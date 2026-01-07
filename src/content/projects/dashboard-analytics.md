@@ -1,51 +1,57 @@
 ---
-title: "Dashboard Analytics Temps Reel"
-description: "Developpement d'un dashboard analytics temps reel avec visualisations interactives. Pipeline de donnees streaming, agregations en temps reel et exports automatises pour le reporting."
-image: "/images/projects/analytics-dashboard.svg"
-tags: ["Web", "TypeScript", "React", "WebSocket", "PostgreSQL"]
-url: "https://example.com/analytics-demo"
-featured: false
+title: "Environnement DevOps Meetic"
+description: "Conception et implementation d'un environnement DevOps complet avec Docker et GitLab CI/CD. Tests automatises BEHAT et E2E, mentorat de developpeurs et decisions d'architecture logicielle strategiques."
+image: "/images/projects/processed/meetic-card.webp"
+tags: ["DevOps", "Docker", "BEHAT", "GitLab CI/CD", "Mentoring"]
 order: 5
 ---
 
 ## Contexte
 
-Une marketplace avait besoin d'un outil interne pour monitorer en temps reel les KPIs business : transactions, conversions, performance vendeurs. Les outils existants (Google Analytics, Mixpanel) ne repondaient pas aux besoins specifiques metier.
+Meetic, leader europeen de la rencontre en ligne, cherchait a ameliorer la qualite de ses livraisons et a renforcer ses pratiques de developpement. L'enjeu : fiabiliser les deploiements et monter en competences les equipes.
 
-## Solution technique
+## Mon role
 
-### Frontend React
+En tant que **Backend Developer & Ops**, j'ai contribue a :
 
-- React 18 avec TypeScript strict
-- Recharts pour les visualisations
-- TanStack Query pour le cache et sync
-- WebSocket pour les updates temps reel
+- La conception et l'implementation de tests automatises
+- Le developpement de l'environnement operationnel
+- Le mentorat des developpeurs juniors et mid-level
+- Les decisions technologiques impactant l'architecture
 
-### Backend Node.js
+## Realisations
 
-- API GraphQL avec Apollo Server
-- Subscriptions WebSocket pour le streaming
-- Redis pour le cache des agregations
-- PostgreSQL avec TimescaleDB pour les series temporelles
+### Tests Automatises
 
-### Pipeline de donnees
+- Implementation de tests BEHAT pour la validation comportementale
+- Tests E2E pour la validation complete des fonctionnalites
+- Integration dans le pipeline CI/CD
+- Reduction significative des regressions
 
-- Kafka Connect pour l'ingestion
-- Apache Flink pour le traitement streaming
-- Agregations pre-calculees toutes les minutes
-- Materialized views pour les requetes complexes
+### Environnement DevOps
 
-### Fonctionnalites
+- Containerisation avec Docker
+- Automatisation GitLab CI/CD
+- Amelioration de l'efficacite des livraisons
+- Deploiements plus frequents et plus surs
 
-- Dashboards personnalisables (drag & drop)
-- Alertes configurables sur seuils
-- Export PDF/Excel automatise
-- Comparaison periodes (YoY, MoM)
-- Drill-down multi-niveaux
+### Mentoring
+
+- Formation des developpeurs juniors et mid-level
+- Partage des bonnes pratiques (KISS, SOLID)
+- Elevation du niveau de qualite global
+- Culture de l'excellence technique
+
+### Architecture
+
+- Participation aux decisions technologiques strategiques
+- Revues de code et Merge Requests
+- Peer Programming et Peer Review
+- Monitoring continu des applications
 
 ## Resultats
 
-- **< 500ms** latence affichage temps reel
-- **100+** utilisateurs internes quotidiens
-- **5 dashboards** metier operationnels
-- **ROI** : decisions business 3x plus rapides
+- **Qualite amelioree** des livraisons
+- **Regressions reduites** grace aux tests automatises
+- **Equipe renforcee** par le mentoring
+- **Deploiements fiables** et automatises

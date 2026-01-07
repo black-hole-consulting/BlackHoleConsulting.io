@@ -90,7 +90,7 @@ const categories: SkillCategory[] = [
                 <div class="flex gap-1">
                   {[1, 2, 3, 4, 5].map((dot) => (
                     <div
-                      class={`w-2 h-2 rounded-full transition-all duration-300 ${dot <= skill.level ? 'scale-100' : 'scale-75 opacity-30'}`}
+                      class={`w-2 h-2 rounded-full transition-all duration-300 ${dot <= skill.level ? 'scale-100' : 'scale-75 opacity-60'}`}
                       style={
                         dot <= skill.level
                           ? `background: ${category.color};`

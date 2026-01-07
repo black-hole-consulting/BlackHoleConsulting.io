@@ -1,0 +1,18 @@
+{
+  "originalFile": "upply.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:10:03.194Z",
+  "dominantColors": {
+    "primary": "#631b92",
+    "lighter": "#6d1ea1",
+    "darker": "#451366"
+  },
+  "aiDescription": null,
+  "formats": [
+    "upply-thumb.webp",
+    "upply-card.webp",
+    "upply-hero.webp",
+    "upply-card.jpg",
+    "upply-original.webp"
+  ]
+}

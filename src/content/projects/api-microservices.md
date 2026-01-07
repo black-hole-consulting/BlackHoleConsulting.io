@@ -1,50 +1,57 @@
 ---
-title: "API Gateway & Microservices"
-description: "Conception d'une architecture microservices event-driven avec API Gateway centralisee. Implementation de patterns CQRS, Event Sourcing et Saga pour la gestion des transactions distribuees."
-image: "/images/projects/api-microservices.svg"
-tags: ["Architecture", "Microservices", "Kafka", "Node.js", "Kubernetes"]
-github: "https://github.com/example/microservices-demo"
-featured: false
+title: "Software Factory BuyIn"
+description: "Mise en place d'une organisation technique internationale avec gestion d'equipes France/Allemagne. Implementation SSO entreprise, audits techniques et creation d'une culture DevOps avec Docker et GitLab CI/CD."
+image: "/images/projects/processed/buyin-card.webp"
+tags: ["Management International", "SSO", "Docker", "GitLab CI/CD", "Symfony 4"]
 order: 4
 ---
 
 ## Contexte
 
-Un acteur e-commerce en forte croissance faisait face aux limites de son monolithe. Les deploiements etaient risques, le time-to-market rallongeait, et les equipes se marchaient sur les pieds dans le code.
+BuyIn, joint-venture entre Orange et Deutsche Telekom dediee aux achats telecoms, necessitait une structuration de son organisation technique et une modernisation de ses pratiques de developpement a l'echelle internationale.
 
-## Solution technique
+## Mon role
 
-### Decomposition en domaines
+En tant que **Technical Manager**, j'ai gere :
 
-- Analyse DDD (Domain-Driven Design)
-- Identification des bounded contexts
-- Definition des agregats et entites
-- Mapping des relations inter-domaines
+- La supervision des equipes de developpement France et Allemagne
+- Les audits techniques et organisationnels
+- Le recrutement et la structuration des equipes IT
+- Le cadrage des projets avec les equipes metiers
 
-### Architecture event-driven
+## Realisations
 
-- Apache Kafka comme backbone de messaging
-- Event Sourcing pour l'audit trail complet
-- CQRS pour separer lectures et ecritures
-- Saga pattern pour les transactions distribuees
+### Gestion Internationale
 
-### API Gateway
+- Coordination des equipes France/Allemagne
+- Harmonisation des pratiques de developpement
+- Communication cross-culturelle efficace
+- Alignement sur les objectifs communs
 
-- Kong Gateway pour le routing centralise
-- Rate limiting et throttling par client
-- Authentication JWT + OAuth2
-- API versioning et deprecation
+### Securite & SSO
 
-### Infrastructure Kubernetes
+- Implementation d'une solution Single Sign-On
+- Renforcement de la securite des acces
+- Simplification de l'authentification
+- Conformite aux standards entreprise
 
-- Cluster EKS multi-zone
-- Service mesh avec Istio
-- Observabilite complete (logs, metrics, traces)
-- GitOps avec ArgoCD
+### DevOps & Tooling
+
+- Introduction de Docker pour les environnements locaux
+- Mise en place de GitLab CI/CD
+- Formation des developpeurs a Git Flow
+- Automatisation des deploiements
+
+### Excellence Technique
+
+- Ateliers code review et peer programming
+- Workshops techniques reguliers
+- Mise en place de bonnes pratiques (SOLID, KISS)
+- Documentation et partage de connaissances
 
 ## Resultats
 
-- **12** microservices autonomes deploys
-- **3x** plus rapide time-to-market nouvelles features
-- **Zero downtime** deployments
-- **Equipes** : de 1 a 4 squads independantes
+- **Equipes alignees** a l'international
+- **Securite renforcee** avec le SSO
+- **Productivite amelioree** grace au DevOps
+- **Culture technique** partagee

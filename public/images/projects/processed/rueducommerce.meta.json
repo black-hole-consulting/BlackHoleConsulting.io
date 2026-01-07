@@ -1,0 +1,18 @@
+{
+  "originalFile": "rueducommerce.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:14:35.006Z",
+  "dominantColors": {
+    "primary": "#6c6f7c",
+    "lighter": "#777a88",
+    "darker": "#4c4e57"
+  },
+  "aiDescription": null,
+  "formats": [
+    "rueducommerce-thumb.webp",
+    "rueducommerce-card.webp",
+    "rueducommerce-hero.webp",
+    "rueducommerce-card.jpg",
+    "rueducommerce-original.webp"
+  ]
+}

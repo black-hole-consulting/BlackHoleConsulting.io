@@ -2,7 +2,6 @@
 import { ClientRouter } from 'astro:transitions';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
-import CustomCursor from '../components/CustomCursor.astro';
 import NoiseOverlay from '../components/NoiseOverlay.astro';
 import BlobBackground from '../components/BlobBackground.astro';
 import CookieBanner from '../components/CookieBanner.astro';
@@ -145,7 +144,7 @@ const structuredData = {
       },
     ],
   },
-  sameAs: ['https://www.linkedin.com/in/cedric-blackhole'],
+  sameAs: ['https://www.linkedin.com/in/cedric-jacqueline-tech'],
 };
 ---
 
@@ -327,9 +326,6 @@ const structuredData = {
       // Run on initial load and after view transitions
       document.addEventListener('astro:page-load', initAnimations);
     </script>
-
-    <!-- Custom cursor effect -->
-    <CustomCursor />
 
     <!-- Noise overlay (on top of everything except modals) -->
     <NoiseOverlay />
