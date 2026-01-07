@@ -223,18 +223,50 @@ jobs:
             {
               "blocks": [
                 {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Déploiement réussi",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Site:*\n<https://blkhole.fr|blkhole.fr>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branche:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Auteur:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    }
+                  ]
+                },
+                {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: *Deploiement reussi*\n*Repo:* ${{ github.repository }}\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                    "text": "*Message:*\n${{ github.event.head_commit.message }}"
                   }
+                },
+                {
+                  "type": "divider"
                 },
                 {
                   "type": "context",
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Voir le workflow>"
+                      "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|📋 Voir le workflow> | <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|🔍 Voir le commit>"
                     }
                   ]
                 }
@@ -251,18 +283,56 @@ jobs:
             {
               "blocks": [
                 {
-                  "type": "section",
+                  "type": "header",
                   "text": {
-                    "type": "mrkdwn",
-                    "text": ":x: *Deploiement echoue*\n*Repo:* ${{ github.repository }}\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                    "type": "plain_text",
+                    "text": "❌ Déploiement échoué",
+                    "emoji": true
                   }
                 },
                 {
-                  "type": "context",
-                  "elements": [
+                  "type": "section",
+                  "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Voir les logs>"
+                      "text": "*Site:*\n<https://blkhole.fr|blkhole.fr>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branche:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Auteur:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Message:*\n${{ github.event.head_commit.message }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔍 Voir les logs",
+                        "emoji": true
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "style": "danger"
                     }
                   ]
                 }
