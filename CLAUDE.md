@@ -95,6 +95,36 @@ Automated via GitHub Actions to AWS S3 + CloudFront.
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_S3_BUCKET`
 - `CLOUDFRONT_DISTRIBUTION_ID`
+- `BREVO_API_KEY`
+
+## Infrastructure (Terraform)
+
+Infrastructure as Code in `infra/` directory. See `infra/README.md` for details.
+
+### Quick Commands
+```bash
+cd infra
+terraform init      # Initialize
+terraform plan      # Preview changes
+terraform apply     # Apply changes
+terraform output    # View outputs
+```
+
+### Resources Managed
+- **S3 Bucket** - Static website hosting
+- **CloudFront** - CDN distribution with OAC
+- **Lambda** - Contact form handler (Node.js 20, ARM64)
+- **API Gateway** - HTTP API for `/contact` endpoint
+- **IAM** - Lambda execution role
+- **CloudWatch** - Logs with 14-day retention
+
+### State Management
+- **State file**: `s3://bhc-terraform-state/website/terraform.tfstate`
+- **Locking**: DynamoDB table `bhc-terraform-locks`
+
+### CI/CD Workflows
+- `terraform.yml` - Plan on PR, Apply on main push
+- `deploy.yml` - Site deployment (uses Terraform-managed infra)
 
 ## Configuration Notes
 
