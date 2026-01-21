@@ -6,7 +6,7 @@
 
 terraform {
   backend "s3" {
-    bucket         = "bhc-terraform-state"
+    bucket         = "blackholeconsulting-terraform-state"
     key            = "website/terraform.tfstate"
     region         = "eu-west-3"
     encrypt        = true

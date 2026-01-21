@@ -49,3 +49,5 @@ infra/crash.log
 infra/crash.*.log
 infra/.terraform.lock.hcl
 infra/**/.terraform.lock.hcl
+# Bootstrap local state (run once)
+infra/bootstrap/*.tfstate*

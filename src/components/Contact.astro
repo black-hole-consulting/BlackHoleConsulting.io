@@ -290,7 +290,7 @@ const isProd = import.meta.env.PROD;
   const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
 
   // API endpoint for contact form (AWS API Gateway + Lambda)
-  const API_ENDPOINT = 'https://zm4iy4pjv8.execute-api.eu-west-3.amazonaws.com/contact';
+  const API_ENDPOINT = 'https://6deuyzfjp7.execute-api.eu-west-3.amazonaws.com/contact';
 
   // Get reCAPTCHA token (returns empty string if disabled/unavailable)
   async function getRecaptchaToken(): Promise<string> {

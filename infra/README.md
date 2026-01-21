@@ -164,7 +164,7 @@ Never commit sensitive values to the repository.
 
 ## State Management
 
-- **State file**: `s3://bhc-terraform-state/website/terraform.tfstate`
+- **State file**: `s3://blackholeconsulting-terraform-state/website/terraform.tfstate`
 - **Locking**: DynamoDB table `bhc-terraform-locks`
 - **Encryption**: AES-256 server-side encryption
 

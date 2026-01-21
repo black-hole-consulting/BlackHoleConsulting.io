@@ -119,7 +119,7 @@ terraform output    # View outputs
 - **CloudWatch** - Logs with 14-day retention
 
 ### State Management
-- **State file**: `s3://bhc-terraform-state/website/terraform.tfstate`
+- **State file**: `s3://blackholeconsulting-terraform-state/website/terraform.tfstate`
 - **Locking**: DynamoDB table `bhc-terraform-locks`
 
 ### CI/CD Workflows

@@ -31,7 +31,7 @@ provider "aws" {
 
 # S3 bucket for Terraform state
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "bhc-terraform-state"
+  bucket = "blackholeconsulting-terraform-state"
 
   lifecycle {
     prevent_destroy = true
