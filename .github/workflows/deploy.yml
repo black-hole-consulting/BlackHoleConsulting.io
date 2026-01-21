@@ -39,20 +39,29 @@ jobs:
       - name: Check for new images
         id: check-images
         run: |
-          if [[ -n $(git status --porcelain public/images/blog/) ]]; then
-            echo "has_changes=true" >> $GITHUB_OUTPUT
+          # Check if any images were generated (files exist in directory)
+          if ls public/images/blog/*.png 1> /dev/null 2>&1; then
+            echo "has_images=true" >> $GITHUB_OUTPUT
+            echo "Found images:"
+            ls -la public/images/blog/
           else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "has_images=false" >> $GITHUB_OUTPUT
+            echo "No images found"
           fi
 
       - name: Commit generated images
-        if: steps.check-images.outputs.has_changes == 'true'
+        if: steps.check-images.outputs.has_images == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add --force public/images/blog/
-          git commit -m "chore: Generate blog hero images [skip ci]"
-          git push
+          # Check if there's actually something to commit (might already be in repo)
+          if git diff --staged --quiet; then
+            echo "Images already up to date in repo"
+          else
+            git commit -m "chore: Generate blog hero images [skip ci]"
+            git push
+          fi
 
   # ─────────────────────────────────────────────
   # Jobs parallèles (pas de dépendances)
