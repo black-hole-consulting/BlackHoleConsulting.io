@@ -3,6 +3,7 @@ title: "Architecture Microservices : Quand et Comment les Adopter"
 description: "Guide complet pour comprendre les microservices, leurs avantages, leurs defis, et les criteres pour determiner si cette architecture convient a votre projet."
 pubDate: 2024-01-20
 tags: ["architecture", "microservices", "cloud", "devops"]
+heroImage: "/images/blog/architecture-microservices.png"
 draft: false
 ---
 

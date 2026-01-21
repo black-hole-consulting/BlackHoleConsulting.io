@@ -10,15 +10,63 @@ permissions:
 
 jobs:
   # ─────────────────────────────────────────────
+  # Génération des images (avant build)
+  # ─────────────────────────────────────────────
+
+  generate-images:
+    name: Generate Blog Images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate missing blog hero images
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run blog:hero:missing
+
+      - name: Check for new images
+        id: check-images
+        run: |
+          if [[ -n $(git status --porcelain public/images/blog/) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit generated images
+        if: steps.check-images.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add --force public/images/blog/
+          git commit -m "chore: Generate blog hero images [skip ci]"
+          git push
+
+  # ─────────────────────────────────────────────
   # Jobs parallèles (pas de dépendances)
   # ─────────────────────────────────────────────
 
   lint:
     name: Lint & Format
+    needs: generate-images
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,10 +85,13 @@ jobs:
 
   build:
     name: Build
+    needs: generate-images
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

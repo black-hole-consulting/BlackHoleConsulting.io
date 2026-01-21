@@ -3,6 +3,7 @@ title: "Bienvenue sur le blog de Black Hole Consulting"
 description: "Decouvrez notre nouveau blog ou nous partageons notre expertise en architecture logicielle, cloud computing et intelligence artificielle generative."
 pubDate: 2024-01-15
 tags: ["actualites", "black-hole-consulting"]
+heroImage: "/images/blog/bienvenue.png"
 draft: false
 ---
 
