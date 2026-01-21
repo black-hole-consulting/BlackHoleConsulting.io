@@ -18,7 +18,7 @@ const formattedDate = pubDate.toLocaleDateString('fr-FR', {
 ---
 
 <article class:list={['article-card group', className]}>
-  <a href={`/blog/${post.id}`} class="block h-full">
+  <a href={`/blog/${post.id.replace(/\.md$/, '')}`} class="block h-full">
     <div
       class="card h-full flex flex-col overflow-hidden hover:border-[var(--color-accent-primary)] transition-all duration-300"
     >

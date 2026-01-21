@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   return sortedPosts.map((post, index) => ({
-    params: { slug: post.id },
+    params: { slug: post.id.replace(/\.md$/, '') },
     props: {
       post,
       prevPost: sortedPosts[index + 1] || null,
