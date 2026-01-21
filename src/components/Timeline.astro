@@ -144,8 +144,15 @@ const { entries = defaultEntries } = Astro.props;
   /* Mobile: All entries on the left side of the line */
   @media (max-width: 767px) {
     .timeline-entry {
-      padding-left: 3rem;
+      padding-left: 2.5rem;
       padding-right: 0;
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 374px) {
+    .timeline-entry {
+      padding-left: 2rem;
     }
   }
 

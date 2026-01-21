@@ -108,7 +108,7 @@ body {
 /* ===== TYPOGRAPHY SCALE ===== */
 
 .text-hero {
-  font-size: clamp(2.5rem, 1.5rem + 5vw, 4.5rem);
+  font-size: clamp(1.875rem, 1rem + 4vw, 4.5rem);
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
@@ -781,8 +781,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(300px, 50vw, 600px);
-  height: clamp(300px, 50vw, 600px);
+  width: clamp(200px, 45vw, 600px);
+  height: clamp(200px, 45vw, 600px);
   pointer-events: none;
   z-index: 0;
 }

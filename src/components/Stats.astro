@@ -31,13 +31,13 @@ const stats: StatItem[] = [
 
 <section id="stats" class="py-16 md:py-20">
   <div class="container">
-    <div class="stats-container fade-in grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 lg:gap-12">
+    <div class="stats-container fade-in grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-6 lg:gap-12">
       {
         stats.map((stat, index) => (
           <div class={`stat-item text-center stagger-${index + 1}`}>
             <div class="stat-value-wrapper mb-2">
               <span
-                class="stat-value gradient-text text-4xl md:text-5xl lg:text-6xl font-bold"
+                class="stat-value gradient-text text-3xl md:text-5xl lg:text-6xl font-bold"
                 data-target={stat.value}
                 data-suffix={stat.suffix}
               >

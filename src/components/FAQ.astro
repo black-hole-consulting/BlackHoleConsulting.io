@@ -51,11 +51,11 @@ const faqs = [
         faqs.map((faq, index) => (
           <div class={`fade-in stagger-${Math.min(index + 1, 4)} faq-item`}>
             <details class="group bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-2xl overflow-hidden hover:border-[var(--color-accent-primary)]/50 transition-all">
-              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                <span class="text-[var(--color-text-primary)] font-medium pr-4">
+              <summary class="flex items-center justify-between p-4 md:p-6 cursor-pointer list-none">
+                <span class="text-[var(--color-text-primary)] font-medium pr-3 md:pr-4 text-sm md:text-base">
                   {faq.question}
                 </span>
-                <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-accent-primary)] group-open:rotate-45 transition-transform duration-300">
+                <span class="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-accent-primary)] group-open:rotate-45 transition-transform duration-300">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
@@ -66,8 +66,10 @@ const faqs = [
                   </svg>
                 </span>
               </summary>
-              <div class="px-6 pb-6">
-                <p class="text-[var(--color-text-secondary)] leading-relaxed">{faq.answer}</p>
+              <div class="px-4 pb-4 md:px-6 md:pb-6">
+                <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base">
+                  {faq.answer}
+                </p>
               </div>
             </details>
           </div>
