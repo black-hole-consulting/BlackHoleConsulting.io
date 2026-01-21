@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Timeline from '../components/Timeline.astro';
+import TechStack from '../components/TechStack.astro';
 
 const motivations = [
   {
@@ -29,17 +30,6 @@ const motivations = [
     description:
       'Pas de sur-ingenierie, pas de complexite inutile. Je me concentre sur ce qui compte : des solutions qui marchent et qui apportent de la valeur business.',
   },
-];
-
-const stackTechnique = [
-  { name: 'PHP / Symfony', level: 'Expert', years: '17 ans' },
-  { name: 'Python / FastAPI', level: 'Avance', years: '3 ans' },
-  { name: 'AWS / Cloud', level: 'Expert', years: '6 ans' },
-  { name: 'Docker / Kubernetes', level: 'Avance', years: '7 ans' },
-  { name: 'Terraform / IaC', level: 'Avance', years: '4 ans' },
-  { name: 'CI/CD (GitLab, GitHub)', level: 'Expert', years: '8 ans' },
-  { name: 'GenAI / LLM', level: 'Avance', years: '2 ans' },
-  { name: 'Architecture SI', level: 'Expert', years: '10 ans' },
 ];
 
 const stackGestion = [
@@ -214,20 +204,8 @@ const stackCommunication = [
           </p>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-          {
-            stackTechnique.map((tech, index) => (
-              <div
-                class={`fade-in stagger-${(index % 4) + 1} p-4 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border)] hover:border-[var(--color-accent-primary)]/50 transition-colors`}
-              >
-                <div class="font-semibold text-[var(--color-text-primary)] mb-1">{tech.name}</div>
-                <div class="flex justify-between text-sm">
-                  <span class="text-[var(--color-accent-primary)]">{tech.level}</span>
-                  <span class="text-[var(--color-text-muted)]">{tech.years}</span>
-                </div>
-              </div>
-            ))
-          }
+        <div class="flex justify-center">
+          <TechStack />
         </div>
       </div>
     </section>
