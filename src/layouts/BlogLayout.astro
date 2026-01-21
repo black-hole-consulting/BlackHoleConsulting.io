@@ -286,14 +286,11 @@ const breadcrumbData = {
           </nav>
         </article>
 
-        <!-- Right Column: Sticky TOC -->
         {
           headings.length > 0 && (
-            <aside class="hidden lg:block">
-              <div class="sticky top-24">
-                <TableOfContents headings={headings} />
-              </div>
-            </aside>
+            <div class="hidden lg:block">
+              <TableOfContents headings={headings} />
+            </div>
           )
         }
       </div>
