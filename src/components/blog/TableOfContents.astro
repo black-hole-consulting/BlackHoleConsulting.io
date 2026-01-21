@@ -17,16 +17,35 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 {
   tocHeadings.length > 0 && (
-    <nav class="toc sticky top-24" aria-label="Table des matieres">
-      <h2 class="text-sm font-semibold text-[var(--color-text-primary)] uppercase tracking-wider mb-4">
-        Sommaire
-      </h2>
-      <ul class="space-y-2 text-sm">
+    <nav
+      class="toc sticky top-24 p-5 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)]"
+      aria-label="Table des matieres"
+    >
+      <div class="flex items-center gap-2 mb-4 pb-3 border-b border-[var(--color-border)]">
+        <svg
+          class="w-4 h-4 text-[var(--color-accent-primary)]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 10h16M4 14h16M4 18h16"
+          />
+        </svg>
+        <h2 class="text-sm font-semibold text-[var(--color-text-primary)] uppercase tracking-wider">
+          Sommaire
+        </h2>
+      </div>
+
+      <ul class="space-y-1 text-sm">
         {tocHeadings.map((heading) => (
           <li class={heading.depth === 3 ? 'ml-4' : ''}>
             <a
               href={`#${heading.slug}`}
-              class="toc-link block py-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent-primary)] transition-colors border-l-2 border-transparent hover:border-[var(--color-accent-primary)] pl-3 -ml-[2px]"
+              class="toc-link block py-1.5 px-3 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-accent-primary)] hover:bg-[var(--color-bg-secondary)] transition-all border-l-2 border-transparent"
               data-heading={heading.slug}
             >
               {heading.text}
@@ -42,11 +61,36 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
   .toc {
     max-height: calc(100vh - 8rem);
     overflow-y: auto;
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.15);
+  }
+
+  .toc-link {
+    position: relative;
   }
 
   .toc-link.active {
     color: var(--color-accent-primary);
+    background: var(--color-bg-secondary);
     border-left-color: var(--color-accent-primary);
+    font-weight: 500;
+  }
+
+  /* Scrollbar styling */
+  .toc::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+
+  .toc::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
   }
 </style>
 
