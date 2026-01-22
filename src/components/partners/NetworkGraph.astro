@@ -40,7 +40,7 @@ const links = partners.map((p) => ({
   .network-container {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 450px;
     background: radial-gradient(
       circle at center,
       var(--color-bg-tertiary) 0%,
@@ -49,6 +49,12 @@ const links = partners.map((p) => ({
     border-radius: 1rem;
     overflow: hidden;
     border: 1px solid var(--color-border);
+  }
+
+  /* Prevent browser translation popup */
+  #network-graph,
+  #network-graph :global(*) {
+    translate: none;
   }
 
   #network-graph {
@@ -174,7 +180,9 @@ const links = partners.map((p) => ({
       .select(container)
       .append('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMidYMid meet');
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .attr('translate', 'no')
+      .attr('class', 'notranslate');
 
     // Create gradient for links
     const defs = svg.append('defs');
@@ -185,7 +193,8 @@ const links = partners.map((p) => ({
     gradient.append('stop').attr('offset', '0%').attr('stop-color', '#6366f1');
     gradient.append('stop').attr('offset', '100%').attr('stop-color', '#ec4899');
 
-    // Create force simulation
+    // Create force simulation with stronger separation
+    const nodeRadius = (d: any) => (d.isCenter ? 40 : 30);
     const simulation = d3
       .forceSimulation(nodesData)
       .force(
@@ -193,11 +202,16 @@ const links = partners.map((p) => ({
         d3
           .forceLink(linksData)
           .id((d: any) => d.id)
-          .distance(120)
+          .distance(140)
       )
-      .force('charge', d3.forceManyBody().strength(-300))
+      .force('charge', d3.forceManyBody().strength(-500))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(50));
+      .force(
+        'collision',
+        d3.forceCollide().radius((d: any) => nodeRadius(d) + 25)
+      )
+      .force('x', d3.forceX(width / 2).strength(0.05))
+      .force('y', d3.forceY(height / 2).strength(0.05));
 
     // Draw links
     const link = svg
@@ -238,20 +252,22 @@ const links = partners.map((p) => ({
     node
       .append('circle')
       .attr('class', 'node-circle')
-      .attr('r', (d: any) => (d.isCenter ? 35 : 25))
+      .attr('r', (d: any) => nodeRadius(d))
       .attr('fill', (d: any) => d.color);
 
     // Add labels to nodes
     node
       .append('text')
-      .attr('class', 'node-label')
-      .attr('dy', (d: any) => (d.isCenter ? 50 : 40))
+      .attr('class', 'node-label notranslate')
+      .attr('translate', 'no')
+      .attr('dy', (d: any) => (d.isCenter ? 55 : 45))
       .text((d: any) => (d.isCenter ? 'VOUS' : d.name.split(' ')[0]));
 
     // Add center icon
     node
       .filter((d: any) => d.isCenter)
       .append('text')
+      .attr('class', 'notranslate')
       .attr('text-anchor', 'middle')
       .attr('dy', '0.35em')
       .attr('fill', 'white')
@@ -262,6 +278,7 @@ const links = partners.map((p) => ({
     node
       .filter((d: any) => !d.isCenter)
       .append('text')
+      .attr('class', 'notranslate')
       .attr('text-anchor', 'middle')
       .attr('dy', '0.35em')
       .attr('fill', 'white')
@@ -287,8 +304,15 @@ const links = partners.map((p) => ({
       }
     });
 
-    // Update positions on tick
+    // Update positions on tick with boundary constraints
+    const padding = 60;
     simulation.on('tick', () => {
+      // Keep nodes within bounds
+      nodesData.forEach((d: any) => {
+        d.x = Math.max(padding, Math.min(width - padding, d.x));
+        d.y = Math.max(padding, Math.min(height - padding, d.y));
+      });
+
       link
         .attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
