@@ -1,0 +1,55 @@
+---
+import type { Badge } from '../../data/partners';
+
+interface Props {
+  badge: Badge;
+}
+
+const { badge } = Astro.props;
+
+const icons: Record<string, string> = {
+  years: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`,
+  projects: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
+  mutual: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+  expertise: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
+};
+
+const colors: Record<string, string> = {
+  years: 'from-blue-500 to-cyan-500',
+  projects: 'from-green-500 to-emerald-500',
+  mutual: 'from-pink-500 to-rose-500',
+  expertise: 'from-amber-500 to-yellow-500',
+};
+---
+
+<div
+  class:list={[
+    'partner-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium',
+    'bg-gradient-to-r text-white shadow-lg',
+    colors[badge.type],
+  ]}
+>
+  <span class="badge-icon" set:html={icons[badge.type]} />
+  {badge.value && <span class="font-bold">{badge.value}</span>}
+  <span>{badge.label}</span>
+</div>
+
+<style>
+  .partner-badge {
+    animation: badge-pop 0.3s ease-out forwards;
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  @keyframes badge-pop {
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .badge-icon {
+    display: flex;
+    align-items: center;
+  }
+</style>

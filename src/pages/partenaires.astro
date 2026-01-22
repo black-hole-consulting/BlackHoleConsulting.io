@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PartnerCard from '../components/partners/PartnerCard.astro';
+import NetworkGraph from '../components/partners/NetworkGraph.astro';
+import { partners, networkStats } from '../data/partners';
+
+const title = 'Mon Reseau de Partenaires | Black Hole Consulting';
+const description =
+  'Decouvrez les experts avec qui je collabore : architectes, developpeurs, DevOps, data scientists. Un reseau de confiance pour vos projets tech.';
+const canonical = 'https://blackholeconsulting.io/partenaires';
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <Header />
+
+  <main class="pt-32 pb-20">
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 mb-16">
+      <div class="max-w-4xl mx-auto text-center fade-in">
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)] text-sm font-semibold mb-6"
+        >
+          Mon Reseau
+        </span>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <span class="gradient-text">Les talents</span> avec qui je collabore
+        </h1>
+
+        <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-8">
+          Un projet ambitieux necessite souvent plusieurs expertises. Voici les professionnels de
+          confiance avec qui je construis des solutions depuis des annees.
+        </p>
+
+        <!-- Stats -->
+        <div class="flex flex-wrap justify-center gap-8 mb-12">
+          <div class="stat-item">
+            <span class="stat-value">{networkStats.totalPartners}</span>
+            <span class="stat-label">Partenaires</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{networkStats.totalYears}+</span>
+            <span class="stat-label">Annees de collaboration</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{networkStats.totalProjects}+</span>
+            <span class="stat-label">Projets ensemble</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Network Graph -->
+      <div class="max-w-4xl mx-auto fade-in stagger-2">
+        <NetworkGraph partners={partners} centerName="Cedric" />
+      </div>
+    </section>
+
+    <!-- Partners Grid -->
+    <section class="section-alt py-20">
+      <div class="container mx-auto px-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-4 fade-in">
+          <span class="gradient-text">Rencontrez</span> l'equipe elargie
+        </h2>
+        <p
+          class="text-center text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-12 fade-in stagger-1"
+        >
+          Survolez (ou tapez sur mobile) pour decouvrir chaque partenaire
+        </p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {partners.map((partner, index) => <PartnerCard partner={partner} index={index} />)}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section py-20">
+      <div class="container mx-auto px-6">
+        <div class="card max-w-3xl mx-auto text-center p-8 md:p-12 fade-in">
+          <div
+            class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] flex items-center justify-center"
+          >
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+              ></path>
+            </svg>
+          </div>
+
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">
+            Envie de <span class="gradient-text">rejoindre le reseau</span> ?
+          </h2>
+
+          <p class="text-[var(--color-text-secondary)] mb-8 max-w-xl mx-auto">
+            Vous etes un expert dans votre domaine et partagez mes valeurs de qualite et de
+            collaboration ? Discutons de comment travailler ensemble.
+          </p>
+
+          <a
+            href="/#contact"
+            class="btn-gradient-animated inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-lg"
+          >
+            <span>Me contacter</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-alt {
+    background: var(--color-bg-secondary);
+  }
+</style>

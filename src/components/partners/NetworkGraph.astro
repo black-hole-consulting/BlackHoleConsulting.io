@@ -1,0 +1,321 @@
+---
+import type { Partner } from '../../data/partners';
+
+interface Props {
+  partners: Partner[];
+  centerName?: string;
+}
+
+const { partners, centerName = 'Cedric' } = Astro.props;
+
+// Prepare data for D3
+const nodes = [
+  { id: 'center', name: centerName, color: '#6366f1', isCenter: true },
+  ...partners.map((p) => ({ id: p.id, name: p.name, color: p.color, isCenter: false })),
+];
+
+const links = partners.map((p) => ({
+  source: 'center',
+  target: p.id,
+}));
+---
+
+<div class="network-container">
+  <div id="network-graph" data-nodes={JSON.stringify(nodes)} data-links={JSON.stringify(links)}>
+  </div>
+  <div class="network-legend">
+    <span class="legend-item">
+      <span class="legend-dot center"></span>
+      Vous
+    </span>
+    <span class="legend-item">
+      <span class="legend-dot partner"></span>
+      Partenaire
+    </span>
+    <span class="legend-hint">Cliquez sur un noeud pour voir le profil</span>
+  </div>
+</div>
+
+<style>
+  .network-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: radial-gradient(
+      circle at center,
+      var(--color-bg-tertiary) 0%,
+      var(--color-bg-primary) 100%
+    );
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  #network-graph {
+    width: 100%;
+    height: 100%;
+  }
+
+  #network-graph :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  #network-graph :global(.node) {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  #network-graph :global(.node:hover) {
+    transform: scale(1.2);
+  }
+
+  #network-graph :global(.node-circle) {
+    stroke: var(--color-bg-primary);
+    stroke-width: 3px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  #network-graph :global(.node-label) {
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--color-text-primary);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  #network-graph :global(.link) {
+    stroke: var(--color-border);
+    stroke-width: 2px;
+    stroke-dasharray: 5, 5;
+    animation: dash 20s linear infinite;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+
+  .network-legend {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.center {
+    background: #6366f1;
+  }
+
+  .legend-dot.partner {
+    background: linear-gradient(135deg, #ec4899, #f59e0b);
+  }
+
+  .legend-hint {
+    opacity: 0.6;
+  }
+
+  @media (max-width: 640px) {
+    .network-container {
+      height: 300px;
+    }
+
+    .network-legend {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .legend-hint {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  async function initNetworkGraph() {
+    const container = document.getElementById('network-graph');
+    if (!container) return;
+
+    const nodesData = JSON.parse(container.dataset.nodes || '[]');
+    const linksData = JSON.parse(container.dataset.links || '[]');
+
+    // Dynamically import D3
+    const d3 = await import('https://cdn.jsdelivr.net/npm/d3@7/+esm');
+
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Clear any existing SVG
+    container.innerHTML = '';
+
+    const svg = d3
+      .select(container)
+      .append('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    // Create gradient for links
+    const defs = svg.append('defs');
+    const gradient = defs
+      .append('linearGradient')
+      .attr('id', 'link-gradient')
+      .attr('gradientUnits', 'userSpaceOnUse');
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#6366f1');
+    gradient.append('stop').attr('offset', '100%').attr('stop-color', '#ec4899');
+
+    // Create force simulation
+    const simulation = d3
+      .forceSimulation(nodesData)
+      .force(
+        'link',
+        d3
+          .forceLink(linksData)
+          .id((d: any) => d.id)
+          .distance(120)
+      )
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('collision', d3.forceCollide().radius(50));
+
+    // Draw links
+    const link = svg
+      .append('g')
+      .selectAll('line')
+      .data(linksData)
+      .join('line')
+      .attr('class', 'link')
+      .attr('stroke', 'url(#link-gradient)');
+
+    // Draw nodes
+    const node = svg
+      .append('g')
+      .selectAll('g')
+      .data(nodesData)
+      .join('g')
+      .attr('class', 'node')
+      .call(
+        d3
+          .drag()
+          .on('start', (event: any, d: any) => {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          })
+          .on('drag', (event: any, d: any) => {
+            d.fx = event.x;
+            d.fy = event.y;
+          })
+          .on('end', (event: any, d: any) => {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+          }) as any
+      );
+
+    // Add circles to nodes
+    node
+      .append('circle')
+      .attr('class', 'node-circle')
+      .attr('r', (d: any) => (d.isCenter ? 35 : 25))
+      .attr('fill', (d: any) => d.color);
+
+    // Add labels to nodes
+    node
+      .append('text')
+      .attr('class', 'node-label')
+      .attr('dy', (d: any) => (d.isCenter ? 50 : 40))
+      .text((d: any) => (d.isCenter ? 'VOUS' : d.name.split(' ')[0]));
+
+    // Add center icon
+    node
+      .filter((d: any) => d.isCenter)
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '0.35em')
+      .attr('fill', 'white')
+      .attr('font-size', '20px')
+      .text('C');
+
+    // Add partner initials
+    node
+      .filter((d: any) => !d.isCenter)
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '0.35em')
+      .attr('fill', 'white')
+      .attr('font-size', '14px')
+      .attr('font-weight', 'bold')
+      .text((d: any) => {
+        const parts = d.name.split(' ');
+        return parts.map((p: string) => p[0]).join('');
+      });
+
+    // Click handler to scroll to partner card
+    node.on('click', (event: any, d: any) => {
+      if (!d.isCenter) {
+        const element = document.getElementById(`partner-${d.id}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Add highlight effect
+          element.closest('.partner-card-container')?.classList.add('highlighted');
+          setTimeout(() => {
+            element.closest('.partner-card-container')?.classList.remove('highlighted');
+          }, 2000);
+        }
+      }
+    });
+
+    // Update positions on tick
+    simulation.on('tick', () => {
+      link
+        .attr('x1', (d: any) => d.source.x)
+        .attr('y1', (d: any) => d.source.y)
+        .attr('x2', (d: any) => d.target.x)
+        .attr('y2', (d: any) => d.target.y);
+
+      node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNetworkGraph);
+  window.addEventListener('resize', initNetworkGraph);
+</script>
+
+<style is:global>
+  .partner-card-container.highlighted {
+    animation: highlight-pulse 0.5s ease-in-out 3;
+  }
+
+  @keyframes highlight-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+    }
+  }
+</style>
