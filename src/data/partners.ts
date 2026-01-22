@@ -29,7 +29,7 @@ export const partners: Partner[] = [
     name: 'Alexandre Martin',
     title: 'DevOps Engineer',
     company: 'CloudScale',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alex',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=alex',
     description:
       'Expert Kubernetes et CI/CD. On a monté ensemble des pipelines qui déploient plus vite que leur ombre.',
     skills: ['Kubernetes', 'Terraform', 'GitLab CI', 'AWS'],
@@ -48,7 +48,7 @@ export const partners: Partner[] = [
     name: 'Sophie Dubois',
     title: 'Data Scientist',
     company: 'DataMind',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sophie',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=sophie',
     description:
       'Magicienne des données et des modèles ML. Ensemble, on transforme la data en décisions.',
     skills: ['Python', 'TensorFlow', 'MLOps', 'BigQuery'],
@@ -68,7 +68,7 @@ export const partners: Partner[] = [
     name: 'Marc Lefebvre',
     title: 'Solution Architect',
     company: 'TechVision',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=marc',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=marc',
     description:
       'Architecte visionnaire. Nos sessions de whiteboarding sont légendaires (et productives).',
     skills: ['Architecture', 'AWS', 'Microservices', 'Event-Driven'],
@@ -88,7 +88,7 @@ export const partners: Partner[] = [
     name: 'Julie Chen',
     title: 'Frontend Lead',
     company: 'PixelPerfect',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=julie',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=julie',
     description:
       'Artiste du pixel et du composant React. Nos interfaces sont belles ET performantes.',
     skills: ['React', 'TypeScript', 'Tailwind', 'Figma'],
@@ -108,7 +108,7 @@ export const partners: Partner[] = [
     name: 'Thomas Bernard',
     title: 'Security Consultant',
     company: 'SecureOps',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=thomas',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=thomas',
     description:
       'Gardien de la forteresse. Il trouve les failles avant les hackers (et parfois avant les devs).',
     skills: ['Pentesting', 'OWASP', 'IAM', 'Compliance'],
@@ -127,7 +127,7 @@ export const partners: Partner[] = [
     name: 'Emma Rodriguez',
     title: 'Product Manager',
     company: 'ProductLab',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=emma',
+    avatar: 'https://api.dicebear.com/7.x/notionists-neutral/svg?seed=emma',
     description: "Traductrice parfaite entre business et tech. Ses specs sont des oeuvres d'art.",
     skills: ['Product Strategy', 'Agile', 'User Research', 'Roadmapping'],
     badges: [
