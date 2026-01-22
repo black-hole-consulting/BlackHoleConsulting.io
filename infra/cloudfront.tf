@@ -3,6 +3,32 @@
 # This resource will be IMPORTED from existing infrastructure.
 # Run: terraform import aws_cloudfront_distribution.website "DISTRIBUTION_ID"
 
+# CloudFront Function for URL rewriting (add index.html to directory requests)
+resource "aws_cloudfront_function" "url_rewrite" {
+  name    = "${var.project_name}-url-rewrite"
+  runtime = "cloudfront-js-2.0"
+  comment = "Rewrite URLs to add index.html for directory requests"
+  publish = true
+
+  code = <<-EOF
+    function handler(event) {
+      var request = event.request;
+      var uri = request.uri;
+
+      // If URI ends with '/', append index.html
+      if (uri.endsWith('/')) {
+        request.uri += 'index.html';
+      }
+      // If URI doesn't have an extension, append /index.html
+      else if (!uri.includes('.')) {
+        request.uri += '/index.html';
+      }
+
+      return request;
+    }
+  EOF
+}
+
 # Origin Access Control for secure S3 access
 resource "aws_cloudfront_origin_access_control" "website" {
   name                              = "${var.project_name}-website-oac"
@@ -40,6 +66,11 @@ resource "aws_cloudfront_distribution" "website" {
 
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.cors_s3_origin.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.url_rewrite.arn
+    }
   }
 
   # Custom error responses for SPA-like behavior
