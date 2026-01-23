@@ -25,6 +25,26 @@ export interface Partner {
 
 export const partners: Partner[] = [
   {
+    id: 'vincent-composieux',
+    name: 'Vincent Composieux',
+    title: 'Tech Lead & Architect',
+    avatar: '/images/partners/vincent-composieux.jpg',
+    description:
+      'Crafting robust products from backend systems to scalable infrastructures. Plus de 10 ans de collaboration et toujours aussi efficace.',
+    skills: ['Go', 'Architecture', 'Cloud'],
+    badges: [
+      { type: 'years', label: 'ans de collaboration', value: 10 },
+      { type: 'projects', label: 'projets ensemble', value: 20 },
+      { type: 'mutual', label: 'Recommandation mutuelle' },
+      { type: 'expertise', label: 'Expert Architecture' },
+    ],
+    links: {
+      linkedin: 'https://www.linkedin.com/in/vincentcomposieux/',
+      github: 'https://github.com/eko',
+    },
+    color: '#6366f1',
+  },
+  {
     id: 'alex-devops',
     name: 'Alexandre Martin',
     title: 'DevOps Engineer',
