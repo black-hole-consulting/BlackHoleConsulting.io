@@ -1,4 +1,4 @@
-/* global fetch, process, console */
+/* global fetch, process, console, URLSearchParams */
 /**
  * AWS Lambda function for contact form
  * Sends emails via Brevo (Sendinblue) API
