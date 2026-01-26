@@ -36,7 +36,7 @@ const { partner, index = 0 } = Astro.props;
             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
           ></path>
         </svg>
-        <span>Hover pour en savoir plus</span>
+        <span>Cliquez pour en savoir plus</span>
       </div>
     </div>
 
@@ -111,6 +111,7 @@ const { partner, index = 0 } = Astro.props;
     animation-delay: var(--delay);
     opacity: 0;
     transform: translateY(20px);
+    cursor: pointer;
   }
 
   @keyframes card-appear {
@@ -128,7 +129,7 @@ const { partner, index = 0 } = Astro.props;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .partner-card-container:hover .partner-card {
+  .partner-card.flipped {
     transform: rotateY(180deg);
   }
 
@@ -233,7 +234,7 @@ const { partner, index = 0 } = Astro.props;
     transition: opacity 0.2s;
   }
 
-  .partner-card-container:hover .flip-hint {
+  .partner-card.flipped .flip-hint {
     opacity: 0;
   }
 
@@ -278,12 +279,8 @@ const { partner, index = 0 } = Astro.props;
     border-color: var(--accent-color);
   }
 
-  /* Mobile: tap to flip instead of hover */
+  /* Mobile: shorter hint text */
   @media (max-width: 768px) {
-    .partner-card-container {
-      cursor: pointer;
-    }
-
     .flip-hint span {
       display: none;
     }
@@ -295,19 +292,20 @@ const { partner, index = 0 } = Astro.props;
 </style>
 
 <script>
-  // Handle tap to flip on mobile
+  // Handle click to flip on all devices
   function initPartnerCards() {
-    if (window.innerWidth <= 768) {
-      document.querySelectorAll('.partner-card-container').forEach((container) => {
-        container.addEventListener('click', () => {
-          const card = container.querySelector('.partner-card') as HTMLElement;
-          if (card) {
-            const isFlipped = card.style.transform === 'rotateY(180deg)';
-            card.style.transform = isFlipped ? '' : 'rotateY(180deg)';
-          }
-        });
+    document.querySelectorAll('.partner-card-container').forEach((container) => {
+      container.addEventListener('click', (e) => {
+        // Don't flip if clicking on a link (LinkedIn, GitHub, etc.)
+        if ((e.target as HTMLElement).closest('a')) return;
+
+        const card = container.querySelector('.partner-card') as HTMLElement;
+        if (card) {
+          const isFlipped = card.classList.contains('flipped');
+          card.classList.toggle('flipped', !isFlipped);
+        }
       });
-    }
+    });
   }
 
   document.addEventListener('astro:page-load', initPartnerCards);
