@@ -68,7 +68,7 @@ projects: { title, description, image, tags, url, github, featured, order }
 ### Key Features
 - **View Transitions** - ClientRouter for smooth navigation
 - **RSS Feed** - `/rss.xml` via @astrojs/rss
-- **Crisp Chat** - Widget in BaseLayout (configure CRISP_WEBSITE_ID)
+- **reCAPTCHA v3** - Spam protection on contact form
 - **Self-hosted fonts** - Inter via @fontsource-variable/inter
 - **Scroll progress** - Visual indicator at page top
 - **Active nav state** - IntersectionObserver highlights current section
@@ -96,6 +96,8 @@ Automated via GitHub Actions to AWS S3 + CloudFront.
 - `AWS_S3_BUCKET`
 - `CLOUDFRONT_DISTRIBUTION_ID`
 - `BREVO_API_KEY`
+- `PUBLIC_RECAPTCHA_SITE_KEY` - reCAPTCHA v3 site key (public)
+- `RECAPTCHA_SECRET_KEY` - reCAPTCHA v3 secret key (for Lambda)
 
 ## Infrastructure (Terraform)
 
@@ -128,8 +130,7 @@ terraform output    # View outputs
 
 ## Configuration Notes
 
-- **Crisp Chat**: Update `YOUR_CRISP_WEBSITE_ID` in `BaseLayout.astro`
-- **Formspree**: Update form action in `Contact.astro`
+- **reCAPTCHA**: Site key is set via `PUBLIC_RECAPTCHA_SITE_KEY` env var at build time
 - **Content**: Customize demo articles in `src/content/blog/` and `src/content/projects/`
 - **Timeline**: Update career data in `a-propos.astro`
 

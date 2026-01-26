@@ -1187,3 +1187,9 @@ html.light .gradient-text-animated {
 html.light .blob {
   opacity: 0.08;
 }
+
+/* ===== RECAPTCHA BADGE HIDDEN ===== */
+/* Badge is hidden per Google's guidelines - attribution text is shown in Contact form */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
