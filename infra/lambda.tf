@@ -63,7 +63,8 @@ resource "aws_lambda_function" "contact_form" {
 
   environment {
     variables = {
-      BREVO_API_KEY = var.brevo_api_key
+      BREVO_API_KEY          = var.brevo_api_key
+      RECAPTCHA_SECRET_KEY   = var.recaptcha_secret_key
     }
   }
 

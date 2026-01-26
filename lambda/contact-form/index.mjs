@@ -2,9 +2,12 @@
 /**
  * AWS Lambda function for contact form
  * Sends emails via Brevo (Sendinblue) API
+ * Includes reCAPTCHA v3 verification
  */
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+const RECAPTCHA_THRESHOLD = 0.5;
 
 // CORS headers for browser requests
 const corsHeaders = {
@@ -38,7 +41,7 @@ export const handler = async (event) => {
   try {
     // Parse form data
     const body = JSON.parse(event.body);
-    const { name, email, company, 'project-type': projectType, message } = body;
+    const { name, email, company, 'project-type': projectType, message, recaptchaToken } = body;
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -47,6 +50,23 @@ export const handler = async (event) => {
         headers: corsHeaders,
         body: JSON.stringify({ error: 'Missing required fields' }),
       };
+    }
+
+    // Verify reCAPTCHA token (if secret key is configured)
+    const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (recaptchaSecretKey) {
+      const recaptchaResult = await verifyRecaptcha(recaptchaToken, recaptchaSecretKey);
+      if (!recaptchaResult.success) {
+        console.warn('reCAPTCHA verification failed:', recaptchaResult.error);
+        return {
+          statusCode: 403,
+          headers: corsHeaders,
+          body: JSON.stringify({ error: 'reCAPTCHA verification failed' }),
+        };
+      }
+      console.log(`reCAPTCHA score: ${recaptchaResult.score}`);
+    } else {
+      console.log('reCAPTCHA verification skipped (no secret key configured)');
     }
 
     // Project type labels
@@ -157,4 +177,44 @@ function escapeHtml(text) {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Verify reCAPTCHA v3 token
+async function verifyRecaptcha(token, secretKey) {
+  if (!token) {
+    return { success: false, error: 'No token provided' };
+  }
+
+  try {
+    const params = new URLSearchParams();
+    params.append('secret', secretKey);
+    params.append('response', token);
+
+    const response = await fetch(RECAPTCHA_VERIFY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      return { success: false, error: data['error-codes']?.join(', ') || 'Verification failed' };
+    }
+
+    // Check score threshold (reCAPTCHA v3 returns 0.0 - 1.0)
+    if (data.score < RECAPTCHA_THRESHOLD) {
+      return { success: false, error: `Score too low: ${data.score}`, score: data.score };
+    }
+
+    // Verify action matches
+    if (data.action !== 'contact_form') {
+      return { success: false, error: `Invalid action: ${data.action}` };
+    }
+
+    return { success: true, score: data.score };
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    return { success: false, error: 'Verification request failed' };
+  }
 }

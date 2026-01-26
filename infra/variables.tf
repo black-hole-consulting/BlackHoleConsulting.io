@@ -38,6 +38,13 @@ variable "brevo_api_key" {
   sensitive   = true
 }
 
+variable "recaptcha_secret_key" {
+  description = "reCAPTCHA v3 secret key for server-side verification"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 # CORS origins for API Gateway
 variable "cors_allowed_origins" {
   description = "List of allowed CORS origins for the contact API"
