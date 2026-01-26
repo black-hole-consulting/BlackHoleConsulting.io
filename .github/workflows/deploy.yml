@@ -112,6 +112,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.PUBLIC_RECAPTCHA_SITE_KEY }}
         run: npm run build
 
       - name: Upload build artifact
