@@ -37,6 +37,9 @@
     "astro": "^5.16.6",
     "tailwindcss": "^4.1.18"
   },
+  "overrides": {
+    "tmp": "0.2.5"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@google/genai": "^1.38.0",

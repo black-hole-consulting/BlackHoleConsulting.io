@@ -3,51 +3,87 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Timeline from '../components/Timeline.astro';
-import TechStack from '../components/TechStack.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
 
-const motivations = [
+const domains = [
   {
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
-    title: 'Resoudre des problemes complexes',
+    icon: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>`,
+    title: 'Architecture de Solutions',
     description:
-      "J'aime les defis techniques qui demandent reflexion et creativite. Transformer un besoin flou en solution concrete, c'est ce qui me fait vibrer.",
+      "Conception d'architectures scalables, résilientes et maintenables. Du monolithe bien structuré aux microservices event-driven, je choisis le bon pattern pour le bon contexte.",
+    tags: ['Microservices', 'DDD', 'Event-Driven', 'API Design', 'C4 Model'],
   },
   {
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
-    title: 'Faire grandir les equipes',
+    icon: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>`,
+    title: 'Cloud Strategy & Infrastructure',
     description:
-      "Partager mes connaissances, mentorer, voir les developpeurs progresser. Le succes d'une equipe me motive plus que les accomplissements individuels.",
+      'Définition et implémentation de stratégies Cloud AWS. Infrastructure as Code avec Terraform, CI/CD automatisé, monitoring et observabilité pour des plateformes production-ready.',
+    tags: ['AWS', 'Terraform', 'Docker', 'CI/CD', 'IaC'],
   },
   {
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
-    title: 'Explorer les nouvelles technos',
+    icon: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>`,
+    title: 'IA Générative & Innovation',
     description:
-      "L'IA generative, le cloud-native, les nouvelles architectures... Je reste curieux et j'experimente constamment pour rester a la pointe.",
+      "Intégration de l'IA générative dans les systèmes d'entreprise. Conception de pipelines RAG, orchestration d'agents LLM, et accompagnement des équipes vers l'adoption responsable de l'IA.",
+    tags: ['LLM', 'RAG', 'Agents', 'OpenAI', 'Claude API'],
   },
   {
-    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
-    title: 'Livrer de la valeur',
+    icon: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+    title: 'Leadership Technique',
     description:
-      'Pas de sur-ingenierie, pas de complexite inutile. Je me concentre sur ce qui compte : des solutions qui marchent et qui apportent de la valeur business.',
+      "Management d'équipes engineering, mise en place de standards techniques et governance. Je fais le pont entre vision business et exécution technique pour aligner les équipes sur les objectifs stratégiques.",
+    tags: ['Mentoring', 'Tech Radar', 'Agile', 'Roadmap', 'Transformation'],
   },
 ];
 
-const stackGestion = [
-  { name: 'Agile / Scrum', icon: '🔄' },
-  { name: 'Kanban', icon: '📋' },
-  { name: 'OKR', icon: '🎯' },
-  { name: 'Management 3.0', icon: '👥' },
-  { name: 'Roadmap produit', icon: '🗺️' },
-  { name: 'Estimation / Planning', icon: '📊' },
+const methodology = [
+  {
+    phase: '01',
+    title: 'Audit & Discovery',
+    description:
+      "Analyse du SI existant, identification des pain points, cartographie de l'écosystème technique et compréhension des enjeux business.",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>`,
+  },
+  {
+    phase: '02',
+    title: 'Cadrage & Design',
+    description:
+      "Définition de l'architecture cible, choix technologiques, prototypage des solutions et validation avec les stakeholders.",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>`,
+  },
+  {
+    phase: '03',
+    title: 'Build & Deliver',
+    description:
+      'Implémentation itérative, mise en place des pipelines CI/CD, accompagnement des équipes dev et livraison en production.',
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>`,
+  },
+  {
+    phase: '04',
+    title: 'Evolve & Scale',
+    description:
+      "Monitoring, optimisation continue, formation des équipes et évolution de l'architecture au rythme du business.",
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>`,
+  },
 ];
 
-const stackCommunication = [
-  { name: 'Jira / Confluence', icon: '📝' },
-  { name: 'Notion', icon: '📓' },
-  { name: 'Slack / Teams', icon: '💬' },
-  { name: 'Miro / FigJam', icon: '🎨' },
-  { name: 'Loom / Screen recording', icon: '🎥' },
-  { name: 'Documentation technique', icon: '📚' },
+const principles = [
+  {
+    label: 'Pragmatisme',
+    description: 'La bonne solution pour le bon contexte, pas de sur-ingénierie.',
+  },
+  {
+    label: 'Résilience',
+    description: 'Des systèmes qui encaissent les pannes et se remettent en service.',
+  },
+  {
+    label: 'Évolutivité',
+    description: 'Une architecture qui évolue avec le business, pas contre lui.',
+  },
+  {
+    label: 'Simplicité',
+    description: 'Réduire la complexité accidentelle, conserver la complexité essentielle.',
+  },
 ];
 ---
 
@@ -59,56 +95,68 @@ const stackCommunication = [
   <Header />
 
   <main>
-    <!-- Hero Section -->
-    <section class="relative min-h-[80vh] flex items-center overflow-hidden pt-24">
+    <!-- ═══════ HERO ═══════ -->
+    <section class="relative min-h-[85vh] flex items-center overflow-hidden pt-24">
       <div class="gradient-mesh"></div>
       <div class="hero-glow"></div>
+      <!-- Blueprint grid subtle -->
+      <div class="about-blueprint-grid" aria-hidden="true"></div>
 
       <div class="container mx-auto px-6 py-16 relative z-10">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <!-- Text content -->
-          <div>
-            <h1
-              class="fade-in text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-6"
+        <div class="grid lg:grid-cols-5 gap-12 items-center">
+          <!-- Text content - 3 cols -->
+          <div class="lg:col-span-3">
+            <div
+              class="fade-in inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20 mb-6"
             >
-              Salut, moi c'est <span class="gradient-text-animated">Cedric</span> 👋
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-sm font-medium text-[var(--color-accent-primary)]"
+                >Disponible pour de nouvelles missions</span
+              >
+            </div>
+
+            <h1
+              class="fade-in stagger-1 text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--color-text-primary)] mb-6 leading-[1.1] tracking-tight"
+            >
+              Je conçois les<br />
+              <span class="gradient-text-animated">systèmes de demain</span>
             </h1>
 
             <p
-              class="fade-in stagger-1 text-lg text-[var(--color-text-secondary)] mb-6 leading-relaxed"
+              class="fade-in stagger-2 text-lg md:text-xl text-[var(--color-text-secondary)] mb-4 leading-relaxed max-w-2xl"
             >
-              Solution Architect chez <strong class="text-[var(--color-text-primary)]"
-                >Sanofi</strong
-              >, je conçois des architectures Cloud et IA depuis 17 ans.
+              <strong class="text-[var(--color-text-primary)]">Solution Architect</strong> avec 17 ans
+              d'expérience. Je transforme des besoins business complexes en architectures Cloud et IA
+              qui passent à l'échelle.
             </p>
 
             <p
-              class="fade-in stagger-2 text-lg text-[var(--color-text-secondary)] mb-8 leading-relaxed"
+              class="fade-in stagger-3 text-base text-[var(--color-text-muted)] mb-8 leading-relaxed max-w-2xl"
             >
-              Mon parcours : developpeur PHP, Lead Dev, Head of Engineering, et maintenant
-              architecte. J'ai accompagne des startups comme des grands groupes dans leur
+              Du développeur PHP au Solution Architect chez Sanofi, en passant par des rôles de Lead
+              Dev et Head of Engineering — j'ai accompagné startups et grands groupes dans leur
               transformation digitale.
             </p>
 
-            <!-- Stats inline -->
-            <div class="fade-in stagger-3 flex flex-wrap gap-6 mb-8">
-              <div class="flex items-center gap-2">
-                <span class="text-2xl font-bold gradient-text">17+</span>
-                <span class="text-sm text-[var(--color-text-muted)]">ans d'XP</span>
+            <!-- Key metrics -->
+            <div class="fade-in stagger-4 grid grid-cols-3 gap-4 mb-8 max-w-md">
+              <div class="about-metric">
+                <span class="about-metric-value">17+</span>
+                <span class="about-metric-label">ans d'XP</span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-2xl font-bold gradient-text">10+</span>
-                <span class="text-sm text-[var(--color-text-muted)]">entreprises</span>
+              <div class="about-metric">
+                <span class="about-metric-value">50+</span>
+                <span class="about-metric-label">devs mentorés</span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-2xl font-bold gradient-text">50+</span>
-                <span class="text-sm text-[var(--color-text-muted)]">devs mentores</span>
+              <div class="about-metric">
+                <span class="about-metric-value">10+</span>
+                <span class="about-metric-label">entreprises</span>
               </div>
             </div>
 
             <!-- CTA -->
-            <div class="fade-in stagger-4 flex flex-wrap gap-4">
-              <a href="/#contact" class="btn btn-gradient-animated"> Me contacter </a>
+            <div class="fade-in stagger-5 flex flex-wrap gap-4">
+              <a href="/#contact" class="btn btn-gradient-animated">Me contacter</a>
               <a
                 href="https://www.linkedin.com/in/cedric-jacqueline-tech"
                 target="_blank"
@@ -125,30 +173,27 @@ const stackCommunication = [
             </div>
           </div>
 
-          <!-- Photo placeholder -->
-          <div class="fade-in stagger-2 flex justify-center lg:justify-end">
+          <!-- Photo - 2 cols -->
+          <div class="fade-in stagger-3 lg:col-span-2 flex justify-center lg:justify-end">
             <div class="relative">
-              <div
-                class="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] p-1"
-              >
-                <div
-                  class="w-full h-full rounded-full bg-[var(--color-bg-secondary)] flex items-center justify-center overflow-hidden"
+              <!-- Geometric frame -->
+              <div class="about-photo-frame">
+                <img
+                  src="/images/me/me.JPG"
+                  alt="Cédric Jacqueline - Solution Architect"
+                  class="w-full h-full object-cover"
+                  loading="eager"
+                />
+              </div>
+              <!-- Decorative corner accents -->
+              <div class="about-corner about-corner-tl" aria-hidden="true"></div>
+              <div class="about-corner about-corner-br" aria-hidden="true"></div>
+              <!-- Floating label -->
+              <div class="about-floating-label">
+                <span
+                  class="font-mono text-xs tracking-widest uppercase text-[var(--color-accent-primary)]"
+                  >Solution Architect</span
                 >
-                  <img
-                    src="/images/me/me.JPG"
-                    alt="Cedric Jacqueline"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <!-- Decorative elements -->
-              <div
-                class="absolute -top-2 -right-2 md:-top-4 md:-right-4 w-16 h-16 md:w-24 md:h-24 bg-[var(--color-accent-primary)]/20 rounded-full blur-xl"
-              >
-              </div>
-              <div
-                class="absolute -bottom-2 -left-2 md:-bottom-4 md:-left-4 w-20 h-20 md:w-32 md:h-32 bg-[var(--color-accent-secondary)]/20 rounded-full blur-xl"
-              >
               </div>
             </div>
           </div>
@@ -156,34 +201,67 @@ const stackCommunication = [
       </div>
     </section>
 
-    <!-- Ce qui me motive -->
+    <!-- ═══════ PRINCIPES D'ARCHITECTURE ═══════ -->
     <section class="section section-alt">
       <div class="container">
-        <div class="text-center mb-16">
+        <div class="text-center mb-12">
           <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
-            Ce qui me motive 🔥
+            Principes d'architecture
           </h2>
           <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-            Au-dela des technos, ce sont ces valeurs qui guident mon travail au quotidien
+            Les convictions qui guident chaque décision technique
           </p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
           {
-            motivations.map((item, index) => (
-              <div class={`fade-in stagger-${(index % 4) + 1} card group`}>
-                <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-accent-primary)]/20 to-[var(--color-accent-secondary)]/20 flex items-center justify-center text-[var(--color-accent-primary)] group-hover:scale-110 transition-transform">
-                    <Fragment set:html={item.icon} />
+            principles.map((p, i) => (
+              <div class={`fade-in stagger-${(i % 4) + 1} about-principle-card`}>
+                <div class="about-principle-number">{String(i + 1).padStart(2, '0')}</div>
+                <h3 class="text-lg font-bold text-[var(--color-text-primary)] mb-2">{p.label}</h3>
+                <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {p.description}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ DOMAINES D'EXPERTISE ═══════ -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-16">
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Domaines d'expertise
+          </h2>
+          <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Les quatre piliers de mon intervention en tant que Solution Architect
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {
+            domains.map((domain, index) => (
+              <div class={`fade-in stagger-${(index % 4) + 1} about-domain-card group`}>
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="about-domain-icon">
+                    <Fragment set:html={domain.icon} />
                   </div>
                   <div>
-                    <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-2">
-                      {item.title}
+                    <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-2">
+                      {domain.title}
                     </h3>
                     <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-                      {item.description}
+                      {domain.description}
                     </p>
                   </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-[var(--color-border)]">
+                  {domain.tags.map((tag) => (
+                    <span class="about-tag">{tag}</span>
+                  ))}
                 </div>
               </div>
             ))
@@ -192,82 +270,68 @@ const stackCommunication = [
       </div>
     </section>
 
-    <!-- Stack Technique -->
+    <!-- ═══════ MÉTHODOLOGIE ═══════ -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="text-center mb-16">
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Ma méthodologie
+          </h2>
+          <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+            Une approche structurée, de l'audit initial au delivery en production
+          </p>
+        </div>
+
+        <div class="about-methodology-grid">
+          {
+            methodology.map((step, index) => (
+              <div class={`fade-in stagger-${(index % 4) + 1} about-method-step`}>
+                {/* Connector line */}
+                {index < methodology.length - 1 && (
+                  <div class="about-method-connector" aria-hidden="true" />
+                )}
+                <div class="about-method-phase">{step.phase}</div>
+                <div class="about-method-icon">
+                  <Fragment set:html={step.icon} />
+                </div>
+                <h3 class="text-lg font-bold text-[var(--color-text-primary)] mb-2 mt-4">
+                  {step.title}
+                </h3>
+                <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ STACK TECHNIQUE ═══════ -->
     <section class="section">
       <div class="container">
         <div class="text-center mb-16">
           <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
-            Ma stack technique 🛠️
+            Stack technique
           </h2>
           <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-            Les technologies que je maitrise et utilise au quotidien
+            Les technologies que je maîtrise et utilise au quotidien
           </p>
         </div>
 
         <div class="flex justify-center">
-          <TechStack />
+          <SkillsGrid />
         </div>
       </div>
     </section>
 
-    <!-- Stack Gestion & Communication -->
-    <section class="section section-alt">
-      <div class="container">
-        <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          <!-- Gestion de projet -->
-          <div>
-            <h2
-              class="fade-in text-2xl font-bold text-[var(--color-text-primary)] mb-6 flex items-center gap-2"
-            >
-              <span>📋</span> Gestion de projet
-            </h2>
-            <div class="grid grid-cols-2 gap-3">
-              {
-                stackGestion.map((item, index) => (
-                  <div
-                    class={`fade-in stagger-${(index % 4) + 1} flex items-center gap-3 p-3 rounded-lg bg-[var(--color-bg-primary)] border border-[var(--color-border)]`}
-                  >
-                    <span class="text-xl">{item.icon}</span>
-                    <span class="text-sm text-[var(--color-text-secondary)]">{item.name}</span>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-
-          <!-- Communication -->
-          <div>
-            <h2
-              class="fade-in text-2xl font-bold text-[var(--color-text-primary)] mb-6 flex items-center gap-2"
-            >
-              <span>💬</span> Communication
-            </h2>
-            <div class="grid grid-cols-2 gap-3">
-              {
-                stackCommunication.map((item, index) => (
-                  <div
-                    class={`fade-in stagger-${(index % 4) + 1} flex items-center gap-3 p-3 rounded-lg bg-[var(--color-bg-primary)] border border-[var(--color-border)]`}
-                  >
-                    <span class="text-xl">{item.icon}</span>
-                    <span class="text-sm text-[var(--color-text-secondary)]">{item.name}</span>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Timeline Section -->
-    <section id="parcours" class="section">
+    <!-- ═══════ PARCOURS ═══════ -->
+    <section id="parcours" class="section section-alt">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
-            Mon parcours 📍
-          </h2>
+          <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">Parcours</h2>
           <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-            17 ans d'evolution, du code a l'architecture
+            17 ans d'évolution, du code à l'architecture
           </p>
         </div>
 
@@ -275,94 +339,95 @@ const stackCommunication = [
       </div>
     </section>
 
-    <!-- Travaillons ensemble -->
-    <section class="section section-alt">
+    <!-- ═══════ CTA ═══════ -->
+    <section class="section">
       <div class="container">
-        <div class="fade-in max-w-3xl mx-auto text-center">
-          <h2 class="text-3xl font-bold text-[var(--color-text-primary)] mb-6">
-            Travaillons ensemble 🤝
-          </h2>
-          <p class="text-lg text-[var(--color-text-secondary)] mb-8 leading-relaxed">
-            Vous avez un projet d'architecture, une transformation cloud a mener, ou besoin d'un
-            regard expert sur votre SI ? Discutons-en !
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <a href="/#contact" class="btn btn-gradient-animated">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                ></path>
-              </svg>
-              Me contacter
-            </a>
-            <a
-              href="https://calendly.com/cedric-blackhole"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-secondary"
+        <div class="fade-in about-cta-block">
+          <div class="about-cta-glow" aria-hidden="true"></div>
+          <div class="relative z-10 text-center">
+            <h2 class="text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+              Un projet d'architecture ?
+            </h2>
+            <p
+              class="text-lg text-[var(--color-text-secondary)] mb-8 leading-relaxed max-w-2xl mx-auto"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                ></path>
-              </svg>
-              Reserver un appel
-            </a>
-          </div>
+              Transformation cloud, intégration IA, modernisation du SI ou besoin d'un regard expert
+              — discutons de votre projet.
+            </p>
 
-          <!-- Trust badges -->
-          <div class="flex flex-wrap justify-center gap-6 text-sm text-[var(--color-text-muted)]">
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-5 h-5 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+              <a href="/#contact" class="btn btn-gradient-animated">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  ></path>
+                </svg>
+                Me contacter
+              </a>
+              <a
+                href="https://calendly.com/cedric-blackhole"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-secondary"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"></path>
-              </svg>
-              Reponse sous 24h
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+                Réserver un appel
+              </a>
             </div>
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-5 h-5 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"></path>
-              </svg>
-              Premier echange gratuit
-            </div>
-            <div class="flex items-center gap-2">
-              <svg
-                class="w-5 h-5 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"></path>
-              </svg>
-              Devis sous 48h
+
+            <div class="flex flex-wrap justify-center gap-6 text-sm text-[var(--color-text-muted)]">
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 text-emerald-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"></path></svg
+                >
+                Réponse sous 24h
+              </div>
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 text-emerald-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"></path></svg
+                >
+                Premier échange gratuit
+              </div>
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-4 h-4 text-emerald-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"></path></svg
+                >
+                Devis sous 48h
+              </div>
             </div>
           </div>
         </div>
@@ -372,3 +437,288 @@ const stackCommunication = [
 
   <Footer />
 </BaseLayout>
+
+<style>
+  /* ═══════ BLUEPRINT GRID ═══════ */
+  .about-blueprint-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at 70% 40%, black 20%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ═══════ PHOTO FRAME ═══════ */
+  .about-photo-frame {
+    width: 280px;
+    height: 340px;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (min-width: 640px) {
+    .about-photo-frame {
+      width: 300px;
+      height: 380px;
+    }
+  }
+
+  .about-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+  }
+
+  .about-corner-tl {
+    top: -8px;
+    left: -8px;
+    border-top: 2px solid var(--color-accent-primary);
+    border-left: 2px solid var(--color-accent-primary);
+    border-top-left-radius: 4px;
+  }
+
+  .about-corner-br {
+    bottom: -8px;
+    right: -8px;
+    border-bottom: 2px solid var(--color-accent-secondary);
+    border-right: 2px solid var(--color-accent-secondary);
+    border-bottom-right-radius: 4px;
+  }
+
+  .about-floating-label {
+    position: absolute;
+    bottom: 20px;
+    left: -16px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    padding: 6px 16px;
+    border-radius: 4px;
+    z-index: 3;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ═══════ METRICS ═══════ */
+  .about-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .about-metric-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+
+  .about-metric-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  /* ═══════ PRINCIPLES ═══════ */
+  .about-principle-card {
+    position: relative;
+    padding: 1.5rem;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: all 300ms var(--ease-out-expo);
+    overflow: hidden;
+  }
+
+  .about-principle-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+
+  .about-principle-card:hover .about-principle-number {
+    color: var(--color-accent-primary);
+    opacity: 0.3;
+  }
+
+  .about-principle-number {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-border);
+    opacity: 0.6;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    transition: all 300ms ease;
+  }
+
+  /* ═══════ DOMAIN CARDS ═══════ */
+  .about-domain-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    transition: all 300ms var(--ease-out-expo);
+  }
+
+  .about-domain-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 40px rgba(99, 102, 241, 0.1);
+  }
+
+  .about-domain-icon {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-accent-primary) 15%, transparent),
+      color-mix(in srgb, var(--color-accent-secondary) 15%, transparent)
+    );
+    color: var(--color-accent-primary);
+    transition: all 300ms ease;
+  }
+
+  .about-domain-card:hover .about-domain-icon {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-accent-primary) 25%, transparent),
+      color-mix(in srgb, var(--color-accent-secondary) 25%, transparent)
+    );
+    transform: scale(1.05);
+  }
+
+  .about-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+    color: var(--color-accent-primary);
+    border: 1px solid color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  }
+
+  /* ═══════ METHODOLOGY ═══════ */
+  .about-methodology-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .about-methodology-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .about-method-step {
+    position: relative;
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .about-method-connector {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .about-method-connector {
+      display: block;
+      position: absolute;
+      top: 3.5rem;
+      left: calc(50% + 2rem);
+      width: calc(100% - 4rem);
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-accent-primary) 40%, transparent),
+        color-mix(in srgb, var(--color-accent-secondary) 40%, transparent)
+      );
+    }
+
+    .about-method-connector::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: -3px;
+      width: 6px;
+      height: 6px;
+      border-top: 1px solid var(--color-accent-secondary);
+      border-right: 1px solid var(--color-accent-secondary);
+      transform: rotate(45deg);
+      opacity: 0.5;
+    }
+  }
+
+  .about-method-phase {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-accent-primary);
+    margin-bottom: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .about-method-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-bg-primary);
+    border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+    color: var(--color-accent-primary);
+    position: relative;
+    z-index: 1;
+    transition: all 300ms ease;
+  }
+
+  .about-method-step:hover .about-method-icon {
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+    transform: scale(1.1);
+  }
+
+  /* ═══════ CTA BLOCK ═══════ */
+  .about-cta-block {
+    position: relative;
+    padding: 3.5rem 2rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .about-cta-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+</style>
