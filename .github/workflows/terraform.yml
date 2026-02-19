@@ -83,6 +83,7 @@ jobs:
           path: |
             ${{ env.TF_WORKING_DIR }}/tfplan
             ${{ env.TF_WORKING_DIR }}/plan_output.txt
+            ${{ env.TF_WORKING_DIR }}/.terraform/tmp/contact-form.zip
           retention-days: 5
 
       - name: Create Plan Summary
