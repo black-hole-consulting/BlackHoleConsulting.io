@@ -18,7 +18,14 @@ const { partner, index = 0 } = Astro.props;
     <!-- Front of card -->
     <div class="card-face card-front">
       <div class="avatar-container">
-        <img src={partner.avatar} alt={partner.name} class="avatar" loading="lazy" />
+        <img
+          src={partner.avatar}
+          alt={partner.name}
+          width="200"
+          height="200"
+          class="avatar"
+          loading="lazy"
+        />
         <div class="avatar-ring"></div>
       </div>
       <h3 class="name">{partner.name}</h3>

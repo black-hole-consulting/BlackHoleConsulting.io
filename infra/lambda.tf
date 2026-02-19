@@ -53,7 +53,7 @@ resource "aws_lambda_function" "contact_form" {
   filename         = data.archive_file.contact_form.output_path
   source_code_hash = data.archive_file.contact_form.output_base64sha256
 
-  runtime       = "nodejs20.x"
+  runtime       = "nodejs22.x"
   handler       = "index.handler"
   architectures = ["arm64"]
   memory_size   = var.lambda_memory_size

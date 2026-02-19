@@ -12,7 +12,7 @@ const navLinks = [
 ];
 ---
 
-<header id="header" class="relative z-50 transition-all duration-300">
+<header id="header" class="sticky top-0 z-50 transition-all duration-300">
   <div class="container mx-auto px-6">
     <nav class="flex items-center justify-between h-20">
       <!-- Logo -->
@@ -154,13 +154,17 @@ const navLinks = [
   function initHeaderScroll() {
     const header = document.getElementById('header');
 
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        header?.classList.add('header-scrolled');
-      } else {
-        header?.classList.remove('header-scrolled');
-      }
-    });
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (window.scrollY > 50) {
+          header?.classList.add('header-scrolled');
+        } else {
+          header?.classList.remove('header-scrolled');
+        }
+      },
+      { passive: true }
+    );
   }
 
   // Close menu on Escape key
@@ -180,29 +184,44 @@ const navLinks = [
 
   function initActiveNav() {
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    const navLinks = document.querySelectorAll('nav a[href]');
+    const currentPath = window.location.pathname;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('id');
-            navLinks.forEach((link) => {
-              link.classList.remove('nav-active');
-              if (link.getAttribute('href') === `#${id}`) {
-                link.classList.add('nav-active');
-              }
-            });
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -80% 0px',
-        threshold: 0,
+    // Highlight page-level nav links (e.g. /blog, /projets, /a-propos)
+    navLinks.forEach((link) => {
+      link.classList.remove('nav-active');
+      const href = link.getAttribute('href') || '';
+      // Match non-anchor links against current path
+      if (!href.includes('#') && href !== '/' && currentPath.startsWith(href)) {
+        link.classList.add('nav-active');
       }
-    );
+    });
 
-    sections.forEach((section) => observer.observe(section));
+    // On homepage, use IntersectionObserver for anchor-based sections
+    if (currentPath === '/' || currentPath === '') {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.getAttribute('id');
+              navLinks.forEach((link) => {
+                link.classList.remove('nav-active');
+                const href = link.getAttribute('href') || '';
+                if (href === `/#${id}` || href === `#${id}`) {
+                  link.classList.add('nav-active');
+                }
+              });
+            }
+          });
+        },
+        {
+          rootMargin: '-20% 0px -80% 0px',
+          threshold: 0,
+        }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    }
   }
 
   // Initialize

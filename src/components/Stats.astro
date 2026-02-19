@@ -9,12 +9,12 @@ const stats: StatItem[] = [
   {
     value: 17,
     suffix: '+',
-    label: "Annees d'experience",
+    label: "Années d'expérience",
   },
   {
     value: 50,
     suffix: '+',
-    label: 'Projets livres',
+    label: 'Projets livrés',
   },
   {
     value: 100,
@@ -24,7 +24,7 @@ const stats: StatItem[] = [
   {
     value: 24,
     suffix: 'h',
-    label: 'Delai de reponse',
+    label: 'Délai de réponse',
   },
 ];
 ---
@@ -99,7 +99,16 @@ const stats: StatItem[] = [
     if (!statsSection) return;
 
     const statValues = statsSection.querySelectorAll('.stat-value');
-    let hasAnimated = false;
+
+    // Persist animation state across View Transitions
+    if ((window as any).__statsHasAnimated) {
+      statValues.forEach((el) => {
+        const target = el.getAttribute('data-target') || '0';
+        const suffix = el.getAttribute('data-suffix') || '';
+        el.textContent = `${target}${suffix}`;
+      });
+      return;
+    }
 
     const animateCounter = (element: Element) => {
       const target = parseInt(element.getAttribute('data-target') || '0', 10);
@@ -133,10 +142,9 @@ const stats: StatItem[] = [
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          hasAnimated = true;
+        if (entry.isIntersecting) {
+          (window as any).__statsHasAnimated = true;
           statValues.forEach((el, index) => {
-            // Stagger the animation start
             setTimeout(() => {
               animateCounter(el);
             }, index * 150);

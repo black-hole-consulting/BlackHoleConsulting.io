@@ -59,7 +59,7 @@ const blogListData = {
 
   <Header />
 
-  <main class="pt-32 pb-20">
+  <main id="main" class="pt-32 pb-20">
     <div class="container mx-auto px-6">
       <!-- Page Header -->
       <header class="max-w-3xl mx-auto text-center mb-16 fade-in">
@@ -112,6 +112,8 @@ const blogListData = {
                       <img
                         src={post.data.heroImage}
                         alt={post.data.title}
+                        width="1200"
+                        height="670"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />

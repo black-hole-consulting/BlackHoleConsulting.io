@@ -2,7 +2,7 @@
 title: "Infrastructure as Code avec Terraform : Migration complète d'un site AWS"
 description: "Retour d'expérience sur la migration d'une infrastructure AWS (S3, CloudFront, Lambda, API Gateway) de CloudFormation vers Terraform avec CI/CD GitHub Actions."
 pubDate: 2026-01-22
-heroImage: "/images/blog/infrastructure-as-code-terraform-migration-aws.png"
+heroImage: "/images/blog/infrastructure-as-code-terraform-migration-aws.webp"
 tags: ["Terraform", "AWS", "DevOps", "Infrastructure as Code", "CI/CD"]
 draft: false
 ---

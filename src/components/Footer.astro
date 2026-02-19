@@ -7,8 +7,8 @@ const shareText = 'Black Hole Consulting - Expert Solution Architecture, IA & Cl
 const navigation = [
   { href: '/#services', label: 'Services' },
   { href: '/#expertise', label: 'Expertise' },
-  { href: '/a-propos', label: 'A propos' },
-  { href: '/#methode', label: 'Methode' },
+  { href: '/a-propos', label: 'À propos' },
+  { href: '/#methode', label: 'Méthode' },
   { href: '/#contact', label: 'Contact' },
 ];
 
@@ -176,7 +176,7 @@ const legal = [
           class="share-button group relative"
           aria-label="Copier le lien"
           data-copy-url={siteUrl}
-          id="copy-link-btn"
+          id="footer-copy-link-btn"
         >
           <svg
             class="w-5 h-5 copy-icon"
@@ -292,31 +292,35 @@ const legal = [
 </style>
 
 <script>
-  const copyButton = document.getElementById('copy-link-btn');
-  const copyIcon = copyButton?.querySelector('.copy-icon');
-  const checkIcon = copyButton?.querySelector('.check-icon');
-  const tooltip = document.getElementById('copy-tooltip');
+  function initFooterCopyLink() {
+    const copyButton = document.getElementById('footer-copy-link-btn');
+    const copyIcon = copyButton?.querySelector('.copy-icon');
+    const checkIcon = copyButton?.querySelector('.check-icon');
+    const tooltip = document.getElementById('copy-tooltip');
 
-  copyButton?.addEventListener('click', async () => {
-    const url = copyButton.getAttribute('data-copy-url');
-    if (!url) return;
+    copyButton?.addEventListener('click', async () => {
+      const url = copyButton.getAttribute('data-copy-url');
+      if (!url) return;
 
-    try {
-      await navigator.clipboard.writeText(url);
+      try {
+        await navigator.clipboard.writeText(url);
 
-      // Show success state
-      copyIcon?.classList.add('hidden');
-      checkIcon?.classList.remove('hidden');
-      if (tooltip) tooltip.textContent = 'Lien copié !';
+        // Show success state
+        copyIcon?.classList.add('hidden');
+        checkIcon?.classList.remove('hidden');
+        if (tooltip) tooltip.textContent = 'Lien copié !';
 
-      // Reset after 2 seconds
-      setTimeout(() => {
-        copyIcon?.classList.remove('hidden');
-        checkIcon?.classList.add('hidden');
-        if (tooltip) tooltip.textContent = 'Copier le lien';
-      }, 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  });
+        // Reset after 2 seconds
+        setTimeout(() => {
+          copyIcon?.classList.remove('hidden');
+          checkIcon?.classList.add('hidden');
+          if (tooltip) tooltip.textContent = 'Copier le lien';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFooterCopyLink);
 </script>

@@ -3,7 +3,7 @@ title: "Guide Complet : Intégrer l'IA Générative (LLM) dans votre Entreprise 
 description: "Guide technique et stratégique pour implémenter l'IA générative en entreprise. Architecture RAG, choix des modèles (GPT-4, Claude, Mistral), sécurité, coûts et ROI. Avec exemples de code."
 pubDate: 2025-01-21
 tags: ["ia", "genai", "llm", "rag", "architecture", "guide"]
-heroImage: "/images/blog/guide-complet-ia-generative-entreprise-2025.png"
+heroImage: "/images/blog/guide-complet-ia-generative-entreprise-2025.webp"
 draft: false
 ---
 

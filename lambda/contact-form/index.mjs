@@ -9,6 +9,14 @@ const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 const RECAPTCHA_THRESHOLD = 0.5;
 
+// Validation constants
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const MAX_NAME_LENGTH = 200;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_MESSAGE_LENGTH = 10000;
+const MAX_COMPANY_LENGTH = 200;
+const ALLOWED_PROJECT_TYPES = ['architecture', 'ia', 'cloud', 'web', 'autre'];
+
 // CORS headers for browser requests
 const corsHeaders = {
   'Access-Control-Allow-Origin': 'https://blackholeconsulting.io',
@@ -49,6 +57,41 @@ export const handler = async (event) => {
         statusCode: 400,
         headers: corsHeaders,
         body: JSON.stringify({ error: 'Missing required fields' }),
+      };
+    }
+
+    // Validate field lengths
+    if (name.length > MAX_NAME_LENGTH || email.length > MAX_EMAIL_LENGTH || message.length > MAX_MESSAGE_LENGTH) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Field exceeds maximum allowed length' }),
+      };
+    }
+
+    if (company && company.length > MAX_COMPANY_LENGTH) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Company name exceeds maximum allowed length' }),
+      };
+    }
+
+    // Validate email format
+    if (!EMAIL_REGEX.test(email)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Invalid email format' }),
+      };
+    }
+
+    // Validate project type against whitelist
+    if (projectType && !ALLOWED_PROJECT_TYPES.includes(projectType)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Invalid project type' }),
       };
     }
 

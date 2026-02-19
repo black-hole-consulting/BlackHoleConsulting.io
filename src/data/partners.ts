@@ -28,7 +28,7 @@ export const partners: Partner[] = [
     id: 'vincent-composieux',
     name: 'Vincent Composieux',
     title: 'Tech Lead & Architect',
-    avatar: '/images/partners/vincent-composieux.jpg',
+    avatar: '/images/partners/vincent-composieux.webp',
     description:
       'Crafting robust products from backend systems to scalable infrastructures. Une collaboration efficace et toujours un plaisir de travailler ensemble.',
     skills: ['Go', 'Architecture', 'Cloud'],

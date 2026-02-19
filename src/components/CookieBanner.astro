@@ -66,9 +66,6 @@
       var banner = document.getElementById('cookie-banner');
       if (banner) {
         banner.style.display = 'block';
-        console.log('[CookieBanner] Banner shown');
-      } else {
-        console.log('[CookieBanner] Banner element not found');
       }
     }
 
@@ -80,12 +77,9 @@
     }
 
     function init() {
-      console.log('[CookieBanner] Init called');
       var consent = getConsent();
-      console.log('[CookieBanner] Current consent:', consent);
 
       if (!consent) {
-        console.log('[CookieBanner] No consent, showing banner in 1s');
         setTimeout(showBanner, 1000);
       }
 

@@ -28,7 +28,7 @@ const pageDescription =
 >
   <Header />
 
-  <main class="pt-24 pb-16">
+  <main id="main" class="pt-24 pb-16">
     <!-- Hero Section -->
     <section class="section pb-12">
       <div class="container">
@@ -83,7 +83,7 @@ const pageDescription =
                     tags={project.data.tags}
                     url={project.data.url}
                     github={project.data.github}
-                    slug={project.slug}
+                    slug={project.id.replace(/\.md$/, '')}
                     index={index}
                     featured={true}
                   />
@@ -114,7 +114,7 @@ const pageDescription =
                     tags={project.data.tags}
                     url={project.data.url}
                     github={project.data.github}
-                    slug={project.slug}
+                    slug={project.id.replace(/\.md$/, '')}
                     index={index + featuredProjects.length}
                     featured={false}
                   />

@@ -3,7 +3,7 @@ title: "Introduction a l'IA Generative pour l'Entreprise"
 description: "Comprendre les LLM, leurs applications concretes en entreprise, et comment demarrer un projet d'IA generative avec une approche pragmatique."
 pubDate: 2024-01-25
 tags: ["ia", "genai", "llm", "innovation"]
-heroImage: "/images/blog/introduction-genai.png"
+heroImage: "/images/blog/introduction-genai.webp"
 draft: false
 ---
 

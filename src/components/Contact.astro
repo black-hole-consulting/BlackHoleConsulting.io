@@ -301,11 +301,6 @@ const isProd = import.meta.env.PROD;
 </section>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  const successMsg = document.getElementById('form-success');
-  const errorMsg = document.getElementById('form-error');
-  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-
   // API endpoint for contact form (AWS API Gateway + Lambda)
   const API_ENDPOINT = 'https://6deuyzfjp7.execute-api.eu-west-3.amazonaws.com/contact';
 
@@ -335,61 +330,70 @@ const isProd = import.meta.env.PROD;
     });
   }
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  function initContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const successMsg = document.getElementById('form-success');
+    const errorMsg = document.getElementById('form-error');
+    const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
 
-    // Disable button during submission
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `
-        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Envoi en cours...
-      `;
-    }
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    // Collect form data as JSON
-    const formData = new FormData(form);
-    const data: Record<string, unknown> = Object.fromEntries(formData.entries());
-
-    try {
-      // Get reCAPTCHA v3 token (empty in dev mode)
-      const recaptchaToken = await getRecaptchaToken();
-      if (recaptchaToken) {
-        data.recaptchaToken = recaptchaToken;
-      }
-
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        form.reset();
-        successMsg?.classList.remove('hidden');
-        errorMsg?.classList.add('hidden');
-      } else {
-        throw new Error('Form submission failed');
-      }
-    } catch {
-      errorMsg?.classList.remove('hidden');
-      successMsg?.classList.add('hidden');
-    } finally {
-      // Re-enable button
+      // Disable button during submission
       if (submitBtn) {
-        submitBtn.disabled = false;
+        submitBtn.disabled = true;
         submitBtn.innerHTML = `
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Envoyer le message
+          Envoi en cours...
         `;
       }
-    }
-  });
+
+      // Collect form data as JSON
+      const formData = new FormData(form);
+      const data: Record<string, unknown> = Object.fromEntries(formData.entries());
+
+      try {
+        // Get reCAPTCHA v3 token (empty in dev mode)
+        const recaptchaToken = await getRecaptchaToken();
+        if (recaptchaToken) {
+          data.recaptchaToken = recaptchaToken;
+        }
+
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          form.reset();
+          successMsg?.classList.remove('hidden');
+          errorMsg?.classList.add('hidden');
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch {
+        errorMsg?.classList.remove('hidden');
+        successMsg?.classList.add('hidden');
+      } finally {
+        // Re-enable button
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Envoyer le message
+          `;
+        }
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initContactForm);
 </script>

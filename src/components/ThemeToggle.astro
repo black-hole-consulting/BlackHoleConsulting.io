@@ -2,7 +2,7 @@
 // ThemeToggle.astro - Dark/Light mode toggle button
 ---
 
-<button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="theme-toggle">
+<button id="theme-toggle" type="button" aria-label="Passer au mode clair" class="theme-toggle">
   <!-- Sun icon (shown in dark mode) -->
   <svg
     class="sun-icon"
@@ -132,7 +132,7 @@
       if (toggle) {
         toggle.setAttribute(
           'aria-label',
-          theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+          theme === 'light' ? 'Passer au mode sombre' : 'Passer au mode clair'
         );
       }
     }

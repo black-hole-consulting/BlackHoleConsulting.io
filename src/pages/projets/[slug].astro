@@ -7,13 +7,14 @@ import Footer from '../../components/Footer.astro';
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map((project) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id.replace(/\.md$/, '') },
     props: { project },
   }));
 }
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const projectSlug = project.id.replace(/\.md$/, '');
 
 const pageTitle = `${project.data.title} | Black Hole Consulting`;
 const pageDescription = project.data.description;
@@ -21,20 +22,18 @@ const pageDescription = project.data.description;
 // Get related projects (same tags)
 const allProjects = await getCollection('projects');
 const relatedProjects = allProjects
-  .filter(
-    (p) => p.slug !== project.slug && p.data.tags.some((tag) => project.data.tags.includes(tag))
-  )
+  .filter((p) => p.id !== project.id && p.data.tags.some((tag) => project.data.tags.includes(tag)))
   .slice(0, 3);
 ---
 
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
-  canonical={`https://blackholeconsulting.io/projets/${project.slug}/`}
+  canonical={`https://blackholeconsulting.io/projets/${projectSlug}/`}
 >
   <Header />
 
-  <main class="pt-24 pb-16">
+  <main id="main" class="pt-24 pb-16">
     <!-- Back link -->
     <section class="section pb-0">
       <div class="container">
@@ -140,7 +139,10 @@ const relatedProjects = allProjects
                 <img
                   src={project.data.image}
                   alt={`Capture du projet ${project.data.title}`}
+                  width="800"
+                  height="450"
                   class="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -172,7 +174,7 @@ const relatedProjects = allProjects
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedProjects.map((related, index) => (
                 <a
-                  href={`/projets/${related.slug}`}
+                  href={`/projets/${related.id.replace(/\.md$/, '')}`}
                   class={`card group fade-in stagger-${index + 1}`}
                 >
                   <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-2 group-hover:text-[var(--color-accent-primary)] transition-colors">
@@ -217,84 +219,6 @@ const relatedProjects = allProjects
 </BaseLayout>
 
 <style>
-  /* Prose styles for markdown content */
-  .prose {
-    color: var(--color-text-secondary);
-  }
-
-  .prose h2 {
-    color: var(--color-text-primary);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .prose h3 {
-    color: var(--color-text-primary);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .prose p {
-    margin-bottom: 1.25rem;
-    line-height: 1.75;
-  }
-
-  .prose ul {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .prose ul li {
-    position: relative;
-    padding-left: 1.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .prose ul li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.6rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-    border-radius: 50%;
-  }
-
-  .prose strong {
-    color: var(--color-text-primary);
-    font-weight: 600;
-  }
-
-  .prose code {
-    background: var(--color-bg-tertiary);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-    font-family: var(--font-mono);
-  }
-
-  .prose pre {
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1.5rem 0;
-  }
-
-  .prose pre code {
-    background: transparent;
-    padding: 0;
-  }
-
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
