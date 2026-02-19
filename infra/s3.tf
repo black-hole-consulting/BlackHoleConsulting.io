@@ -8,6 +8,7 @@ resource "aws_s3_bucket" "website" {
 
   lifecycle {
     prevent_destroy = true
+    ignore_changes  = [bucket]
   }
 }
 
