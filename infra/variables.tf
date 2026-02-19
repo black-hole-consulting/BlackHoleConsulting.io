@@ -22,13 +22,11 @@ variable "domain_name" {
 variable "s3_bucket_name" {
   description = "Name of existing S3 bucket to import"
   type        = string
-  sensitive   = true
 }
 
 variable "cloudfront_distribution_id" {
   description = "ID of existing CloudFront distribution to import"
   type        = string
-  sensitive   = true
 }
 
 # Lambda configuration
