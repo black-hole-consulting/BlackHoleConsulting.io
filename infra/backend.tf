@@ -10,6 +10,6 @@ terraform {
     key            = "website/terraform.tfstate"
     region         = "eu-west-3"
     encrypt        = true
-    dynamodb_table = "bhc-terraform-locks"
+    use_lockfile   = true
   }
 }
