@@ -6,10 +6,10 @@
 
 terraform {
   backend "s3" {
-    bucket         = "blackholeconsulting-terraform-state"
-    key            = "website/terraform.tfstate"
-    region         = "eu-west-3"
-    encrypt        = true
-    use_lockfile   = true
+    bucket       = "blackholeconsulting-terraform-state"
+    key          = "website/terraform.tfstate"
+    region       = "eu-west-3"
+    encrypt      = true
+    use_lockfile = true
   }
 }
