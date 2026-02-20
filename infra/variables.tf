@@ -70,3 +70,16 @@ variable "log_retention_days" {
   type        = number
   default     = 14
 }
+
+variable "telegram_bot_token" {
+  description = "Telegram bot token for contact notifications"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "telegram_chat_id" {
+  description = "Telegram chat ID for contact notifications"
+  type        = string
+  default     = ""
+}

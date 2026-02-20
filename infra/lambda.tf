@@ -65,6 +65,8 @@ resource "aws_lambda_function" "contact_form" {
     variables = {
       BREVO_API_KEY        = var.brevo_api_key
       RECAPTCHA_SECRET_KEY = var.recaptcha_secret_key
+      TELEGRAM_BOT_TOKEN   = var.telegram_bot_token
+      TELEGRAM_CHAT_ID     = var.telegram_chat_id
     }
   }
 

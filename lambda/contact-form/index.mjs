@@ -199,6 +199,9 @@ export const handler = async (event) => {
       throw new Error('Failed to send email');
     }
 
+    // Send Telegram notification (non-blocking)
+    await sendTelegramNotification(name, email, company, projectLabel, message);
+
     return {
       statusCode: 200,
       headers: corsHeaders,
@@ -213,6 +216,45 @@ export const handler = async (event) => {
     };
   }
 };
+
+// Send Telegram notification (best-effort, does not block response)
+async function sendTelegramNotification(name, email, company, projectLabel, message) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    console.log('Telegram notification skipped (not configured)');
+    return;
+  }
+
+  const text =
+    `\u{1F4E7} Nouveau contact\n\n` +
+    `\u{1F464} Nom : ${name}\n` +
+    `\u{1F4E9} Email : ${email}\n` +
+    `\u{1F3E2} Société : ${company || '-'}\n` +
+    `\u{1F4CB} Projet : ${projectLabel}\n\n` +
+    `\u{1F4AC} Message :\n${message}`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: text,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.warn('Telegram API error:', err);
+    } else {
+      console.log('Telegram notification sent');
+    }
+  } catch (error) {
+    console.warn('Telegram notification failed:', error.message);
+  }
+}
 
 // Escape HTML to prevent XSS
 function escapeHtml(text) {
