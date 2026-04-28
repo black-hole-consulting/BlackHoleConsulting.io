@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { sortedServices } from '../../data/services';
+
+const title = 'Services Tech : Architecture, GenAI, Cloud, Web | Black Hole Consulting';
+const description =
+  '4 expertises pour faire avancer vos projets tech : architecture de solutions, IA générative et LLM, Cloud AWS et IaC, développement web React/Next.js. Freelance senior, France entière.';
+const canonical = 'https://blackholeconsulting.io/services/';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://blackholeconsulting.io/' },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: canonical },
+  ],
+};
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description,
+  url: canonical,
+  inLanguage: 'fr-FR',
+  hasPart: sortedServices.map((s, i) => ({
+    '@type': 'Service',
+    position: i + 1,
+    name: s.title,
+    description: s.metaDescription,
+    serviceType: s.serviceType,
+    url: `https://blackholeconsulting.io/services/${s.slug}/`,
+    provider: { '@id': 'https://blackholeconsulting.io/#localbusiness' },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} is:inline />
+
+  <Header />
+
+  <main id="main">
+    <section class="relative pt-32 pb-12 overflow-hidden">
+      <div class="container mx-auto px-6 relative z-10">
+        <nav aria-label="Fil d'ariane" class="mb-8 text-sm">
+          <ol class="flex items-center gap-2 text-[var(--color-text-muted)]">
+            <li>
+              <a href="/" class="hover:text-[var(--color-text-primary)] transition-colors"
+                >Accueil</a
+              >
+            </li>
+            <li aria-hidden="true">/</li>
+            <li class="text-[var(--color-text-secondary)]" aria-current="page">Services</li>
+          </ol>
+        </nav>
+
+        <div class="max-w-3xl mb-16">
+          <p
+            class="fade-in inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20 text-sm text-[var(--color-accent-primary)] font-medium mb-6"
+          >
+            4 piliers d'expertise
+          </p>
+          <h1
+            class="fade-in stagger-1 text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-6"
+          >
+            <span class="gradient-text">Architecture, IA, Cloud, Web</span>
+          </h1>
+          <p class="fade-in stagger-2 text-lg text-[var(--color-text-secondary)]">
+            Selon votre besoin, j'interviens en cadrage, conception, mise en production ou tech
+            leadership. Toujours avec la même règle : la solution la plus simple qui marche,
+            documentée pour que votre équipe puisse l'opérer.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 max-w-5xl">
+          {
+            sortedServices.map((service) => (
+              <a
+                href={`/services/${service.slug}/`}
+                class={`service-card group fade-in stagger-${service.navOrder + 2}`}
+              >
+                <div
+                  class={`service-card-accent bg-gradient-to-br ${service.heroAccent}`}
+                  aria-hidden="true"
+                />
+                <div class="relative p-6">
+                  <div class="text-3xl mb-4" aria-hidden="true">
+                    {service.heroIcon}
+                  </div>
+                  <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-2 group-hover:text-[var(--color-accent-primary)] transition-colors">
+                    {service.title}
+                  </h2>
+                  <p class="text-sm text-[var(--color-text-secondary)] mb-4 line-clamp-3">
+                    {service.heroIntro}
+                  </p>
+                  <span class="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-accent-primary)]">
+                    Voir le détail
+                    <svg
+                      class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .service-card {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    overflow: hidden;
+    transition:
+      border-color 240ms ease,
+      transform 240ms ease;
+  }
+  .service-card:hover {
+    border-color: var(--color-accent-primary);
+    transform: translateY(-2px);
+  }
+  .service-card-accent {
+    position: absolute;
+    inset: -1px -1px auto -1px;
+    height: 4px;
+    opacity: 0.85;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
