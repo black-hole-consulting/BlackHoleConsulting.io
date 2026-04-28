@@ -716,6 +716,58 @@ body {
   pointer-events: none;
 }
 
+/* Honeypot: hidden visually + from screen readers via aria-hidden, but available to bots */
+.hp-field {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Animated success checkmark */
+.success-checkmark {
+  animation: checkmarkScaleIn 360ms var(--ease-out-expo);
+}
+
+.success-checkmark-path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: checkmarkDraw 480ms var(--ease-out-expo) forwards;
+  animation-delay: 200ms;
+}
+
+@keyframes checkmarkScaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes checkmarkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-checkmark,
+  .success-checkmark-path {
+    animation: none;
+  }
+  .success-checkmark-path {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* ===== SCROLLBAR ===== */
 
 ::-webkit-scrollbar {

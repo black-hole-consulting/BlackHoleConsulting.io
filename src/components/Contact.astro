@@ -183,6 +183,48 @@ const isProd = import.meta.env.PROD;
                 Plus vous donnez de contexte, plus ma réponse sera précise.
               </p>
               <p id="error-message" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
+
+              <!-- Contextual Calendly suggestion when message is long -->
+              <div
+                id="calendly-suggestion"
+                class="hidden mt-3 p-3 rounded-lg border border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-primary)]/5 text-sm text-[var(--color-text-secondary)] flex items-start gap-3"
+              >
+                <svg
+                  class="w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--color-accent-primary)]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>
+                  Beau brief — un appel de 30 min sera plus efficace.
+                  <a
+                    href="https://calendly.com/cedric-blkhole/30min"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline text-[var(--color-text-primary)] hover:text-[var(--color-accent-primary)]"
+                    >Réserver un créneau →</a
+                  >
+                </span>
+              </div>
+            </div>
+
+            <!-- Honeypot: bots fill this hidden field, humans don't -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="contact-website">Site web (laissez vide)</label>
+              <input
+                type="text"
+                id="contact-website"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+              />
             </div>
           </fieldset>
 
@@ -247,10 +289,47 @@ const isProd = import.meta.env.PROD;
           <div id="form-status" aria-live="polite" aria-atomic="true">
             <div
               id="form-success"
-              class="hidden p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400"
+              class="hidden p-6 rounded-xl border border-green-500/30 bg-green-500/5 text-center"
               tabindex="-1"
             >
-              Merci pour votre message ! Je vous répondrai dans les plus brefs délais.
+              <div
+                class="success-checkmark mx-auto mb-4 w-14 h-14 rounded-full bg-green-500/15 flex items-center justify-center text-green-400"
+                aria-hidden="true"
+              >
+                <svg
+                  class="w-7 h-7"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                    class="success-checkmark-path"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-1">
+                Message bien reçu !
+              </h3>
+              <p class="text-sm text-[var(--color-text-secondary)] mb-4">
+                Je reviens vers vous sous 24 h ouvrées. Pour un échange plus rapide, vous pouvez
+                aussi&nbsp;:
+              </p>
+              <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <a
+                  href="https://calendly.com/cedric-blkhole/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-primary"
+                >
+                  Réserver un appel
+                </a>
+                <button type="button" id="form-reset" class="btn btn-secondary">
+                  Envoyer un autre message
+                </button>
+              </div>
             </div>
 
             <div
@@ -557,7 +636,8 @@ const isProd = import.meta.env.PROD;
       });
     });
 
-    // Character counter + auto-grow on the message textarea
+    // Character counter + auto-grow + contextual Calendly suggestion
+    const calendlySuggestion = document.getElementById('calendly-suggestion');
     function updateMessageMeta() {
       if (!messageEl) return;
       const length = messageEl.value.length;
@@ -567,9 +647,35 @@ const isProd = import.meta.env.PROD;
       }
       messageEl.style.height = 'auto';
       messageEl.style.height = `${Math.min(messageEl.scrollHeight, 480)}px`;
+      calendlySuggestion?.classList.toggle('hidden', length < 500);
     }
     messageEl?.addEventListener('input', updateMessageMeta);
     updateMessageMeta();
+
+    // Pre-warm Lambda on first user interaction (kills cold-start on submit)
+    let prewarmed = false;
+    function prewarm() {
+      if (prewarmed) return;
+      prewarmed = true;
+      try {
+        fetch(API_ENDPOINT, { method: 'OPTIONS', mode: 'cors' }).catch(() => {});
+      } catch {
+        // ignore
+      }
+    }
+    form.addEventListener('focusin', prewarm, { once: true });
+
+    // Reset button on success state
+    const resetBtn = document.getElementById('form-reset');
+    resetBtn?.addEventListener('click', () => {
+      successMsg?.classList.add('hidden');
+      form
+        .querySelectorAll('fieldset, button[type="submit"], #message-counter')
+        .forEach((el) => (el as HTMLElement).classList.remove('hidden'));
+      const nameEl = document.getElementById('name') as HTMLInputElement | null;
+      nameEl?.focus();
+      updateMessageMeta();
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -577,6 +683,14 @@ const isProd = import.meta.env.PROD;
       // Hide previous status
       successMsg?.classList.add('hidden');
       errorMsg?.classList.add('hidden');
+
+      // Honeypot: if filled, fake a success silently
+      const hp = form.elements.namedItem('website') as HTMLInputElement | null;
+      if (hp?.value) {
+        form.reset();
+        successMsg?.classList.remove('hidden');
+        return;
+      }
 
       // Client-side validation
       const firstInvalid = validateAll(form);
@@ -613,8 +727,13 @@ const isProd = import.meta.env.PROD;
 
         if (response.ok) {
           form.reset();
+          // Hide all form fieldsets to make the success state shine
+          form
+            .querySelectorAll('fieldset, button[type="submit"], #message-counter')
+            .forEach((el) => (el as HTMLElement).classList.add('hidden'));
           successMsg?.classList.remove('hidden');
           (successMsg as HTMLElement | null)?.focus();
+          successMsg?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
           let serverError: string | undefined;
           try {
