@@ -33,9 +33,10 @@ data "aws_region" "current" {}
 
 # ACM certificate (must exist in us-east-1 for CloudFront)
 data "aws_acm_certificate" "website" {
-  provider = aws.us_east_1
-  domain   = var.domain_name
-  statuses = ["ISSUED"]
+  provider    = aws.us_east_1
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
+  most_recent = true
 }
 
 # Managed CloudFront policies
