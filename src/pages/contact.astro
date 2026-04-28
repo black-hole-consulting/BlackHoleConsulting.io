@@ -50,6 +50,9 @@ const breadcrumbSchema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(contactPageSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+
   <Header />
 
   <main id="main">
@@ -98,6 +101,3 @@ const breadcrumbSchema = {
 
   <Footer />
 </BaseLayout>
-
-<script type="application/ld+json" set:html={JSON.stringify(contactPageSchema)} is:inline />
-<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />

@@ -18,12 +18,64 @@ const projectSlug = project.id.replace(/\.md$/, '');
 
 const pageTitle = `${project.data.title} | Black Hole Consulting`;
 const pageDescription = project.data.description;
+const projectUrl = `https://blackholeconsulting.io/projets/${projectSlug}/`;
 
 // Get related projects (same tags)
 const allProjects = await getCollection('projects');
 const relatedProjects = allProjects
   .filter((p) => p.id !== project.id && p.data.tags.some((tag) => project.data.tags.includes(tag)))
   .slice(0, 3);
+
+// JSON-LD: CreativeWork describing the project + Service it falls under
+const projectImage = project.data.image
+  ? new URL(project.data.image, 'https://blackholeconsulting.io').toString()
+  : 'https://blackholeconsulting.io/og-image.png';
+
+const creativeWorkSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  '@id': `${projectUrl}#project`,
+  name: project.data.title,
+  headline: project.data.title,
+  description: pageDescription,
+  url: projectUrl,
+  image: projectImage,
+  inLanguage: 'fr-FR',
+  keywords: project.data.tags.join(', '),
+  about: project.data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
+  creator: {
+    '@type': 'Person',
+    '@id': 'https://blackholeconsulting.io/a-propos#person',
+    name: 'Cédric Jacqueline',
+  },
+  publisher: { '@id': 'https://blackholeconsulting.io/#localbusiness' },
+  isPartOf: { '@id': 'https://blackholeconsulting.io/#website' },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Accueil',
+      item: 'https://blackholeconsulting.io/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Projets',
+      item: 'https://blackholeconsulting.io/projets/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: project.data.title,
+      item: projectUrl,
+    },
+  ],
+};
 ---
 
 <BaseLayout
@@ -31,6 +83,9 @@ const relatedProjects = allProjects
   description={pageDescription}
   canonical={`https://blackholeconsulting.io/projets/${projectSlug}/`}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(creativeWorkSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+
   <Header />
 
   <main id="main" class="pt-24 pb-16">

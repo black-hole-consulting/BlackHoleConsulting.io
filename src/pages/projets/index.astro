@@ -19,6 +19,38 @@ const allTags = [...new Set(sortedProjects.flatMap((p) => p.data.tags))].sort();
 const pageTitle = 'Portfolio Projets : Architecture Cloud, IA & Web | Black Hole Consulting';
 const pageDescription =
   'Portfolio de réalisations : migrations cloud AWS, intégrations IA générative (LLM, RAG), applications web React/Next.js, microservices. Études de cas pour startups et grands groupes.';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://blackholeconsulting.io/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Projets',
+      item: 'https://blackholeconsulting.io/projets/',
+    },
+  ],
+};
+
+// CollectionPage with itemListElement of projects (helps Google understand the listing)
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: pageTitle,
+  description: pageDescription,
+  url: 'https://blackholeconsulting.io/projets/',
+  inLanguage: 'fr-FR',
+  hasPart: sortedProjects.map((p, i) => ({
+    '@type': 'CreativeWork',
+    position: i + 1,
+    name: p.data.title,
+    description: p.data.description,
+    url: `https://blackholeconsulting.io/projets/${p.id.replace(/\.md$/, '')}/`,
+    keywords: p.data.tags.join(', '),
+  })),
+};
 ---
 
 <BaseLayout
@@ -26,6 +58,9 @@ const pageDescription =
   description={pageDescription}
   canonical="https://blackholeconsulting.io/projets/"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} is:inline />
+
   <Header />
 
   <main id="main" class="pt-24 pb-16">

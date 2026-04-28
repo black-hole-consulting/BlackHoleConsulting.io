@@ -85,6 +85,72 @@ const principles = [
     description: 'Réduire la complexité accidentelle, conserver la complexité essentielle.',
   },
 ];
+
+const aboutUrl = 'https://blackholeconsulting.io/a-propos';
+
+// Enriched Person schema for EEAT signals
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${aboutUrl}#person`,
+  name: 'Cédric Jacqueline',
+  givenName: 'Cédric',
+  familyName: 'Jacqueline',
+  jobTitle: 'Solution Architect & Expert IA Générative',
+  description:
+    "17+ ans d'expérience en architecture logicielle. Expert IA générative (LLM, RAG), Cloud AWS et Terraform. Disponible en freelance France entière.",
+  url: aboutUrl,
+  image: 'https://blackholeconsulting.io/og-image.png',
+  email: 'mailto:cedric@blkhole.fr',
+  telephone: '+33602180413',
+  worksFor: { '@id': 'https://blackholeconsulting.io/#localbusiness' },
+  knowsAbout: [
+    'Solution Architecture',
+    'Microservices',
+    'Event-Driven Architecture',
+    'Domain-Driven Design',
+    'Generative AI',
+    'Large Language Models',
+    'RAG (Retrieval-Augmented Generation)',
+    'LLM Production Engineering',
+    'AWS Cloud Architecture',
+    'Terraform',
+    'Infrastructure as Code',
+    'CI/CD',
+    'FinOps',
+    'React',
+    'Next.js',
+    'TypeScript',
+    'Tech Leadership',
+  ],
+  knowsLanguage: [
+    { '@type': 'Language', name: 'French', alternateName: 'fr' },
+    { '@type': 'Language', name: 'English', alternateName: 'en' },
+  ],
+  sameAs: [
+    'https://www.linkedin.com/in/cedric-jacqueline-tech',
+    'https://github.com/black-hole-consulting',
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Accueil',
+      item: 'https://blackholeconsulting.io/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'À propos',
+      item: aboutUrl,
+    },
+  ],
+};
 ---
 
 <BaseLayout
@@ -92,6 +158,9 @@ const principles = [
   description="17 ans d'expérience en architecture logicielle. Ex-Sanofi, Wamiz, Meetic. Spécialiste IA générative (LLM, RAG), Cloud AWS, Terraform. Disponible en freelance France entière."
   canonical="https://blackholeconsulting.io/a-propos"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+
   <Header />
 
   <main id="main">
