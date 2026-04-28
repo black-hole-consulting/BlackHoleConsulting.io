@@ -24,5 +24,6 @@ Allow: /
 User-agent: Amazonbot
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://blackholeconsulting.io/sitemap-index.xml
+Sitemap: https://blackholeconsulting.io/sitemap-images.xml

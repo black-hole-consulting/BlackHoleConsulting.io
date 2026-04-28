@@ -6,9 +6,12 @@ interface Props {
   features: string[];
   index: number;
   size?: 'small' | 'medium' | 'large';
+  href?: string;
 }
 
-const { icon, title, description, features, index, size = 'small' } = Astro.props;
+const { icon, title, description, features, index, size = 'small', href } = Astro.props;
+const Tag = href ? 'a' : 'article';
+const anchorAttrs = href ? { href, 'aria-label': `${title} — voir le service` } : {};
 
 // Size-based styling
 const sizeClasses = {
@@ -38,7 +41,10 @@ const sizeClasses = {
 const styles = sizeClasses[size];
 ---
 
-<article class={`card card-tilt fade-in stagger-${index + 1} group h-full flex flex-col`}>
+<Tag
+  {...anchorAttrs}
+  class={`card card-tilt fade-in stagger-${index + 1} group h-full flex flex-col ${href ? 'cursor-pointer hover:border-[var(--color-accent-primary)] transition-colors' : ''}`}
+>
   <div class={`flex ${size === 'large' ? 'flex-col gap-4' : 'items-start gap-4'}`}>
     <div
       class={`flex-shrink-0 ${styles.icon} rounded-lg bg-gradient-to-br from-[var(--color-accent-primary)]/30 to-[var(--color-accent-secondary)]/30 flex items-center justify-center text-[var(--color-accent-primary)] group-hover:from-[var(--color-accent-primary)]/40 group-hover:to-[var(--color-accent-secondary)]/40 transition-all`}
@@ -81,4 +87,20 @@ const styles = sizeClasses[size];
       </ul>
     </div>
   </div>
-</article>
+  {
+    href && (
+      <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-accent-primary)] group-hover:underline">
+        Voir le service
+        <svg
+          class="w-4 h-4 transition-transform group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    )
+  }
+</Tag>
