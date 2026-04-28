@@ -338,7 +338,7 @@ async function generatePlaceholder(metadata, outputPath) {
       </svg>
     `;
 
-    await sharp(Buffer.from(svg)).png().toFile(outputPath);
+    await sharp(Buffer.from(svg)).webp({ quality: 88 }).toFile(outputPath);
 
     log(`  ✓ Placeholder image created: ${path.basename(outputPath)}`, 'green');
     return true;
@@ -353,7 +353,7 @@ async function generatePlaceholder(metadata, outputPath) {
  */
 async function processArticle(slug, options = {}) {
   const mdPath = path.join(BLOG_DIR, `${slug}.md`);
-  const outputPath = path.join(OUTPUT_DIR, `${slug}.png`);
+  const outputPath = path.join(OUTPUT_DIR, `${slug}.webp`);
 
   log(`\nProcessing: ${slug}`, 'bright');
 
@@ -464,7 +464,7 @@ async function main() {
 
     for (const slug of articles) {
       if (processMissing) {
-        const imagePath = path.join(OUTPUT_DIR, `${slug}.png`);
+        const imagePath = path.join(OUTPUT_DIR, `${slug}.webp`);
         try {
           await fs.access(imagePath);
           log(`\nSkipping: ${slug} (image exists)`, 'yellow');

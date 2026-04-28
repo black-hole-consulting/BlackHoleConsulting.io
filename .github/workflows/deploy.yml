@@ -45,7 +45,7 @@ jobs:
         id: check-images
         run: |
           # Check if any images were generated (files exist in directory)
-          if ls public/images/blog/*.png 1> /dev/null 2>&1; then
+          if ls public/images/blog/*.webp 1> /dev/null 2>&1; then
             echo "has_images=true" >> $GITHUB_OUTPUT
             echo "Found images:"
             ls -la public/images/blog/

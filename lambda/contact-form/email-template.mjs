@@ -110,9 +110,7 @@ export function buildEmailText(data) {
   lines.push(`Répondre : mailto:${email}`);
   lines.push('Réserver un appel : https://calendly.com/cedric-blkhole/30min');
   lines.push('');
-  lines.push(
-    `${BRAND.name} · ${BRAND.location} · ${BRAND.url}`
-  );
+  lines.push(`${BRAND.name} · ${BRAND.location} · ${BRAND.url}`);
   return lines.join('\n');
 }
 
