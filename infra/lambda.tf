@@ -38,10 +38,10 @@ resource "aws_cloudwatch_log_group" "contact_form" {
   }
 }
 
-# Package Lambda code as ZIP
+# Package Lambda code as ZIP (whole contact-form dir to include sibling modules)
 data "archive_file" "contact_form" {
   type        = "zip"
-  source_file = "${path.module}/../lambda/contact-form/index.mjs"
+  source_dir  = "${path.module}/../lambda/contact-form"
   output_path = "${path.module}/.terraform/tmp/contact-form.zip"
 }
 

@@ -5,6 +5,8 @@
  * Includes reCAPTCHA v3 verification
  */
 
+import { buildEmailHtml, buildEmailText, buildSubject } from './email-template.mjs';
+
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 const RECAPTCHA_THRESHOLD = 0.5;
@@ -116,6 +118,7 @@ export const handler = async (event) => {
     // Verify reCAPTCHA token (if secret key is configured and origin is not localhost)
     const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
     const isLocalhost = origin.startsWith('http://localhost:');
+    let recaptchaScore;
     if (recaptchaSecretKey && !isLocalhost) {
       const recaptchaResult = await verifyRecaptcha(recaptchaToken, recaptchaSecretKey);
       if (!recaptchaResult.success) {
@@ -126,60 +129,26 @@ export const handler = async (event) => {
           body: JSON.stringify({ error: 'reCAPTCHA verification failed' }),
         };
       }
-      console.log(`reCAPTCHA score: ${recaptchaResult.score}`);
+      recaptchaScore = recaptchaResult.score;
+      console.log(`reCAPTCHA score: ${recaptchaScore}`);
     } else if (isLocalhost) {
       console.log('reCAPTCHA verification skipped (localhost origin)');
     } else {
       console.log('reCAPTCHA verification skipped (no secret key configured)');
     }
 
-    // Project type labels
-    const projectLabels = {
-      architecture: 'Architecture & Conseil',
-      ia: 'IA & GenAI',
-      cloud: 'Cloud & DevOps',
-      web: 'Développement Web',
-      autre: 'Autre',
+    const templateData = {
+      name,
+      email,
+      company,
+      projectType,
+      message,
+      recaptchaScore,
+      receivedAt: new Date(),
     };
-
-    const projectLabel = projectLabels[projectType] || 'Non spécifié';
-
-    // Build email content
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #6366f1;">Nouveau message de contact</h2>
-        <hr style="border: 1px solid #e5e7eb;" />
-
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Nom</td>
-            <td style="padding: 10px 0; color: #4b5563;">${escapeHtml(name)}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Email</td>
-            <td style="padding: 10px 0; color: #4b5563;">
-              <a href="mailto:${escapeHtml(email)}" style="color: #6366f1;">${escapeHtml(email)}</a>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Société</td>
-            <td style="padding: 10px 0; color: #4b5563;">${escapeHtml(company) || '-'}</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px 0; font-weight: bold; color: #374151;">Type de projet</td>
-            <td style="padding: 10px 0; color: #4b5563;">${projectLabel}</td>
-          </tr>
-        </table>
-
-        <h3 style="color: #374151; margin-top: 20px;">Message</h3>
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; color: #4b5563; white-space: pre-wrap;">${escapeHtml(message)}</div>
-
-        <hr style="border: 1px solid #e5e7eb; margin-top: 30px;" />
-        <p style="color: #9ca3af; font-size: 12px;">
-          Message envoyé depuis le formulaire de contact de blackholeconsulting.io
-        </p>
-      </div>
-    `;
+    const htmlContent = buildEmailHtml(templateData);
+    const textContent = buildEmailText(templateData);
+    const subject = buildSubject(templateData);
 
     // Send via Brevo API
     const response = await fetch(BREVO_API_URL, {
@@ -204,8 +173,12 @@ export const handler = async (event) => {
           email: email,
           name: name,
         },
-        subject: `[Contact] ${name} - ${projectLabel}`,
-        htmlContent: htmlContent,
+        subject,
+        htmlContent,
+        textContent,
+        headers: {
+          'X-BHC-Category': 'contact-form',
+        },
       }),
     });
 
@@ -216,7 +189,15 @@ export const handler = async (event) => {
     }
 
     // Send Telegram notification (non-blocking)
-    await sendTelegramNotification(name, email, company, projectLabel, message);
+    const projectLabelForTelegram =
+      {
+        architecture: 'Architecture & Conseil',
+        ia: 'IA & GenAI',
+        cloud: 'Cloud & DevOps',
+        web: 'Développement Web',
+        autre: 'Autre',
+      }[projectType] || 'Non spécifié';
+    await sendTelegramNotification(name, email, company, projectLabelForTelegram, message);
 
     return {
       statusCode: 200,
@@ -270,19 +251,6 @@ async function sendTelegramNotification(name, email, company, projectLabel, mess
   } catch (error) {
     console.warn('Telegram notification failed:', error.message);
   }
-}
-
-// Escape HTML to prevent XSS
-function escapeHtml(text) {
-  if (!text) return '';
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  };
-  return text.replace(/[&<>"']/g, (m) => map[m]);
 }
 
 // Verify reCAPTCHA v3 token
