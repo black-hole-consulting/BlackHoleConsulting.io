@@ -1,0 +1,200 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import ArticleCard from '../../../components/blog/ArticleCard.astro';
+import { blogCategories, categoriesForTags } from '../../../data/blog-categories';
+
+export async function getStaticPaths() {
+  return blogCategories.map((category) => ({
+    params: { slug: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const categoryFromProps = category;
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Articles in this category (multi-cluster: an article can match several)
+const matchingPosts = allPosts
+  .filter((post) =>
+    categoriesForTags(post.data.tags).some((c) => c.slug === categoryFromProps.slug)
+  )
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const canonical = `https://blackholeconsulting.io/blog/categorie/${category.slug}/`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://blackholeconsulting.io/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Blog',
+      item: 'https://blackholeconsulting.io/blog/',
+    },
+    { '@type': 'ListItem', position: 3, name: category.navLabel, item: canonical },
+  ],
+};
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: category.title,
+  description: category.metaDescription,
+  url: canonical,
+  inLanguage: 'fr-FR',
+  isPartOf: { '@id': 'https://blackholeconsulting.io/#website' },
+  hasPart: matchingPosts.map((post, i) => ({
+    '@type': 'BlogPosting',
+    position: i + 1,
+    headline: post.data.title,
+    description: post.data.description,
+    url: `https://blackholeconsulting.io/blog/${post.id.replace(/\.md$/, '')}/`,
+    datePublished: post.data.pubDate.toISOString(),
+  })),
+};
+
+const otherCategories = blogCategories.filter((c) => c.slug !== category.slug);
+---
+
+<BaseLayout title={category.metaTitle} description={category.metaDescription} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} is:inline />
+
+  <Header />
+
+  <main id="main">
+    <section class="relative pt-32 pb-12 overflow-hidden">
+      <div class={`pillar-hero-glow bg-gradient-to-br ${category.accent}`} aria-hidden="true"></div>
+      <div class="container mx-auto px-6 relative z-10">
+        <nav aria-label="Fil d'ariane" class="mb-8 text-sm">
+          <ol class="flex items-center gap-2 text-[var(--color-text-muted)]">
+            <li>
+              <a href="/" class="hover:text-[var(--color-text-primary)] transition-colors"
+                >Accueil</a
+              >
+            </li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <a href="/blog" class="hover:text-[var(--color-text-primary)] transition-colors"
+                >Blog</a
+              >
+            </li>
+            <li aria-hidden="true">/</li>
+            <li class="text-[var(--color-text-secondary)]" aria-current="page">
+              {category.navLabel}
+            </li>
+          </ol>
+        </nav>
+
+        <div class="max-w-3xl mb-10">
+          <p
+            class="fade-in inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20 text-sm text-[var(--color-accent-primary)] font-medium mb-6"
+          >
+            <span aria-hidden="true">{category.icon}</span> Catégorie
+          </p>
+          <h1
+            class="fade-in stagger-1 text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-6"
+          >
+            {category.title}
+          </h1>
+          <p class="fade-in stagger-2 text-lg text-[var(--color-text-secondary)] mb-6">
+            {category.intro}
+          </p>
+          <a
+            href={`/services/${category.servicePillarSlug}/`}
+            class="fade-in stagger-3 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-accent-primary)] hover:underline"
+          >
+            {category.servicePillarLabel}
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-6 pb-20">
+      {
+        matchingPosts.length === 0 ? (
+          <div class="text-center py-16 text-[var(--color-text-secondary)]">
+            <p class="mb-4">Pas encore d'article publié dans cette catégorie.</p>
+            <a href="/blog" class="btn btn-secondary">
+              Tous les articles
+            </a>
+          </div>
+        ) : (
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {matchingPosts.map((post) => (
+              <ArticleCard post={post} />
+            ))}
+          </div>
+        )
+      }
+    </section>
+
+    <!-- Other categories -->
+    <section class="section py-16 border-t border-[var(--color-border)]">
+      <div class="container mx-auto px-6">
+        <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8">
+          Autres catégories du blog
+        </h2>
+        <div class="grid md:grid-cols-3 gap-4">
+          {
+            otherCategories.map((c) => (
+              <a
+                href={`/blog/categorie/${c.slug}/`}
+                class="card p-5 group hover:border-[var(--color-accent-primary)] transition-colors"
+              >
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="text-2xl" aria-hidden="true">
+                    {c.icon}
+                  </span>
+                  <h3 class="font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-primary)] transition-colors">
+                    {c.navLabel}
+                  </h3>
+                </div>
+                <p class="text-sm text-[var(--color-text-secondary)] line-clamp-2">{c.intro}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .pillar-hero-glow {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

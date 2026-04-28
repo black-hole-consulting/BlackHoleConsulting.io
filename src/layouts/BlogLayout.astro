@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
 import type { CollectionEntry } from 'astro:content';
+import { categoriesForTags } from '../data/blog-categories';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -14,6 +15,11 @@ interface Props {
 
 const { post, headings, prevPost, nextPost } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, heroImage } = post.data;
+
+// Categories this article belongs to → drives the contextual CTA toward
+// the matching service pillar page.
+const articleCategories = categoriesForTags(tags);
+const primaryCategory = articleCategories[0];
 
 const baseUrl = 'https://blackholeconsulting.io';
 const postSlug = post.id.replace(/\.md$/, '');
@@ -251,6 +257,42 @@ const breadcrumbData = {
               </div>
             </div>
           </div>
+
+          {
+            primaryCategory && (
+              <aside
+                class={`mt-12 rounded-2xl border border-[var(--color-border)] p-6 md:p-8 relative overflow-hidden`}
+              >
+                <div
+                  class={`absolute inset-0 bg-gradient-to-br ${primaryCategory.accent} opacity-10`}
+                  aria-hidden="true"
+                />
+                <div class="relative">
+                  <p class="text-xs font-semibold uppercase tracking-wider text-[var(--color-accent-primary)] mb-2">
+                    Cet article fait partie de · {primaryCategory.navLabel}
+                  </p>
+                  <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-2">
+                    Un projet {primaryCategory.navLabel.toLowerCase()} en cours ?
+                  </h2>
+                  <p class="text-[var(--color-text-secondary)] mb-5 max-w-2xl">
+                    Au-delà de l'article, j'accompagne les équipes tech sur ces sujets en mission
+                    cadrée. Premier échange gratuit, sans engagement.
+                  </p>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <a
+                      href={`/services/${primaryCategory.servicePillarSlug}/`}
+                      class="btn btn-primary"
+                    >
+                      Découvrir le service
+                    </a>
+                    <a href={`/blog/categorie/${primaryCategory.slug}/`} class="btn btn-secondary">
+                      Tous les articles {primaryCategory.navLabel}
+                    </a>
+                  </div>
+                </div>
+              </aside>
+            )
+          }
 
           <!-- Previous/Next Navigation -->
           <nav class="mt-12 pt-8 border-t border-[var(--color-border)]">

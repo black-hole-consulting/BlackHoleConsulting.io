@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { blogCategories } from '../../data/blog-categories';
 
 // Get all non-draft blog posts, sorted by date (newest first)
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -62,7 +63,7 @@ const blogListData = {
   <main id="main" class="pt-32 pb-20">
     <div class="container mx-auto px-6">
       <!-- Page Header -->
-      <header class="max-w-3xl mx-auto text-center mb-16 fade-in">
+      <header class="max-w-3xl mx-auto text-center mb-12 fade-in">
         <h1 class="text-4xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-6">
           <span class="gradient-text">Blog</span>
         </h1>
@@ -71,6 +72,28 @@ const blogListData = {
           generative et les technologies web modernes.
         </p>
       </header>
+
+      <!-- Categories hubs -->
+      <div class="max-w-5xl mx-auto mb-12 fade-in stagger-1">
+        <h2 class="sr-only">Parcourir par catégorie</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {
+            blogCategories.map((cat) => (
+              <a
+                href={`/blog/categorie/${cat.slug}/`}
+                class="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-[var(--color-accent-primary)] transition-colors"
+              >
+                <span class="text-xl" aria-hidden="true">
+                  {cat.icon}
+                </span>
+                <span class="text-sm font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-primary)] transition-colors">
+                  {cat.navLabel}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
 
       <!-- Tags Filter -->
       {
