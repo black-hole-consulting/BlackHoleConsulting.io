@@ -19,6 +19,10 @@ const {
   canonical = 'https://blackholeconsulting.io/',
 } = Astro.props;
 
+// Search engine verification meta tags (set in env, optional)
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION || '';
+const bingSiteVerification = import.meta.env.PUBLIC_BING_SITE_VERIFICATION || '';
+
 // LocalBusiness schema
 const localBusinessData = {
   '@context': 'https://schema.org',
@@ -70,9 +74,18 @@ const structuredData = {
     latitude: 48.3056,
     longitude: 2.7038,
   },
-  areaServed: {
-    '@type': 'Country',
-    name: 'France',
+  areaServed: [
+    { '@type': 'Country', name: 'France' },
+    { '@type': 'AdministrativeArea', name: 'Île-de-France' },
+    { '@type': 'AdministrativeArea', name: 'Centre-Val de Loire' },
+    { '@type': 'City', name: 'Tours' },
+    { '@type': 'City', name: 'Paris' },
+  ],
+  serviceType: ['Solution Architecture', 'GenAI', 'Cloud', 'Web Development'],
+  availableChannel: {
+    '@type': 'ServiceChannel',
+    serviceUrl: 'https://blackholeconsulting.io/contact',
+    availableLanguage: ['fr', 'en'],
   },
   founder: {
     '@type': 'Person',
@@ -81,13 +94,26 @@ const structuredData = {
   },
   knowsAbout: [
     'Solution Architecture',
+    'Architecture Microservices',
+    'Architecture Event-Driven',
     'Artificial Intelligence',
     'Generative AI',
     'Large Language Models',
+    'RAG',
+    'Retrieval-Augmented Generation',
+    'LLM Production',
+    'Prompt Engineering',
     'Cloud Computing',
     'AWS',
+    'Terraform',
+    'Infrastructure as Code',
+    'FinOps',
     'Web Development',
+    'React',
+    'Next.js',
+    'TypeScript',
     'DevOps',
+    'CI/CD',
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -145,6 +171,18 @@ const structuredData = {
   },
   sameAs: ['https://www.linkedin.com/in/cedric-jacqueline-tech'],
 };
+
+// WebSite schema (signal SearchAction + sitelinks)
+const websiteData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': 'https://blackholeconsulting.io/#website',
+  url: 'https://blackholeconsulting.io',
+  name: 'Black Hole Consulting',
+  description: 'Consultant Solution Architect, IA générative, Cloud AWS et développement web.',
+  publisher: { '@id': 'https://blackholeconsulting.io/#localbusiness' },
+  inLanguage: 'fr-FR',
+};
 ---
 
 <!doctype html>
@@ -158,13 +196,21 @@ const structuredData = {
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="author" content="Cédric Jacqueline - Black Hole Consulting" />
+    <meta name="publisher" content="Black Hole Consulting" />
     <meta
-      name="keywords"
-      content="consultant solution architect, expert ia générative, freelance cloud aws, architecte logiciel, consultant genai llm, développeur senior freelance, expert rag chatgpt, terraform devops, react next.js, paris île-de-france france"
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
     />
-    <meta name="author" content="Cédric - Black Hole Consulting" />
-    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
+
+    <!-- Search engine verification (optional, set via PUBLIC_*_VERIFICATION env) -->
+    {
+      googleSiteVerification && (
+        <meta name="google-site-verification" content={googleSiteVerification} />
+      )
+    }
+    {bingSiteVerification && <meta name="msvalidate.01" content={bingSiteVerification} />}
 
     <!-- Geo Tags -->
     <meta name="geo.region" content="FR-IDF" />
@@ -197,6 +243,7 @@ const structuredData = {
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <script type="application/ld+json" set:html={JSON.stringify(localBusinessData)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteData)} />
 
     <!-- View Transitions -->
     <ClientRouter />
