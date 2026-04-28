@@ -113,9 +113,10 @@ export const handler = async (event) => {
       };
     }
 
-    // Verify reCAPTCHA token (if secret key is configured)
+    // Verify reCAPTCHA token (if secret key is configured and origin is not localhost)
     const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
-    if (recaptchaSecretKey) {
+    const isLocalhost = origin.startsWith('http://localhost:');
+    if (recaptchaSecretKey && !isLocalhost) {
       const recaptchaResult = await verifyRecaptcha(recaptchaToken, recaptchaSecretKey);
       if (!recaptchaResult.success) {
         console.warn('reCAPTCHA verification failed:', recaptchaResult.error);
@@ -126,6 +127,8 @@ export const handler = async (event) => {
         };
       }
       console.log(`reCAPTCHA score: ${recaptchaResult.score}`);
+    } else if (isLocalhost) {
+      console.log('reCAPTCHA verification skipped (localhost origin)');
     } else {
       console.log('reCAPTCHA verification skipped (no secret key configured)');
     }
