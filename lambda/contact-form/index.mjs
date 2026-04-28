@@ -18,14 +18,27 @@ const MAX_MESSAGE_LENGTH = 10000;
 const MAX_COMPANY_LENGTH = 200;
 const ALLOWED_PROJECT_TYPES = ['architecture', 'ia', 'cloud', 'web', 'autre'];
 
-// CORS headers for browser requests
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://blackholeconsulting.io',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+// CORS - allowed origins whitelist
+const ALLOWED_ORIGINS = [
+  'https://blackholeconsulting.io',
+  'https://www.blackholeconsulting.io',
+  'http://localhost:4321',
+  'http://localhost:4322',
+];
+
+function buildCorsHeaders(origin) {
+  const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    Vary: 'Origin',
+  };
+}
 
 export const handler = async (event) => {
+  const origin = event.headers?.origin || event.headers?.Origin || '';
+  const corsHeaders = buildCorsHeaders(origin);
   // HTTP API v2 uses requestContext.http.method
   const httpMethod = event.requestContext?.http?.method || event.httpMethod;
 

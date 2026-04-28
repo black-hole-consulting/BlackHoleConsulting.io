@@ -48,7 +48,10 @@ variable "cors_allowed_origins" {
   description = "List of allowed CORS origins for the contact API"
   type        = list(string)
   default = [
-    "https://blackholeconsulting.io"
+    "https://blackholeconsulting.io",
+    "https://www.blackholeconsulting.io",
+    "http://localhost:4321",
+    "http://localhost:4322",
   ]
 }
 
