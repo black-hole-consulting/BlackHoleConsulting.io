@@ -1,0 +1,18 @@
+{
+  "originalFile": "wodcontest.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:41:16.679Z",
+  "dominantColors": {
+    "primary": "#321c1e",
+    "lighter": "#371f21",
+    "darker": "#231415"
+  },
+  "aiDescription": null,
+  "formats": [
+    "wodcontest-thumb.webp",
+    "wodcontest-card.webp",
+    "wodcontest-hero.webp",
+    "wodcontest-card.jpg",
+    "wodcontest-original.webp"
+  ]
+}

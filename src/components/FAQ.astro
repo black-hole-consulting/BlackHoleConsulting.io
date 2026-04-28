@@ -3,32 +3,32 @@ const faqs = [
   {
     question: 'Quels types de projets accompagnez-vous ?',
     answer:
-      "J'accompagne des projets varies : conception d'architectures cloud, integration de solutions IA/GenAI, developpement d'applications web, migration vers le cloud, mise en place de pipelines CI/CD, et transformation digitale. Que ce soit pour une startup ou un grand groupe, j'adapte mon approche a vos besoins specifiques.",
+      "J'accompagne des projets variés : conception d'architectures cloud, intégration de solutions IA/GenAI, développement d'applications web, migration vers le cloud, mise en place de pipelines CI/CD, et transformation digitale. Que ce soit pour une startup ou un grand groupe, j'adapte mon approche à vos besoins spécifiques.",
   },
   {
-    question: 'Comment se deroule une mission type ?',
+    question: 'Comment se déroule une mission type ?',
     answer:
-      'Chaque mission suit une methodologie eprouvee en 4 phases : Decouverte (analyse des besoins et audit), Conception (architecture et planning), Realisation (developpement iteratif avec points reguliers), et Livraison (deploiement, documentation et support). La duree varie selon la complexite, de quelques jours pour un audit a plusieurs mois pour un projet complet.',
+      'Chaque mission suit une méthodologie éprouvée en 4 phases : Découverte (analyse des besoins et audit), Conception (architecture et planning), Réalisation (développement itératif avec points réguliers), et Livraison (déploiement, documentation et support). La durée varie selon la complexité, de quelques jours pour un audit à plusieurs mois pour un projet complet.',
   },
   {
     question: 'Travaillez-vous en remote ou sur site ?',
     answer:
-      'Je travaille principalement en remote, ce qui permet une grande flexibilite et efficacite. Cependant, je me deplace volontiers pour les phases cles du projet : ateliers de cadrage, presentations strategiques, formations ou workshops. Une approche hybride peut etre mise en place selon vos besoins.',
+      'Je travaille principalement en remote, ce qui permet une grande flexibilité et efficacité. Cependant, je me déplace volontiers pour les phases clés du projet : ateliers de cadrage, présentations stratégiques, formations ou workshops. Une approche hybride peut être mise en place selon vos besoins.',
   },
   {
-    question: 'Quelles sont vos technologies de predilection ?',
+    question: 'Quelles sont vos technologies de prédilection ?',
     answer:
-      "Cote cloud : AWS, Azure, GCP avec une expertise Terraform pour l'IaC. Pour l'IA : OpenAI, Claude, Mistral, LangChain et les architectures RAG. En developpement web : React, Next.js, Vue.js, Node.js, PHP/Symfony. Je reste technologiquement agnostique et choisis les outils les plus adaptes a chaque contexte.",
+      "Côté cloud : AWS, Azure, GCP avec une expertise Terraform pour l'IaC. Pour l'IA : OpenAI, Claude, Mistral, LangChain et les architectures RAG. En développement web : React, Next.js, Vue.js, Node.js, PHP/Symfony. Je reste technologiquement agnostique et choisis les outils les plus adaptés à chaque contexte.",
   },
   {
-    question: 'Comment reserver un premier echange ?',
+    question: 'Comment réserver un premier échange ?',
     answer:
-      'Rien de plus simple ! Vous pouvez reserver directement un creneau de 30 minutes via Calendly pour un appel decouverte gratuit et sans engagement. Vous pouvez egalement me contacter via le formulaire ci-dessous ou par email. Je reponds generalement sous 24h.',
+      'Rien de plus simple ! Vous pouvez réserver directement un créneau de 30 minutes via Calendly pour un appel découverte gratuit et sans engagement. Vous pouvez également me contacter via le formulaire ci-dessous ou par email. Je réponds généralement sous 24h.',
   },
   {
     question: 'Quels sont vos tarifs ?',
     answer:
-      "Mes tarifs varient selon le type de mission : forfait projet, regie au TJM, ou accompagnement recurrent. Chaque devis est personnalise apres analyse de vos besoins. Le premier echange decouverte est gratuit et permet d'etablir une proposition adaptee a votre budget et vos objectifs.",
+      "Mes tarifs varient selon le type de mission : forfait projet, régie au TJM, ou accompagnement récurrent. Chaque devis est personnalisé après analyse de vos besoins. Le premier échange découverte est gratuit et permet d'établir une proposition adaptée à votre budget et vos objectifs.",
   },
 ];
 ---
@@ -38,10 +38,10 @@ const faqs = [
     <!-- Section Header -->
     <div class="text-center mb-16">
       <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
-        Questions Frequentes
+        Questions Fréquentes
       </h2>
       <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-        Les reponses aux questions que vous vous posez peut-etre
+        Les réponses aux questions que vous vous posez peut-être
       </p>
     </div>
 
@@ -51,11 +51,11 @@ const faqs = [
         faqs.map((faq, index) => (
           <div class={`fade-in stagger-${Math.min(index + 1, 4)} faq-item`}>
             <details class="group bg-[var(--color-bg-secondary)] border border-[var(--color-border)] rounded-2xl overflow-hidden hover:border-[var(--color-accent-primary)]/50 transition-all">
-              <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                <span class="text-[var(--color-text-primary)] font-medium pr-4">
+              <summary class="flex items-center justify-between p-4 md:p-6 cursor-pointer list-none">
+                <span class="text-[var(--color-text-primary)] font-medium pr-3 md:pr-4 text-sm md:text-base">
                   {faq.question}
                 </span>
-                <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-accent-primary)] group-open:rotate-45 transition-transform duration-300">
+                <span class="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-accent-primary)] group-open:rotate-45 transition-transform duration-300">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       stroke-linecap="round"
@@ -66,8 +66,10 @@ const faqs = [
                   </svg>
                 </span>
               </summary>
-              <div class="px-6 pb-6">
-                <p class="text-[var(--color-text-secondary)] leading-relaxed">{faq.answer}</p>
+              <div class="px-4 pb-4 md:px-6 md:pb-6">
+                <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm md:text-base">
+                  {faq.answer}
+                </p>
               </div>
             </details>
           </div>

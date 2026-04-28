@@ -1,0 +1,169 @@
+---
+interface TimelineEntry {
+  period: string;
+  title: string;
+  company: string;
+  description: string;
+  highlights?: string[];
+}
+
+interface Props {
+  entries?: TimelineEntry[];
+}
+
+const defaultEntries: TimelineEntry[] = [
+  {
+    period: '2025 - Present',
+    title: 'Solution Architect',
+    company: 'Sanofi Accelerator',
+    description:
+      "Architecture de solutions Cloud et IA au sein de l'Accelerator Sanofi. Conception d'architectures scalables pour accelerer l'innovation dans le secteur pharmaceutique.",
+    highlights: ['Solution Architecture', 'Cloud AWS', 'IA & Innovation', 'Pharma'],
+  },
+  {
+    period: '2024 - 2025',
+    title: 'Head of Engineering ~ Solution Architect',
+    company: 'Career Booster',
+    description:
+      "Definition de la strategie digitale, management d'equipes techniques et resolution de la complexite produit par les technologies. Transformation et modernisation des systemes.",
+    highlights: ['Strategie digitale', 'Management', 'Architecture', 'Product'],
+  },
+  {
+    period: '2023 - 2024',
+    title: 'Head of Engineering',
+    company: 'Wamiz',
+    description:
+      "Direction des equipes d'ingenieurs, gestion de projets techniques complexes ameliorant l'efficacite operationnelle. Mise en place de processus d'amelioration continue et collaboration cross-fonctionnelle.",
+    highlights: ['Leadership', 'Web Core Vitals', 'Symfony', 'Google Analytics'],
+  },
+  {
+    period: '2021 - 2023',
+    title: 'Engineering Manager ~ Tech Lead',
+    company: 'QUARTUS Residentiel',
+    description:
+      "Migration vers une plateforme tech unifiee, implementation AWS/Terraform pour la scalabilite. Creation d'une software factory integree avec GitLab CI/CD, developpement de plateformes metier avec Symfony et API Platform.",
+    highlights: ['AWS/Terraform', 'GitLab CI/CD', 'API Platform', 'RabbitMQ'],
+  },
+  {
+    period: '2018 - 2020',
+    title: 'Senior Backend Developer',
+    company: 'Meetic, Rue Du Commerce, upply',
+    description:
+      'Developpement backend senior, mise en place de tests automatises (BEHAT, E2E), environnements DevOps avec Docker et GitLab CI/CD. Mentorat de developpeurs juniors et mid-level.',
+    highlights: ['PHP 8', 'Docker', 'Tests automatises', 'Mentoring'],
+  },
+  {
+    period: '2015 - 2017',
+    title: 'Lead Developer',
+    company: 'Aramisauto',
+    description:
+      "Recrutement et formation d'une equipe tech complete (PO, devs, ops). Conception et deploiement d'une plateforme e-commerce automobile en 7 mois. Mise en place des outils de monitoring (New Relic, AppDynamics).",
+    highlights: ['E-commerce', 'Team Building', 'Symfony', 'Monitoring'],
+  },
+  {
+    period: '2008 - 2015',
+    title: 'PHP Developer',
+    company: 'Anakrys, AgriAffaires (LeBonCoin), FashionGroup',
+    description:
+      'Conception et developpement backend sous Symfony (1 a 5). Tests unitaires et fonctionnels, maintenance applicative, revues de code et methodologies Agile (SCRUM).',
+    highlights: ['PHP/Symfony', 'TDD', 'SCRUM', 'Code Review'],
+  },
+];
+
+const { entries = defaultEntries } = Astro.props;
+---
+
+<div class="timeline-container relative">
+  <!-- Vertical line -->
+  <div
+    class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--color-accent-primary)] via-[var(--color-accent-secondary)] to-[var(--color-border)] md:-translate-x-1/2"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="space-y-12 md:space-y-16">
+    {
+      entries.map((entry, index) => (
+        <div
+          class={`fade-in stagger-${(index % 4) + 1} timeline-entry relative pl-12 md:pl-0 ${index % 2 === 0 ? 'md:pr-[calc(50%+2rem)]' : 'md:pl-[calc(50%+2rem)]'}`}
+        >
+          {/* Timeline dot */}
+          <div
+            class={`absolute left-4 md:left-1/2 top-2 w-3 h-3 rounded-full bg-[var(--color-accent-primary)] border-4 border-[var(--color-bg-primary)] md:-translate-x-1/2 z-10 shadow-[0_0_10px_var(--color-accent-primary)]`}
+            aria-hidden="true"
+          />
+
+          {/* Content card */}
+          <div class="card card-tilt hover:border-[var(--color-accent-primary)]/50 transition-all duration-300">
+            {/* Period badge */}
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent-primary)]/20 border border-[var(--color-accent-primary)]/30 mb-4">
+              <svg
+                class="w-4 h-4 text-[var(--color-accent-primary)]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span class="text-sm font-medium text-[var(--color-accent-primary)]">
+                {entry.period}
+              </span>
+            </div>
+
+            {/* Title & Company */}
+            <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-1">{entry.title}</h3>
+            <p class="text-[var(--color-accent-secondary)] font-medium mb-3">{entry.company}</p>
+
+            {/* Description */}
+            <p class="text-[var(--color-text-secondary)] mb-4 leading-relaxed">
+              {entry.description}
+            </p>
+
+            {/* Highlights */}
+            {entry.highlights && entry.highlights.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {entry.highlights.map((highlight) => (
+                  <span class="tech-badge">{highlight}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* Mobile: All entries on the left side of the line */
+  @media (max-width: 767px) {
+    .timeline-entry {
+      padding-left: 2.5rem;
+      padding-right: 0;
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 374px) {
+    .timeline-entry {
+      padding-left: 2rem;
+    }
+  }
+
+  /* Desktop: Alternating left/right layout */
+  @media (min-width: 768px) {
+    .timeline-entry:nth-child(odd) .card {
+      text-align: left;
+    }
+
+    .timeline-entry:nth-child(even) .card {
+      text-align: left;
+    }
+  }
+</style>

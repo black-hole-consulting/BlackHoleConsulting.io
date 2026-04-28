@@ -1,10 +1,22 @@
-/* global fetch, process, console */
+/* global fetch, process, console, URLSearchParams */
 /**
  * AWS Lambda function for contact form
  * Sends emails via Brevo (Sendinblue) API
+ * Includes reCAPTCHA v3 verification
  */
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const RECAPTCHA_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+const RECAPTCHA_THRESHOLD = 0.5;
+
+// Validation constants
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const MAX_NAME_LENGTH = 200;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_MESSAGE_LENGTH = 10000;
+const MAX_COMPANY_LENGTH = 200;
+const ALLOWED_PROJECT_TYPES = ['architecture', 'ia', 'cloud', 'web', 'autre'];
 
 // CORS headers for browser requests
 const corsHeaders = {
@@ -38,7 +50,7 @@ export const handler = async (event) => {
   try {
     // Parse form data
     const body = JSON.parse(event.body);
-    const { name, email, company, 'project-type': projectType, message } = body;
+    const { name, email, company, 'project-type': projectType, message, recaptchaToken } = body;
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -47,6 +59,62 @@ export const handler = async (event) => {
         headers: corsHeaders,
         body: JSON.stringify({ error: 'Missing required fields' }),
       };
+    }
+
+    // Validate field lengths
+    if (
+      name.length > MAX_NAME_LENGTH ||
+      email.length > MAX_EMAIL_LENGTH ||
+      message.length > MAX_MESSAGE_LENGTH
+    ) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Field exceeds maximum allowed length' }),
+      };
+    }
+
+    if (company && company.length > MAX_COMPANY_LENGTH) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Company name exceeds maximum allowed length' }),
+      };
+    }
+
+    // Validate email format
+    if (!EMAIL_REGEX.test(email)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Invalid email format' }),
+      };
+    }
+
+    // Validate project type against whitelist
+    if (projectType && !ALLOWED_PROJECT_TYPES.includes(projectType)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'Invalid project type' }),
+      };
+    }
+
+    // Verify reCAPTCHA token (if secret key is configured)
+    const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (recaptchaSecretKey) {
+      const recaptchaResult = await verifyRecaptcha(recaptchaToken, recaptchaSecretKey);
+      if (!recaptchaResult.success) {
+        console.warn('reCAPTCHA verification failed:', recaptchaResult.error);
+        return {
+          statusCode: 403,
+          headers: corsHeaders,
+          body: JSON.stringify({ error: 'reCAPTCHA verification failed' }),
+        };
+      }
+      console.log(`reCAPTCHA score: ${recaptchaResult.score}`);
+    } else {
+      console.log('reCAPTCHA verification skipped (no secret key configured)');
     }
 
     // Project type labels
@@ -131,6 +199,9 @@ export const handler = async (event) => {
       throw new Error('Failed to send email');
     }
 
+    // Send Telegram notification (non-blocking)
+    await sendTelegramNotification(name, email, company, projectLabel, message);
+
     return {
       statusCode: 200,
       headers: corsHeaders,
@@ -146,6 +217,45 @@ export const handler = async (event) => {
   }
 };
 
+// Send Telegram notification (best-effort, does not block response)
+async function sendTelegramNotification(name, email, company, projectLabel, message) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    console.log('Telegram notification skipped (not configured)');
+    return;
+  }
+
+  const text =
+    `\u{1F4E7} Nouveau contact\n\n` +
+    `\u{1F464} Nom : ${name}\n` +
+    `\u{1F4E9} Email : ${email}\n` +
+    `\u{1F3E2} Société : ${company || '-'}\n` +
+    `\u{1F4CB} Projet : ${projectLabel}\n\n` +
+    `\u{1F4AC} Message :\n${message}`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: text,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.warn('Telegram API error:', err);
+    } else {
+      console.log('Telegram notification sent');
+    }
+  } catch (error) {
+    console.warn('Telegram notification failed:', error.message);
+  }
+}
+
 // Escape HTML to prevent XSS
 function escapeHtml(text) {
   if (!text) return '';
@@ -157,4 +267,44 @@ function escapeHtml(text) {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Verify reCAPTCHA v3 token
+async function verifyRecaptcha(token, secretKey) {
+  if (!token) {
+    return { success: false, error: 'No token provided' };
+  }
+
+  try {
+    const params = new URLSearchParams();
+    params.append('secret', secretKey);
+    params.append('response', token);
+
+    const response = await fetch(RECAPTCHA_VERIFY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      return { success: false, error: data['error-codes']?.join(', ') || 'Verification failed' };
+    }
+
+    // Check score threshold (reCAPTCHA v3 returns 0.0 - 1.0)
+    if (data.score < RECAPTCHA_THRESHOLD) {
+      return { success: false, error: `Score too low: ${data.score}`, score: data.score };
+    }
+
+    // Verify action matches
+    if (data.action !== 'contact_form') {
+      return { success: false, error: `Invalid action: ${data.action}` };
+    }
+
+    return { success: true, score: data.score };
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    return { success: false, error: 'Verification request failed' };
+  }
 }

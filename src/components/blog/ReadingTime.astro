@@ -1,0 +1,39 @@
+---
+interface Props {
+  content: string;
+  wordsPerMinute?: number;
+}
+
+const { content, wordsPerMinute = 200 } = Astro.props;
+
+// Calculate reading time
+function calculateReadingTime(text: string, wpm: number): number {
+  // Remove markdown/HTML syntax for more accurate word count
+  const cleanText = text
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+    .replace(/`[^`]*`/g, '') // Remove inline code
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // Replace links with text
+    .replace(/[#*_~`]/g, '') // Remove markdown symbols
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+
+  const words = cleanText.split(/\s+/).filter((word) => word.length > 0);
+  const minutes = Math.ceil(words.length / wpm);
+
+  return Math.max(1, minutes); // Minimum 1 minute
+}
+
+const readingTime = calculateReadingTime(content, wordsPerMinute);
+---
+
+<span class="reading-time flex items-center gap-2">
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+  </svg>
+  <span>{readingTime} min de lecture</span>
+</span>

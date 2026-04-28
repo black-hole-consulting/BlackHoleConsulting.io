@@ -56,12 +56,12 @@ const sectors = [
     >
       {
         sectors.map((sector) => (
-          <div class="sector-item group flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-all duration-300 cursor-default">
+          <div class="sector-item group flex flex-col items-center gap-3 transition-all duration-300 cursor-default">
             <div
-              class="text-[var(--color-text-muted)] group-hover:text-[var(--color-accent-primary)] transition-colors duration-300"
+              class="sector-icon w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300"
               set:html={sector.icon}
             />
-            <span class="text-xs text-[var(--color-text-muted)] group-hover:text-[var(--color-text-secondary)] transition-colors duration-300 whitespace-nowrap">
+            <span class="text-xs font-medium text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] transition-colors duration-300 whitespace-nowrap">
               {sector.name}
             </span>
           </div>
@@ -77,6 +77,16 @@ const sectors = [
   }
 
   .sector-item:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+  }
+
+  .sector-icon {
+    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+    color: white;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  }
+
+  .sector-item:hover .sector-icon {
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
   }
 </style>

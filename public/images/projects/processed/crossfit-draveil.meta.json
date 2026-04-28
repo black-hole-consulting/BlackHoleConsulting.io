@@ -1,0 +1,18 @@
+{
+  "originalFile": "crossfit-draveil.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:28:54.369Z",
+  "dominantColors": {
+    "primary": "#586064",
+    "lighter": "#616a6e",
+    "darker": "#3e4346"
+  },
+  "aiDescription": null,
+  "formats": [
+    "crossfit-draveil-thumb.webp",
+    "crossfit-draveil-card.webp",
+    "crossfit-draveil-hero.webp",
+    "crossfit-draveil-card.jpg",
+    "crossfit-draveil-original.webp"
+  ]
+}

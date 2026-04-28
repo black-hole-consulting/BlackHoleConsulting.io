@@ -40,7 +40,7 @@
 
       <!-- Subtitle -->
       <p class="fade-in stagger-2 text-lg text-[var(--color-text-secondary)] mb-8 max-w-xl mx-auto">
-        J'analyse votre projet et vous envoie mes recommandations personnalisees sous 48h.
+        J'analyse votre projet et vous envoie mes recommandations personnalisées sous 48h.
       </p>
 
       <!-- Form -->
@@ -106,7 +106,7 @@
           id="lead-error"
           class="hidden mt-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400"
         >
-          Une erreur est survenue. Veuillez reessayer ou me contacter directement.
+          Une erreur est survenue. Veuillez réessayer ou me contacter directement.
         </div>
       </form>
 
@@ -114,7 +114,7 @@
       <div class="fade-in stagger-5 mt-12 grid sm:grid-cols-3 gap-6 text-left">
         <div class="flex items-start gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/10 flex items-center justify-center"
+            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/20 flex items-center justify-center"
           >
             <svg
               class="w-4 h-4 text-[var(--color-accent-primary)]"
@@ -132,14 +132,14 @@
           </div>
           <div>
             <p class="text-sm font-medium text-[var(--color-text-primary)]">
-              Analyse personnalisee
+              Analyse personnalisée
             </p>
             <p class="text-xs text-[var(--color-text-muted)]">De votre architecture actuelle</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/10 flex items-center justify-center"
+            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/20 flex items-center justify-center"
           >
             <svg
               class="w-4 h-4 text-[var(--color-accent-primary)]"
@@ -159,12 +159,12 @@
             <p class="text-sm font-medium text-[var(--color-text-primary)]">
               Recommandations claires
             </p>
-            <p class="text-xs text-[var(--color-text-muted)]">Points d'amelioration concrets</p>
+            <p class="text-xs text-[var(--color-text-muted)]">Points d'amélioration concrets</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
           <div
-            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/10 flex items-center justify-center"
+            class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent-primary)]/20 flex items-center justify-center"
           >
             <svg
               class="w-4 h-4 text-[var(--color-accent-primary)]"
@@ -181,7 +181,7 @@
             </svg>
           </div>
           <div>
-            <p class="text-sm font-medium text-[var(--color-text-primary)]">Reponse sous 48h</p>
+            <p class="text-sm font-medium text-[var(--color-text-primary)]">Réponse sous 48h</p>
             <p class="text-xs text-[var(--color-text-muted)]">Retour rapide et professionnel</p>
           </div>
         </div>
@@ -197,7 +197,32 @@
   const leadSubmitBtn = leadForm?.querySelector('button[type="submit"]') as HTMLButtonElement;
 
   // Use the same API endpoint as contact form
-  const API_ENDPOINT = 'https://zm4iy4pjv8.execute-api.eu-west-3.amazonaws.com/contact';
+  const API_ENDPOINT = 'https://6deuyzfjp7.execute-api.eu-west-3.amazonaws.com/contact';
+
+  // Get reCAPTCHA token (returns empty string if disabled/unavailable)
+  async function getLeadRecaptchaToken(): Promise<string> {
+    const recaptchaEnabled =
+      'RECAPTCHA_ENABLED' in window && (window as Record<string, unknown>).RECAPTCHA_ENABLED;
+    const grecaptcha = (window as Record<string, unknown>).grecaptcha as
+      | Record<string, Function>
+      | undefined;
+    const siteKey = (window as Record<string, unknown>).RECAPTCHA_SITE_KEY as string | undefined;
+
+    if (!recaptchaEnabled || !grecaptcha) {
+      return '';
+    }
+
+    return new Promise((resolve) => {
+      grecaptcha.ready(() => {
+        (grecaptcha.execute(siteKey, { action: 'lead_magnet' }) as Promise<string>)
+          .then(resolve)
+          .catch((err: unknown) => {
+            console.warn('reCAPTCHA error:', err);
+            resolve('');
+          });
+      });
+    });
+  }
 
   leadForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -207,7 +232,7 @@
       leadSubmitBtn.disabled = true;
       leadSubmitBtn.innerHTML = `
         <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <circle class="opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
         Envoi...
@@ -218,7 +243,7 @@
     const formData = new FormData(leadForm);
     const email = formData.get('email');
 
-    const data = {
+    const data: Record<string, unknown> = {
       name: 'Lead Magnet',
       email: email,
       'project-type': 'audit',
@@ -226,6 +251,12 @@
     };
 
     try {
+      // Get reCAPTCHA v3 token (empty in dev mode)
+      const recaptchaToken = await getLeadRecaptchaToken();
+      if (recaptchaToken) {
+        data.recaptchaToken = recaptchaToken;
+      }
+
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {

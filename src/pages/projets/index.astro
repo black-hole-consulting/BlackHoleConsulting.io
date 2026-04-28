@@ -1,0 +1,241 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ProjectCard from '../../components/projects/ProjectCard.astro';
+
+// Get all projects and sort by order
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+// Separate featured and other projects
+const featuredProjects = sortedProjects.filter((p) => p.data.featured);
+const otherProjects = sortedProjects.filter((p) => !p.data.featured);
+
+// Extract all unique tags for filtering
+const allTags = [...new Set(sortedProjects.flatMap((p) => p.data.tags))].sort();
+
+const pageTitle = 'Portfolio Projets : Architecture Cloud, IA & Web | Black Hole Consulting';
+const pageDescription =
+  'Portfolio de réalisations : migrations cloud AWS, intégrations IA générative (LLM, RAG), applications web React/Next.js, microservices. Études de cas pour startups et grands groupes.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="https://blackholeconsulting.io/projets/"
+>
+  <Header />
+
+  <main id="main" class="pt-24 pb-16">
+    <!-- Hero Section -->
+    <section class="section pb-12">
+      <div class="container">
+        <div class="max-w-3xl mx-auto text-center fade-in">
+          <h1 class="text-3xl lg:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
+            Projets & <span class="gradient-text">Realisations</span>
+          </h1>
+          <p class="text-lg text-[var(--color-text-secondary)] mb-8">
+            Une selection de projets representatifs de mon expertise en architecture cloud,
+            intelligence artificielle et developpement web moderne.
+          </p>
+
+          <!-- Tag filters -->
+          <div class="flex flex-wrap justify-center gap-2" id="tag-filters">
+            <button
+              class="filter-btn active tech-badge cursor-pointer hover:border-[var(--color-accent-primary)] transition-colors"
+              data-tag="all"
+            >
+              Tous
+            </button>
+            {
+              allTags.map((tag) => (
+                <button
+                  class="filter-btn tech-badge cursor-pointer hover:border-[var(--color-accent-primary)] transition-colors"
+                  data-tag={tag}
+                >
+                  {tag}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    {
+      featuredProjects.length > 0 && (
+        <section class="section py-12" id="featured-section">
+          <div class="container">
+            <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8 fade-in">
+              <span class="gradient-text">Projets phares</span>
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="featured-grid">
+              {featuredProjects.map((project, index) => (
+                <div class="project-item" data-tags={project.data.tags.join(',')}>
+                  <ProjectCard
+                    title={project.data.title}
+                    description={project.data.description}
+                    image={project.data.image}
+                    tags={project.data.tags}
+                    url={project.data.url}
+                    github={project.data.github}
+                    slug={project.id.replace(/\.md$/, '')}
+                    index={index}
+                    featured={true}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Other Projects Section -->
+    {
+      otherProjects.length > 0 && (
+        <section class="section py-12" id="other-section">
+          <div class="container">
+            <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8 fade-in">
+              Autres projets
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="other-grid">
+              {otherProjects.map((project, index) => (
+                <div class="project-item" data-tags={project.data.tags.join(',')}>
+                  <ProjectCard
+                    title={project.data.title}
+                    description={project.data.description}
+                    image={project.data.image}
+                    tags={project.data.tags}
+                    url={project.data.url}
+                    github={project.data.github}
+                    slug={project.id.replace(/\.md$/, '')}
+                    index={index + featuredProjects.length}
+                    featured={false}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden section py-12">
+      <div class="container">
+        <div class="text-center text-[var(--color-text-muted)]">
+          <svg
+            class="w-16 h-16 mx-auto mb-4 opacity-50"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <p class="text-lg">Aucun projet ne correspond a ce filtre.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="section py-16">
+      <div class="container">
+        <div
+          class="card p-8 lg:p-12 text-center max-w-3xl mx-auto fade-in bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-tertiary)]"
+        >
+          <h2 class="text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)] mb-4">
+            Un projet en tete ?
+          </h2>
+          <p class="text-[var(--color-text-secondary)] mb-8 max-w-xl mx-auto">
+            Discutons de votre projet et voyons comment je peux vous aider a le concretiser avec une
+            architecture solide et des technologies adaptees.
+          </p>
+          <a href="/#contact" class="btn btn-primary"> Parlons de votre projet </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  function initFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectItems = document.querySelectorAll('.project-item');
+    const featuredSection = document.getElementById('featured-section');
+    const otherSection = document.getElementById('other-section');
+    const emptyState = document.getElementById('empty-state');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tag = btn.getAttribute('data-tag');
+
+        // Update active state
+        filterButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        let visibleCount = 0;
+        let featuredVisible = 0;
+        let otherVisible = 0;
+
+        projectItems.forEach((item) => {
+          const itemTags = item.getAttribute('data-tags')?.split(',') || [];
+          const isFeatured = item.closest('#featured-grid') !== null;
+
+          if (tag === 'all' || itemTags.includes(tag)) {
+            item.classList.remove('hidden');
+            visibleCount++;
+            if (isFeatured) featuredVisible++;
+            else otherVisible++;
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+
+        // Show/hide sections based on visibility
+        if (featuredSection) {
+          featuredSection.classList.toggle('hidden', featuredVisible === 0);
+        }
+        if (otherSection) {
+          otherSection.classList.toggle('hidden', otherVisible === 0);
+        }
+        if (emptyState) {
+          emptyState.classList.toggle('hidden', visibleCount > 0);
+        }
+      });
+    });
+  }
+
+  // Initialize on load and after view transitions
+  document.addEventListener('astro:page-load', initFilters);
+</script>
+
+<style>
+  .filter-btn.active {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .project-item {
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .project-item.hidden {
+    display: none;
+  }
+</style>

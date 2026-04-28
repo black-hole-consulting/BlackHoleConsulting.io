@@ -8,17 +8,80 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # ─────────────────────────────────────────────
+  # Génération des images (avant build)
+  # ─────────────────────────────────────────────
+
+  generate-images:
+    name: Generate Blog Images
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate missing blog hero images
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run blog:hero:missing
+
+      - name: Check for new images
+        id: check-images
+        run: |
+          # Check if any images were generated (files exist in directory)
+          if ls public/images/blog/*.png 1> /dev/null 2>&1; then
+            echo "has_images=true" >> $GITHUB_OUTPUT
+            echo "Found images:"
+            ls -la public/images/blog/
+          else
+            echo "has_images=false" >> $GITHUB_OUTPUT
+            echo "No images found"
+          fi
+
+      - name: Commit generated images
+        if: steps.check-images.outputs.has_images == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add --force public/images/blog/
+          # Check if there's actually something to commit (might already be in repo)
+          if git diff --staged --quiet; then
+            echo "Images already up to date in repo"
+          else
+            git commit -m "chore: Generate blog hero images [skip ci]"
+            git push
+          fi
+
   # ─────────────────────────────────────────────
   # Jobs parallèles (pas de dépendances)
   # ─────────────────────────────────────────────
 
   lint:
     name: Lint & Format
+    needs: generate-images
+    if: ${{ !cancelled() && (needs.generate-images.result == 'success' || needs.generate-images.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,10 +100,14 @@ jobs:
 
   build:
     name: Build
+    needs: generate-images
+    if: ${{ !cancelled() && (needs.generate-images.result == 'success' || needs.generate-images.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -52,6 +119,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.PUBLIC_RECAPTCHA_SITE_KEY }}
         run: npm run build
 
       - name: Upload build artifact
@@ -153,52 +222,194 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-3
 
-      # ─── Deploy Lambda (Contact Form API) ───
-      - name: Deploy CloudFormation stack
-        run: |
-          aws cloudformation deploy \
-            --template-file lambda/template.yaml \
-            --stack-name bhc-contact-form \
-            --capabilities CAPABILITY_NAMED_IAM \
-            --parameter-overrides BrevoApiKey=${{ secrets.BREVO_API_KEY }} \
-            --no-fail-on-empty-changeset
-
-      - name: Update Lambda code
-        run: |
-          cd lambda/contact-form
-          zip -j function.zip index.mjs
-          aws lambda update-function-code \
-            --function-name bhc-contact-form \
-            --zip-file fileb://function.zip
-
       # ─── Deploy Static Site ───
-      - name: Deploy assets to S3
+      # Lambda is managed entirely by Terraform (see infra/)
+      - name: Deploy to S3
         run: |
+          # Step 1: Sync all files with immutable cache (excluding dynamic content)
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
             --delete \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "*.html" \
             --exclude "sitemap*.xml" \
-            --exclude "robots.txt"
+            --exclude "robots.txt" \
+            --exclude "rss.xml"
 
-      - name: Deploy HTML to S3
-        run: |
+          # Step 2: Sync HTML and dynamic files with must-revalidate cache
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }} \
             --cache-control "public, max-age=0, must-revalidate" \
+            --exclude "*" \
             --include "*.html" \
             --include "sitemap*.xml" \
-            --include "robots.txt"
+            --include "robots.txt" \
+            --include "rss.xml"
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+            --paths "/index.html" "/*.html" "/blog/*" "/projets/*" "/a-propos" "/sitemap*.xml" "/robots.txt" "/rss.xml"
 
-      - name: Output API URL
+      - name: Smoke test
         run: |
-          API_URL=$(aws cloudformation describe-stacks \
-            --stack-name bhc-contact-form \
-            --query 'Stacks[0].Outputs[?OutputKey==`ApiEndpoint`].OutputValue' \
-            --output text)
-          echo "Contact API URL: $API_URL"
+          sleep 10
+          for url in "/" "/blog" "/projets" "/a-propos"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://blackholeconsulting.io${url}")
+            if [ "$STATUS" != "200" ]; then
+              echo "FAIL: ${url} returned ${STATUS}"
+              exit 1
+            fi
+            echo "OK: ${url} returned ${STATUS}"
+          done
+
+      - name: Output deployment info
+        run: |
+          echo "Website deployed to: https://blackholeconsulting.io"
+          echo "S3 Bucket: ${{ secrets.AWS_S3_BUCKET }}"
+          echo "CloudFront Distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+          echo "Lambda function: bhc-contact-form (managed by Terraform)"
+
+  # ─────────────────────────────────────────────
+  # Notifications Slack
+  # ─────────────────────────────────────────────
+
+  notify:
+    name: Slack Notification
+    needs: [lint, build, test, lighthouse, deploy]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Prepare commit message
+        id: prep
+        run: |
+          MSG=$(jq -r '.head_commit.message' "$GITHUB_EVENT_PATH" | head -1)
+          ESCAPED=$(printf '%s' "$MSG" | jq -Rsa .)
+          ESCAPED="${ESCAPED%\"}"
+          ESCAPED="${ESCAPED#\"}"
+          echo "msg=$ESCAPED" >> "$GITHUB_OUTPUT"
+
+      - name: Notify Slack on Success
+        if: ${{ needs.deploy.result == 'success' && needs.lint.result == 'success' && needs.test.result == 'success' }}
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Déploiement réussi",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Site:*\n<https://blkhole.fr|blkhole.fr>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branche:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Auteur:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Message:*\n${{ steps.prep.outputs.msg }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|📋 Voir le workflow> | <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|🔍 Voir le commit>"
+                    }
+                  ]
+                }
+              ]
+            }
+
+      - name: Notify Slack on Failure
+        if: ${{ needs.deploy.result == 'failure' || needs.lint.result == 'failure' || needs.build.result == 'failure' || needs.test.result == 'failure' || needs.lighthouse.result == 'failure' }}
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ Déploiement échoué",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Site:*\n<https://blkhole.fr|blkhole.fr>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branche:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Auteur:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n`${{ github.sha }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Message:*\n${{ steps.prep.outputs.msg }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🔍 Voir les logs",
+                        "emoji": true
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "style": "danger"
+                    }
+                  ]
+                }
+              ]
+            }

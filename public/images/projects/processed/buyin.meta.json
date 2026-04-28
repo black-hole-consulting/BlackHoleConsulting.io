@@ -1,0 +1,18 @@
+{
+  "originalFile": "buyin.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T10:00:50.542Z",
+  "dominantColors": {
+    "primary": "#2d2c2e",
+    "lighter": "#323033",
+    "darker": "#1f1f20"
+  },
+  "aiDescription": null,
+  "formats": [
+    "buyin-thumb.webp",
+    "buyin-card.webp",
+    "buyin-hero.webp",
+    "buyin-card.jpg",
+    "buyin-original.webp"
+  ]
+}

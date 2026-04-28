@@ -7,7 +7,26 @@ const projectTypes = [
   { value: 'web', label: 'Développement Web' },
   { value: 'autre', label: 'Autre' },
 ];
+
+// reCAPTCHA v3 site key
+const RECAPTCHA_SITE_KEY = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '';
+const isProd = import.meta.env.PROD;
 ---
+
+<!-- reCAPTCHA v3 Script (only in production or if key is set) -->
+<script is:inline define:vars={{ RECAPTCHA_SITE_KEY, isProd }}>
+  window.RECAPTCHA_SITE_KEY = RECAPTCHA_SITE_KEY;
+  window.RECAPTCHA_ENABLED =
+    isProd && RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY !== 'YOUR_RECAPTCHA_SITE_KEY';
+</script>
+{
+  RECAPTCHA_SITE_KEY && isProd && (
+    <script
+      is:inline
+      src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`}
+    />
+  )
+}
 
 <section id="contact" class="section">
   <div class="container">
@@ -25,7 +44,7 @@ const projectTypes = [
       <!-- Contact Form -->
       <div class="fade-in stagger-2">
         <form class="space-y-6" id="contact-form">
-          <div class="grid sm:grid-cols-2 gap-6">
+          <div class="grid md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label
                 for="name"
@@ -60,7 +79,7 @@ const projectTypes = [
             </div>
           </div>
 
-          <div class="grid sm:grid-cols-2 gap-6">
+          <div class="grid md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label
                 for="company"
@@ -137,6 +156,23 @@ const projectTypes = [
           >
             Une erreur est survenue. Veuillez réessayer ou me contacter directement par email.
           </div>
+
+          <!-- reCAPTCHA attribution (required when hiding badge) -->
+          <p class="text-xs text-[var(--color-text-muted)] mt-4">
+            Ce site est protégé par reCAPTCHA. La
+            <a
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline hover:text-[var(--color-text-secondary)]"
+              >Politique de confidentialité</a
+            > et les <a
+              href="https://policies.google.com/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline hover:text-[var(--color-text-secondary)]">Conditions d'utilisation</a
+            > de Google s'appliquent.
+          </p>
         </form>
       </div>
 
@@ -199,7 +235,7 @@ const projectTypes = [
             </li>
             <li>
               <a
-                href="https://www.linkedin.com/in/cedric-blackhole"
+                href="https://www.linkedin.com/in/cedric-jacqueline-tech"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center gap-4 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors group"
@@ -222,7 +258,7 @@ const projectTypes = [
         <div>
           <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-4">Localisation</h3>
           <p class="text-[var(--color-text-secondary)]">
-            Basé en <strong class="text-[var(--color-text-primary)]">Île-de-France</strong><br />
+            Basé à <strong class="text-[var(--color-text-primary)]">Tours</strong><br />
             Interventions : France entière & Remote
           </p>
         </div>
@@ -237,7 +273,7 @@ const projectTypes = [
             Réservez directement un créneau de 30 minutes pour discuter de votre projet.
           </p>
           <a
-            href="https://calendly.com/cedric-blackhole"
+            href="https://calendly.com/cedric-blkhole/30min"
             target="_blank"
             rel="noopener noreferrer"
             class="btn btn-secondary w-full"
@@ -265,63 +301,99 @@ const projectTypes = [
 </section>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  const successMsg = document.getElementById('form-success');
-  const errorMsg = document.getElementById('form-error');
-  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-
   // API endpoint for contact form (AWS API Gateway + Lambda)
-  const API_ENDPOINT = 'https://zm4iy4pjv8.execute-api.eu-west-3.amazonaws.com/contact';
+  const API_ENDPOINT = 'https://6deuyzfjp7.execute-api.eu-west-3.amazonaws.com/contact';
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // Get reCAPTCHA token (returns empty string if disabled/unavailable)
+  async function getRecaptchaToken(): Promise<string> {
+    const recaptchaEnabled =
+      'RECAPTCHA_ENABLED' in window && (window as Record<string, unknown>).RECAPTCHA_ENABLED;
+    const grecaptcha = (window as Record<string, unknown>).grecaptcha as
+      | Record<string, Function>
+      | undefined;
+    const siteKey = (window as Record<string, unknown>).RECAPTCHA_SITE_KEY as string | undefined;
 
-    // Disable button during submission
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `
-        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Envoi en cours...
-      `;
+    if (!recaptchaEnabled || !grecaptcha) {
+      console.log('reCAPTCHA disabled or not loaded (dev mode)');
+      return '';
     }
 
-    // Collect form data as JSON
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-
-    try {
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+    return new Promise((resolve) => {
+      grecaptcha.ready(() => {
+        (grecaptcha.execute(siteKey, { action: 'contact_form' }) as Promise<string>)
+          .then(resolve)
+          .catch((err: unknown) => {
+            console.warn('reCAPTCHA error:', err);
+            resolve('');
+          });
       });
+    });
+  }
 
-      if (response.ok) {
-        form.reset();
-        successMsg?.classList.remove('hidden');
-        errorMsg?.classList.add('hidden');
-      } else {
-        throw new Error('Form submission failed');
-      }
-    } catch {
-      errorMsg?.classList.remove('hidden');
-      successMsg?.classList.add('hidden');
-    } finally {
-      // Re-enable button
+  function initContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const successMsg = document.getElementById('form-success');
+    const errorMsg = document.getElementById('form-error');
+    const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Disable button during submission
       if (submitBtn) {
-        submitBtn.disabled = false;
+        submitBtn.disabled = true;
         submitBtn.innerHTML = `
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Envoyer le message
+          Envoi en cours...
         `;
       }
-    }
-  });
+
+      // Collect form data as JSON
+      const formData = new FormData(form);
+      const data: Record<string, unknown> = Object.fromEntries(formData.entries());
+
+      try {
+        // Get reCAPTCHA v3 token (empty in dev mode)
+        const recaptchaToken = await getRecaptchaToken();
+        if (recaptchaToken) {
+          data.recaptchaToken = recaptchaToken;
+        }
+
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          form.reset();
+          successMsg?.classList.remove('hidden');
+          errorMsg?.classList.add('hidden');
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch {
+        errorMsg?.classList.remove('hidden');
+        successMsg?.classList.add('hidden');
+      } finally {
+        // Re-enable button
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Envoyer le message
+          `;
+        }
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initContactForm);
 </script>

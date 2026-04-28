@@ -1,0 +1,18 @@
+{
+  "originalFile": "wamiz.png",
+  "originalDimensions": "1536x1024",
+  "processedAt": "2026-01-07T09:58:16.314Z",
+  "dominantColors": {
+    "primary": "#216b7f",
+    "lighter": "#24768c",
+    "darker": "#174b59"
+  },
+  "aiDescription": null,
+  "formats": [
+    "wamiz-thumb.webp",
+    "wamiz-card.webp",
+    "wamiz-hero.webp",
+    "wamiz-card.jpg",
+    "wamiz-original.webp"
+  ]
+}

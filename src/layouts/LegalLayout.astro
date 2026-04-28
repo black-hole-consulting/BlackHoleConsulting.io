@@ -42,7 +42,7 @@ const breadcrumbData = {
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
 
   <Header />
-  <main class="pt-32 pb-20">
+  <main id="main" class="pt-32 pb-20">
     <article class="container mx-auto px-6 max-w-3xl">
       <h1 class="text-3xl font-bold text-[var(--color-text-primary)] mb-8">
         {title}
@@ -54,45 +54,3 @@ const breadcrumbData = {
   </main>
   <Footer />
 </BaseLayout>
-
-<style is:global>
-  .prose {
-    color: var(--color-text-secondary);
-  }
-  .prose h2 {
-    color: var(--color-text-primary);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-  .prose h3 {
-    color: var(--color-text-primary);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-  .prose p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
-  }
-  .prose ul {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  .prose li {
-    margin-bottom: 0.5rem;
-  }
-  .prose a {
-    color: var(--color-accent-primary);
-    text-decoration: underline;
-  }
-  .prose a:hover {
-    color: var(--color-accent-secondary);
-  }
-  .prose strong {
-    color: var(--color-text-primary);
-  }
-</style>

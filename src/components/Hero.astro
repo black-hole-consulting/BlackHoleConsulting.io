@@ -6,6 +6,9 @@
   <!-- Gradient mesh animated background -->
   <div class="gradient-mesh"></div>
 
+  <!-- Animated grid background -->
+  <div class="animated-grid" aria-hidden="true"></div>
+
   <!-- Hero glow effect -->
   <div class="hero-glow"></div>
 
@@ -18,10 +21,16 @@
     <div class="accretion-disk"></div>
   </div>
 
-  <!-- Animated background shapes (blobs) -->
+  <!-- Animated background shapes (blobs) - responsive sizes -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="blob blob-primary w-[500px] h-[500px] top-1/4 left-1/4"></div>
-    <div class="blob blob-secondary w-[400px] h-[400px] bottom-1/4 right-1/4"></div>
+    <div
+      class="blob blob-primary w-[250px] h-[250px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] top-1/4 left-1/4"
+    >
+    </div>
+    <div
+      class="blob blob-secondary w-[200px] h-[200px] md:w-[300px] md:h-[300px] lg:w-[400px] lg:h-[400px] bottom-1/4 right-1/4"
+    >
+    </div>
   </div>
 
   <div class="container mx-auto px-6 pt-32 pb-20 relative z-10">
@@ -32,7 +41,7 @@
       >
         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
         <span class="text-sm text-[var(--color-text-secondary)]"
-          >Disponible pour de nouvelles missions</span
+          >Basé à Tours · Disponible en remote France entière</span
         >
       </div>
 
@@ -43,8 +52,8 @@
         <span class="word">Architecte</span>
         <span class="word">de</span>
         <span class="word">vos</span>
-        <span class="word gradient-text">solutions</span>
-        <span class="word gradient-text">digitales</span>
+        <span class="word gradient-text-animated">solutions</span>
+        <span class="word gradient-text-animated">digitales</span>
       </h1>
 
       <!-- Subtitle (appears after headline) -->
@@ -59,7 +68,7 @@
 
       <!-- CTAs (appear last) -->
       <div class="fade-in stagger-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#contact" class="btn btn-primary">
+        <a href="#contact" class="btn btn-gradient-animated">
           <svg
             class="w-5 h-5"
             fill="none"
