@@ -1,11 +1,10 @@
 ---
 const projectTypes = [
-  { value: '', label: 'Sélectionnez un type de projet' },
-  { value: 'architecture', label: 'Architecture & Conseil' },
-  { value: 'ia', label: 'IA & GenAI' },
-  { value: 'cloud', label: 'Cloud & DevOps' },
-  { value: 'web', label: 'Développement Web' },
-  { value: 'autre', label: 'Autre' },
+  { value: 'architecture', label: 'Architecture & Conseil', icon: '🏛️' },
+  { value: 'ia', label: 'IA & GenAI', icon: '🤖' },
+  { value: 'cloud', label: 'Cloud & DevOps', icon: '☁️' },
+  { value: 'web', label: 'Développement Web', icon: '💻' },
+  { value: 'autre', label: 'Autre', icon: '✨' },
 ];
 
 // reCAPTCHA v3 site key
@@ -31,66 +30,75 @@ const isProd = import.meta.env.PROD;
 <section id="contact" class="section">
   <div class="container">
     <!-- Section Header -->
-    <div class="text-center mb-16">
+    <div class="text-center mb-12">
       <h2 class="fade-in text-3xl font-bold text-[var(--color-text-primary)] mb-4">
         Parlons de votre projet
       </h2>
       <p class="fade-in stagger-1 text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-        Prêt à concrétiser votre vision ? Discutons-en.
+        Prêt à concrétiser votre vision ? Décrivez votre besoin en moins d'une minute, je reviens
+        vers vous sous 24 h ouvrées.
       </p>
     </div>
 
     <div class="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
       <!-- Contact Form -->
       <div class="fade-in stagger-2">
-        <form class="space-y-6" id="contact-form" novalidate aria-describedby="form-status">
-          <div class="grid md:grid-cols-2 gap-4 md:gap-6">
-            <div>
-              <label
-                for="name"
-                class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
-              >
-                Nom complet <span class="text-[var(--color-accent-primary)]" aria-hidden="true"
-                  >*</span
+        <form class="space-y-8" id="contact-form" novalidate aria-describedby="form-status">
+          <!-- Group: Identité -->
+          <fieldset class="space-y-5 border-0 p-0 m-0">
+            <legend
+              class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-4"
+            >
+              Vos coordonnées
+            </legend>
+            <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+              <div>
+                <label
+                  for="name"
+                  class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
                 >
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                aria-required="true"
-                aria-describedby="error-name"
-                autocomplete="name"
-                class="input"
-                placeholder="Jean Dupont"
-              />
-              <p id="error-name" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
+                  Nom complet <span class="text-[var(--color-accent-primary)]" aria-hidden="true"
+                    >*</span
+                  >
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  aria-required="true"
+                  aria-describedby="error-name"
+                  autocomplete="name"
+                  class="input"
+                  placeholder="Jean Dupont"
+                />
+                <p id="error-name" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
+              </div>
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
+                >
+                  Email professionnel <span
+                    class="text-[var(--color-accent-primary)]"
+                    aria-hidden="true">*</span
+                  >
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  aria-required="true"
+                  aria-describedby="error-email"
+                  autocomplete="email"
+                  inputmode="email"
+                  class="input"
+                  placeholder="prenom@ma-societe.com"
+                />
+                <p id="error-email" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
+              </div>
             </div>
-            <div>
-              <label
-                for="email"
-                class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
-              >
-                Email <span class="text-[var(--color-accent-primary)]" aria-hidden="true">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                aria-required="true"
-                aria-describedby="error-email"
-                autocomplete="email"
-                inputmode="email"
-                class="input"
-                placeholder="prenom@ma-societe.com"
-              />
-              <p id="error-email" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-4 md:gap-6">
             <div>
               <label
                 for="company"
@@ -104,58 +112,136 @@ const isProd = import.meta.env.PROD;
                 name="company"
                 autocomplete="organization"
                 class="input"
-                placeholder="Votre entreprise"
+                placeholder="Acme Corp"
               />
             </div>
-            <div>
-              <label
-                for="project-type"
-                class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
+          </fieldset>
+
+          <!-- Group: Projet -->
+          <fieldset class="space-y-5 border-0 p-0 m-0">
+            <legend
+              class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-4"
+            >
+              Votre projet
+            </legend>
+
+            <div role="radiogroup" aria-labelledby="project-type-label">
+              <p
+                id="project-type-label"
+                class="block text-sm font-medium text-[var(--color-text-primary)] mb-3"
               >
-                Type de projet
-              </label>
-              <select id="project-type" name="project-type" class="input cursor-pointer">
-                {projectTypes.map((type) => <option value={type.value}>{type.label}</option>)}
-              </select>
+                Type de projet <span class="text-[var(--color-text-muted)] font-normal"
+                  >(facultatif)</span
+                >
+              </p>
+              <div class="flex flex-wrap gap-2" id="project-type-pills">
+                {
+                  projectTypes.map((type) => (
+                    <label class="project-pill cursor-pointer">
+                      <input
+                        type="radio"
+                        name="project-type"
+                        value={type.value}
+                        class="sr-only project-pill-input"
+                      />
+                      <span class="project-pill-content">
+                        <span aria-hidden="true">{type.icon}</span>
+                        <span>{type.label}</span>
+                      </span>
+                    </label>
+                  ))
+                }
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label
-              for="message"
-              class="block text-sm font-medium text-[var(--color-text-primary)] mb-2"
-            >
-              Message <span class="text-[var(--color-accent-primary)]" aria-hidden="true">*</span>
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              required
-              aria-required="true"
-              aria-describedby="error-message"
-              rows="5"
-              maxlength="10000"
-              class="input resize-none"
-              placeholder="Décrivez votre projet, vos besoins, vos contraintes..."></textarea>
-            <p id="error-message" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
-          </div>
+            <div>
+              <div class="flex items-baseline justify-between mb-2">
+                <label for="message" class="text-sm font-medium text-[var(--color-text-primary)]">
+                  Message <span class="text-[var(--color-accent-primary)]" aria-hidden="true"
+                    >*</span
+                  >
+                </label>
+                <span
+                  id="message-counter"
+                  class="text-xs text-[var(--color-text-muted)] tabular-nums"
+                  aria-live="off"
+                >
+                  0 / 10 000
+                </span>
+              </div>
+              <textarea
+                id="message"
+                name="message"
+                required
+                aria-required="true"
+                aria-describedby="error-message message-hint"
+                rows="5"
+                maxlength="10000"
+                class="input message-textarea"
+                placeholder="Contexte, objectifs, contraintes, échéance souhaitée…"></textarea>
+              <p id="message-hint" class="mt-1.5 text-xs text-[var(--color-text-muted)]">
+                Plus vous donnez de contexte, plus ma réponse sera précise.
+              </p>
+              <p id="error-message" class="hidden mt-1.5 text-xs text-red-400" role="alert"></p>
+            </div>
+          </fieldset>
 
-          <button type="submit" class="btn btn-primary w-full sm:w-auto">
-            Envoyer le message
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </button>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <button type="submit" class="btn btn-primary w-full sm:w-auto">
+              Envoyer le message
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </button>
+            <ul class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-[var(--color-text-secondary)]">
+              <li class="flex items-center gap-1.5">
+                <svg
+                  class="w-3.5 h-3.5 text-[var(--color-accent-primary)]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  ><path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"></path></svg
+                >
+                Réponse sous 24 h ouvrées
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg
+                  class="w-3.5 h-3.5 text-[var(--color-accent-primary)]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  ><path
+                    fill-rule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clip-rule="evenodd"></path></svg
+                >
+                Données confidentielles
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg
+                  class="w-3.5 h-3.5 text-[var(--color-accent-primary)]"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  ><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path></svg
+                >
+                Aucun engagement
+              </li>
+            </ul>
+          </div>
 
           <!-- Live status region (success / error) -->
           <div id="form-status" aria-live="polite" aria-atomic="true">
@@ -178,19 +264,19 @@ const isProd = import.meta.env.PROD;
           </div>
 
           <!-- reCAPTCHA attribution (required when hiding badge) -->
-          <p class="text-xs text-[var(--color-text-muted)] mt-4">
+          <p class="text-xs text-[var(--color-text-secondary)]">
             Ce site est protégé par reCAPTCHA. La
             <a
               href="https://policies.google.com/privacy"
               target="_blank"
               rel="noopener noreferrer"
-              class="underline hover:text-[var(--color-text-secondary)]"
+              class="underline hover:text-[var(--color-text-primary)]"
               >Politique de confidentialité</a
             > et les <a
               href="https://policies.google.com/terms"
               target="_blank"
               rel="noopener noreferrer"
-              class="underline hover:text-[var(--color-text-secondary)]">Conditions d'utilisation</a
+              class="underline hover:text-[var(--color-text-primary)]">Conditions d'utilisation</a
             > de Google s'appliquent.
           </p>
         </form>
@@ -283,20 +369,29 @@ const isProd = import.meta.env.PROD;
           </p>
         </div>
 
-        <div
-          class="p-6 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border)]"
-        >
-          <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-3">
-            Préférez un appel ?
-          </h3>
-          <p class="text-[var(--color-text-secondary)] text-sm mb-4">
-            Réservez directement un créneau de 30 minutes pour discuter de votre projet.
-          </p>
+        <div class="calendly-card relative p-6 rounded-xl overflow-hidden">
+          <div class="relative">
+            <div class="flex items-center gap-2 mb-3">
+              <span
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/20"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                Recommandé
+              </span>
+            </div>
+            <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-2">
+              Discutons en visio · 30 min
+            </h3>
+            <p class="text-[var(--color-text-secondary)] text-sm mb-5">
+              Le moyen le plus rapide de challenger votre projet et obtenir un premier avis
+              actionnable. Sans engagement.
+            </p>
+          </div>
           <a
             href="https://calendly.com/cedric-blkhole/30min"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-secondary w-full"
+            class="btn btn-primary w-full relative"
           >
             <svg
               class="w-5 h-5"
@@ -445,6 +540,8 @@ const isProd = import.meta.env.PROD;
     const successMsg = document.getElementById('form-success');
     const errorMsg = document.getElementById('form-error');
     const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    const messageEl = document.getElementById('message') as HTMLTextAreaElement | null;
+    const counterEl = document.getElementById('message-counter');
 
     // Inline validation: validate on blur, clear on input
     (['name', 'email', 'message'] as FieldId[]).forEach((f) => {
@@ -459,6 +556,20 @@ const isProd = import.meta.env.PROD;
         }
       });
     });
+
+    // Character counter + auto-grow on the message textarea
+    function updateMessageMeta() {
+      if (!messageEl) return;
+      const length = messageEl.value.length;
+      if (counterEl) {
+        counterEl.textContent = `${length.toLocaleString('fr-FR')} / 10 000`;
+        counterEl.classList.toggle('text-amber-400', length > 9500);
+      }
+      messageEl.style.height = 'auto';
+      messageEl.style.height = `${Math.min(messageEl.scrollHeight, 480)}px`;
+    }
+    messageEl?.addEventListener('input', updateMessageMeta);
+    updateMessageMeta();
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
